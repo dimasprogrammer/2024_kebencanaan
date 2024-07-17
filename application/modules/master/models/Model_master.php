@@ -26,6 +26,41 @@ class Model_master extends CI_Model
         return $jenis;
     }
 
+    public function getDataPusdalops()
+    {
+        $this->db->select('a.id_regency,
+                           a.nm_regency');
+        $this->db->from('wil_regency a');
+        $this->db->order_by('id_regency', 'ASC');
+        $query = $this->db->get();
+        // $jenis[''] = 'Pilih Daerah';
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $jenis[$row['id_regency']] = $row['nm_regency'];
+            }
+        }
+        return $jenis;
+    }
+
+    public function getDataUsersPersonal()
+    {
+        $this->db->select('a.fullname,
+                           a.id_users');
+        $this->db->from('xi_sa_users a');
+        $this->db->join('xi_sa_users_privileges b', 'a.id_users = b.id_users', 'inner');
+        $this->db->where('a.id_status', 1);
+        $this->db->where('b.id_group', 6);
+        $this->db->order_by('id_users', 'ASC');
+        $query = $this->db->get();
+        $jenis[''] = 'Pilih OPD Penanggung Jawab';
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $jenis[$row['id_users']] = $row['fullname'];
+            }
+        }
+        return $jenis;
+    }
+
     // public function getDataJenisBencana()
     // {
     //     $this->db->select('id_jenis_bencana,
@@ -116,44 +151,18 @@ class Model_master extends CI_Model
 
     public function getDataDistrictByRegency($id)
     {
-        $this->db->where('regency_id', $id);
-        $this->db->order_by('id ASC');
-        $query = $this->db->get('wa_district');
+        $this->db->where('id_regency', $id);
+        $this->db->order_by('id_district ASC');
+        $query = $this->db->get('wil_district');
         return $query->result_array();
     }
 
     public function getDataVillageByDistrict($id)
     {
-        $this->db->where('district_id', $id);
-        $this->db->order_by('id ASC');
-        $query = $this->db->get('wa_village');
+        $this->db->where('id_district', $id);
+        $this->db->order_by('id_village ASC');
+        $query = $this->db->get('wil_village');
         return $query->result_array();
-    }
-
-    public function getDataStatusNikah()
-    {
-        $this->db->order_by('id_nikah ASC');
-        $query = $this->db->get('ref_status_nikah');
-        $dd_data[''] = 'Pilih Data';
-        if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $dd_data[$row['id_nikah']] = $row['status_nikah'];
-            }
-        }
-        return $dd_data;
-    }
-
-    public function getDataStudy()
-    {
-        $this->db->order_by('id ASC');
-        $query = $this->db->get('ref_pendidikan');
-        $dd_data[''] = 'Pilih Data';
-        if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $dd_data[$row['id']] = $row['study'];
-            }
-        }
-        return $dd_data;
     }
 }
 

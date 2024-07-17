@@ -41,9 +41,12 @@ class bencana extends SLP_Controller
         $this->session_info['siteUri']       = $this->_uriName;
         $this->session_info['page_css']      = $this->load->view($this->_vwName . '/vcss', '', true);
         $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
+        // $this->session_info['jenis_bencana'] = $this->mmas->getDataJenisBencanaGroup();
         $this->session_info['jenis_bencana'] = $this->mmas->getDataJenisBencana();
-        $this->session_info['pusdalops']         = $this->mmas->getDataPusdalops();
-        // $this->session_info['regency']      = $this->mmas->getDataRegency();
+        // $this->session_info['data_user']     = $this->mmas->getDataUserAll();
+        // $this->session_info['instansi']      = $this->mmas->getDataInstansi();
+        $this->session_info['users']         = $this->mmas->getDataUsersPersonal();
+        $this->session_info['regency']      = $this->mmas->getDataRegency();
         $this->session_info['data_opd']      = "";
         $this->template->build($this->_vwName . '/vpage', $this->session_info);
     }
@@ -64,13 +67,11 @@ class bencana extends SLP_Controller
                     $row = array();
 
                     $row[] = $no;
-                    $row[] = $dl['jenis_bencana'];
+                    $row[] = $dl['nm_bencana'];
                     $row[] = $dl['nama_bencana'];
                     $row[] = $dl['tanggal_bencana'];
                     $row[] = $dl['id_status'];
-                    $row[] = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnEdit" title="Indikator Satuan">
-                        <i class="far fa-folder-open"></i> Lihat Data
-                        </a>';
+                    $row[] = '<button type="button" class="btn btn-orange btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnEdit" data-id="' . $dl['token_bencana'] . '" title="Edit data"><i class="fas fa-pencil-alt"></i></button> <button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDelete" data-id="' . $dl['token_bencana'] . '" title="Delete data"><i class="fas fa-trash-alt"></i></button>';
                     $data[] = $row;
                 }
                 $output = array(

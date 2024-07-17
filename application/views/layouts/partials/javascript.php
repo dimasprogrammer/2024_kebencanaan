@@ -7,6 +7,7 @@
 <?= $this->asset->js('themes/mdb.min.js'); ?>
 <!-- Bootstrap tooltips -->
 <?= $this->asset->js('themes/popper.min.js'); ?>
+
 <!-- jQuery Custom Scroller -->
 <?= $this->asset->js('themes/jquery.nicescroll.min.js'); ?>
 <!-- Datatables JS -->

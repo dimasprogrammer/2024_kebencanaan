@@ -1,12 +1,12 @@
 <?php (defined('BASEPATH')) or exit('No direct script access allowed');
 
 /**
- * Description of bencana model
+ * Description of korban_jiwa model
  *
  * @author Dimas Dwi Randa
  */
 
-class Model_bencana extends CI_Model
+class Model_korban_jiwa extends CI_Model
 {
 
     public function __construct()
@@ -15,7 +15,7 @@ class Model_bencana extends CI_Model
     }
 
     /*Fungsi Get Data List*/
-    var $search = array('a.nama_bencana');
+    var $search = array('a.nama_korban_jiwa');
     public function get_datatables($param)
     {
         $this->_get_datatables_query($param);
@@ -34,7 +34,7 @@ class Model_bencana extends CI_Model
 
     public function count_all()
     {
-        return $this->db->count_all_results('ms_bencana');
+        return $this->db->count_all_results('ms_korban_jiwa');
     }
 
     private function _get_datatables_query($param)
@@ -46,17 +46,11 @@ class Model_bencana extends CI_Model
             }
         }
 
-        $this->db->select('a.id_bencana,
-                           a.token_bencana,
-                           a.nama_bencana,
-                           a.tanggal_bencana,
-                           a.id_status,
-                           b.nm_bencana as jenis_bencana');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
-        // if (!empty($id_tahapan_bencana)) {
-        //     $this->db->where('a.id_tahapan_bencana', $id_tahapan_bencana);
-        // }
+        $this->db->select('a.id_korban_jiwa,
+                           a.token_korban_jiwa,
+                           a.nama_korban_jiwa,
+                           a.tanggal_korban_jiwa');
+        $this->db->from('ms_korban_jiwa a');
         $i = 0;
         foreach ($this->search as $item) { // loop column
             if ($_POST['search']['value']) { // if datatable send POST for search
@@ -71,68 +65,68 @@ class Model_bencana extends CI_Model
             }
             $i++;
         }
-        $this->db->order_by('a.id_bencana DESC');
+        $this->db->order_by('a.id_korban_jiwa DESC');
     }
 
     /*Fungsi get data edit by id*/
-    public function getDataDetailBencana($token_bencana)
+    public function getDataDetailkorban_jiwa($token_korban_jiwa)
     {
-        $this->db->select('a.id_bencana,
-                           a.token_bencana,
-                           a.tanggal_bencana,
+        $this->db->select('a.id_korban_jiwa,
+                           a.token_korban_jiwa,
+                           a.tanggal_korban_jiwa,
                            a.kategori_tanggap,
                            a.id_regency,
                            a.id_district,
                            a.id_village,
                            a.jorong,
-                           a.id_jenis_bencana,
-                           a.nama_bencana,
-                           a.keterangan_bencana,
-                           a.penyebab_bencana,
+                           a.id_jenis_korban_jiwa,
+                           a.nama_korban_jiwa,
+                           a.keterangan_korban_jiwa,
+                           a.penyebab_korban_jiwa,
                            a.nama_file,
                            a.nama_file_infografis,
                            a.id_status,
                            a.create_date,
-                           b.nm_bencana as jenis_bencana');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'a.id_jenis_bencana = b.id_jenis_bencana', 'inner');
-        $this->db->where('token_bencana', $token_bencana);
+                           b.nm_korban_jiwa as jenis_korban_jiwa');
+        $this->db->from('ms_korban_jiwa a');
+        $this->db->join('cx_jenis_korban_jiwa b', 'a.id_jenis_korban_jiwa = b.id_jenis_korban_jiwa', 'inner');
+        $this->db->where('token_korban_jiwa', $token_korban_jiwa);
         $query = $this->db->get();
         return $query->row_array();
     }
 
     /* Fungsi untuk insert data */
-    public function insertDataBencana()
+    public function insertDatakorban_jiwa()
     {
         //get data
-        $token_bencana          =  $this->uuid->v4(true);
+        $token_korban_jiwa          =  $this->uuid->v4(true);
         $create_by              = $this->app_loader->current_user();
         $create_date            = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip              = $this->input->ip_address();
-        $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
+        $tanggal_korban_jiwa        = escape($this->input->post('tanggal_korban_jiwa', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
         $id_district            = escape($this->input->post('id_district', TRUE));
         $id_village             = escape($this->input->post('id_village', TRUE));
         $jorong                 = escape($this->input->post('jorong', TRUE));
-        $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
-        $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
-        $keterangan_bencana     = escape($this->input->post('keterangan_bencana', TRUE));
-        $penyebab_bencana       = escape($this->input->post('penyebab_bencana', TRUE));
+        $id_jenis_korban_jiwa       = escape($this->input->post('id_jenis_korban_jiwa', TRUE));
+        $nama_korban_jiwa           = escape($this->input->post('nama_korban_jiwa', TRUE));
+        $keterangan_korban_jiwa     = escape($this->input->post('keterangan_korban_jiwa', TRUE));
+        $penyebab_korban_jiwa       = escape($this->input->post('penyebab_korban_jiwa', TRUE));
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
 
         //cek nama fungsi duplicate
-        $this->db->where('tanggal_bencana', $tanggal_bencana);
-        $checkData = $this->db->count_all_results('ms_bencana');
+        $this->db->where('tanggal_korban_jiwa', $tanggal_korban_jiwa);
+        $checkData = $this->db->count_all_results('ms_korban_jiwa');
         if ($checkData > 0) {
-            return array('response' => 'ERROR', 'nama' =>  $tanggal_bencana);
+            return array('response' => 'ERROR', 'nama' =>  $tanggal_korban_jiwa);
         } else {
             $year    = date('Y');
             $month   = date('m');
 
-            //--------------------------- foto bencana -------------------------------//
-            $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/';
+            //--------------------------- foto korban_jiwa -------------------------------//
+            $dirname = 'dokumen/korban_jiwa/' . $year . '/' . $month . '/';
             if (!is_dir($dirname)) {
                 mkdir('./' . $dirname, 0777, TRUE);
             }
@@ -160,7 +154,7 @@ class Model_bencana extends CI_Model
                 $upload_data = $this->upload->data();
                 $nama_file   = $upload_data['file_name'];
             }
-            //--------------------------- foto bencana -------------------------------//
+            //--------------------------- foto korban_jiwa -------------------------------//
 
             //--------------------------- foto infografis -------------------------------//
             $dirname = 'dokumen/infografis/' . $year . '/' . $month . '/';
@@ -194,17 +188,17 @@ class Model_bencana extends CI_Model
             //--------------------------- foto infografis -------------------------------//
 
             $data = array(
-                'token_bencana'          => $token_bencana,
-                'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
+                'token_korban_jiwa'          => $token_korban_jiwa,
+                'tanggal_korban_jiwa'        => !empty($tanggal_korban_jiwa) ? $tanggal_korban_jiwa : '',
                 'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
                 'id_regency'             => !empty($id_regency) ? $id_regency : '',
                 'id_district'            => !empty($id_district) ? $id_district : '',
                 'id_village'             => !empty($id_village) ? $id_village : '',
                 'jorong'                 => !empty($jorong) ? $jorong : '',
-                'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
-                'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
-                'keterangan_bencana'     => !empty($keterangan_bencana) ? $keterangan_bencana : '',
-                'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
+                'id_jenis_korban_jiwa'       => !empty($id_jenis_korban_jiwa) ? $id_jenis_korban_jiwa : '',
+                'nama_korban_jiwa'           => !empty($nama_korban_jiwa) ? $nama_korban_jiwa : '',
+                'keterangan_korban_jiwa'     => !empty($keterangan_korban_jiwa) ? $keterangan_korban_jiwa : '',
+                'penyebab_korban_jiwa'       => !empty($penyebab_korban_jiwa) ? $penyebab_korban_jiwa : '',
                 'nama_file'              => $nama_file,
                 'nama_file_infografis'   => $nama_file_infografis,
                 'id_status'              => 1,
@@ -218,8 +212,8 @@ class Model_bencana extends CI_Model
             // print_r($data);
             // die;
             /*query insert*/
-            $this->db->insert('ms_bencana', $data);
-            return array('response' => 'SUCCESS', 'nama' =>  $tanggal_bencana);
+            $this->db->insert('ms_korban_jiwa', $data);
+            return array('response' => 'SUCCESS', 'nama' =>  $tanggal_korban_jiwa);
         }
     }
 
@@ -234,24 +228,24 @@ class Model_bencana extends CI_Model
     }
 
     /* Fungsi untuk update data */
-    public function updateDataBencana()
+    public function updateDatakorban_jiwa()
     {
         //get data
         $create_by        = $this->app_loader->current_user();
         $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip     = $this->input->ip_address();
-        // $token_bencana     = escape($this->input->post('token_bencana', TRUE));
-        $token_bencana = escape($this->input->post('tokenId', TRUE));
-        $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
+        // $token_korban_jiwa     = escape($this->input->post('token_korban_jiwa', TRUE));
+        $token_korban_jiwa = escape($this->input->post('tokenId', TRUE));
+        $tanggal_korban_jiwa        = escape($this->input->post('tanggal_korban_jiwa', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
         $id_district            = escape($this->input->post('id_district', TRUE));
         $id_village             = escape($this->input->post('id_village', TRUE));
         $jorong                 = escape($this->input->post('jorong', TRUE));
-        $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
-        $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
-        $keterangan_bencana     = escape($this->input->post('keterangan_bencana', TRUE));
-        $penyebab_bencana       = escape($this->input->post('penyebab_bencana', TRUE));
+        $id_jenis_korban_jiwa       = escape($this->input->post('id_jenis_korban_jiwa', TRUE));
+        $nama_korban_jiwa           = escape($this->input->post('nama_korban_jiwa', TRUE));
+        $keterangan_korban_jiwa     = escape($this->input->post('keterangan_korban_jiwa', TRUE));
+        $penyebab_korban_jiwa       = escape($this->input->post('penyebab_korban_jiwa', TRUE));
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
         // var_dump($_FILES);
@@ -261,8 +255,8 @@ class Model_bencana extends CI_Model
         $year    = date('Y');
         $month   = date('m');
 
-        //--------------------------- foto bencana -------------------------------//
-        $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/';
+        //--------------------------- foto korban_jiwa -------------------------------//
+        $dirname = 'dokumen/korban_jiwa/' . $year . '/' . $month . '/';
         if (!is_dir($dirname)) {
             mkdir('./' . $dirname, 0777, TRUE);
         }
@@ -293,12 +287,12 @@ class Model_bencana extends CI_Model
             } else {
                 $upload_data = $this->upload->data();
                 $nama_file   = $upload_data['file_name'];
-                $checkFile   = $this->getDataUpload($token_bencana);
+                $checkFile   = $this->getDataUpload($token_korban_jiwa);
                 $file        = $checkFile['nama_file'];
                 $year        = substr($checkFile['create_date'], 0, 4);
                 $month       = substr($checkFile['create_date'], 5, 2);
 
-                $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/' . $file;
+                $dirname = 'dokumen/korban_jiwa/' . $year . '/' . $month . '/' . $file;
                 if (file_exists($dirname)) {
                     unlink($dirname);
                 }
@@ -306,31 +300,31 @@ class Model_bencana extends CI_Model
                     'nama_file'      => $nama_file
                 );
                 /*query update*/
-                $this->db->where('token_bencana ', $token_bencana);
-                $this->db->update('ms_bencana', $dataGambar);
+                $this->db->where('token_korban_jiwa ', $token_korban_jiwa);
+                $this->db->update('ms_korban_jiwa', $dataGambar);
             }
         } else {
-            $dataBencana = array(
-                'token_bencana'     => $token_bencana,
-                'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
+            $datakorban_jiwa = array(
+                'token_korban_jiwa'     => $token_korban_jiwa,
+                'tanggal_korban_jiwa'        => !empty($tanggal_korban_jiwa) ? $tanggal_korban_jiwa : '',
                 'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
                 'id_regency'             => !empty($id_regency) ? $id_regency : '',
                 'id_district'            => !empty($id_district) ? $id_district : '',
                 'id_village'             => !empty($id_village) ? $id_village : '',
                 'jorong'                 => !empty($jorong) ? $jorong : '',
-                'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
-                'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
-                'keterangan_bencana'     => !empty($keterangan_bencana) ? $keterangan_bencana : '',
-                'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
+                'id_jenis_korban_jiwa'       => !empty($id_jenis_korban_jiwa) ? $id_jenis_korban_jiwa : '',
+                'nama_korban_jiwa'           => !empty($nama_korban_jiwa) ? $nama_korban_jiwa : '',
+                'keterangan_korban_jiwa'     => !empty($keterangan_korban_jiwa) ? $keterangan_korban_jiwa : '',
+                'penyebab_korban_jiwa'       => !empty($penyebab_korban_jiwa) ? $penyebab_korban_jiwa : '',
                 'mod_by'    => $create_by,
                 'mod_date'  => $create_date,
                 'mod_ip'    => $create_ip
             );
             /*query update*/
-            $this->db->where('token_bencana ', $token_bencana);
-            $this->db->update('ms_bencana', $dataBencana);
+            $this->db->where('token_korban_jiwa ', $token_korban_jiwa);
+            $this->db->update('ms_korban_jiwa', $datakorban_jiwa);
         }
-        return array('response' => 'SUCCESS', 'nama' => $nama_bencana);
+        return array('response' => 'SUCCESS', 'nama' => $nama_korban_jiwa);
     }
 
     /* Fungsi untuk update data */
@@ -340,15 +334,15 @@ class Model_bencana extends CI_Model
         $create_by        = $this->app_loader->current_user();
         $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip     = $this->input->ip_address();
-        $token_bencana    = escape($this->input->post('tokenId', TRUE));
-        $token_bencana_share    = escape($this->input->post('tokenIdShare', TRUE));
+        $token_korban_jiwa    = escape($this->input->post('tokenId', TRUE));
+        $token_korban_jiwa_share    = escape($this->input->post('tokenIdShare', TRUE));
         $id_users_penerima   = escape($this->input->post('id_users_penerima', TRUE));
-        // print_r($token_bencana_share);
+        // print_r($token_korban_jiwa_share);
         // die;
         // var_dump($_FILES);
 
         $dataShare = array(
-            'token_bencana' => !empty($token_bencana) ? $token_bencana : '',
+            'token_korban_jiwa' => !empty($token_korban_jiwa) ? $token_korban_jiwa : '',
             'id_users_penerima' => !empty($id_users_penerima) ? $id_users_penerima : 0,
             'mod_by_prov'    => $create_by,
             'mod_date_prov'  => $create_date,
@@ -356,76 +350,76 @@ class Model_bencana extends CI_Model
         );
 
         /*query update*/
-        $this->db->where('token_bencana_share ', $token_bencana_share);
-        $this->db->update('ms_bencana_share', $dataShare);
+        $this->db->where('token_korban_jiwa_share ', $token_korban_jiwa_share);
+        $this->db->update('ms_korban_jiwa_share', $dataShare);
 
         return array('response' => 'SUCCESS', 'nama' => '');
     }
 
-    //--------------------------- FUNGSI UNTUK GET FILE BENCANA OPD -------------------------------//
-    public function getDataUpload($token_bencana)
+    //--------------------------- FUNGSI UNTUK GET FILE korban_jiwa OPD -------------------------------//
+    public function getDataUpload($token_korban_jiwa)
     {
-        $this->db->select(' a.token_bencana, 
+        $this->db->select(' a.token_korban_jiwa, 
                             create_date,
                             a.nama_file,
                             a.nama_file_infografis');
-        $this->db->from('ms_bencana a');
-        $this->db->where('a.token_bencana', $token_bencana);
+        $this->db->from('ms_korban_jiwa a');
+        $this->db->where('a.token_korban_jiwa', $token_korban_jiwa);
         $this->db->limit(1);
         $query = $this->db->get();
         return $query->row_array();
     }
-    //--------------------------- FUNGSI UNTUK GET FILE BENCANA OPD -------------------------------//
-    //--------------------------- FUNGSI UNTUK DELETE FILE bencana OPD -------------------------------//
+    //--------------------------- FUNGSI UNTUK GET FILE korban_jiwa OPD -------------------------------//
+    //--------------------------- FUNGSI UNTUK DELETE FILE korban_jiwa OPD -------------------------------//
 
-    //--------------------------- FUNGSI UNTUK DELETE FILE bencana OPD -------------------------------//
+    //--------------------------- FUNGSI UNTUK DELETE FILE korban_jiwa OPD -------------------------------//
 
-    public function getDataBencanaDetail($token_bencana)
+    public function getDatakorban_jiwaDetail($token_korban_jiwa)
     {
-        $this->db->select('	a.id_bencana_share, 
-							a.token_bencana, 
-							a.token_bencana_share, 
+        $this->db->select('	a.id_korban_jiwa_share, 
+							a.token_korban_jiwa, 
+							a.token_korban_jiwa_share, 
 							a.id_users_penerima,
                             c.fullname,
                             d.nm_instansi,
                             e.nm_regency');
-        $this->db->from('ms_bencana_share a');
-        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->from('ms_korban_jiwa_share a');
+        $this->db->join('ms_korban_jiwa b', 'b.token_korban_jiwa = a.token_korban_jiwa', 'INNER');
         $this->db->join('xi_sa_users c', 'c.id_users = a.id_users_penerima', 'INNER');
         $this->db->join('cx_instansi_prov d', 'd.id_instansi = c.id_instansi', 'INNER');
         $this->db->join('wil_regency e', 'e.id_regency = c.id_regency', 'INNER');
-        $this->db->where('a.token_bencana', $token_bencana);
-        // $this->db->order_by('a.id_bencana_share DESC');
+        $this->db->where('a.token_korban_jiwa', $token_korban_jiwa);
+        // $this->db->order_by('a.id_korban_jiwa_share DESC');
         $query = $this->db->get();
         return $query->result_array();
     }
 
     /*Fungsi get data edit by id*/
-    public function getDataBencanaShare($token_bencana_share)
+    public function getDatakorban_jiwaShare($token_korban_jiwa_share)
     {
-        $this->db->select('	a.id_bencana_share, 
-							a.token_bencana, 
-							a.token_bencana_share, 
+        $this->db->select('	a.id_korban_jiwa_share, 
+							a.token_korban_jiwa, 
+							a.token_korban_jiwa_share, 
 							a.id_users_penerima');
-        $this->db->from('ms_bencana_share a');
-        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
-        $this->db->where('a.token_bencana_share', $token_bencana_share);
+        $this->db->from('ms_korban_jiwa_share a');
+        $this->db->join('ms_korban_jiwa b', 'b.token_korban_jiwa = a.token_korban_jiwa', 'INNER');
+        $this->db->where('a.token_korban_jiwa_share', $token_korban_jiwa_share);
         $query = $this->db->get();
         return $query->row_array();
     }
 
     public function getDataCetakExcel($opd)
     {
-        $this->db->select('a.id_bencana,
-                           a.token_bencana,
-                           a.nama_bencana,
-                           a.id_jenis_bencana,
-                           a.id_inisiator_bencana,
+        $this->db->select('a.id_korban_jiwa,
+                           a.token_korban_jiwa,
+                           a.nama_korban_jiwa,
+                           a.id_jenis_korban_jiwa,
+                           a.id_inisiator_korban_jiwa,
                            a.waktu_uji_coba,
                            a.waktu_penerapan,
-                           a.id_tahapan_bencana,
+                           a.id_tahapan_korban_jiwa,
                            a.waktu_penerapan,
-                           a.status_bencana,
+                           a.status_korban_jiwa,
                            a.status_permohonan,
                            a.create_date,
                            b.nm_urusan_utama,
@@ -433,10 +427,10 @@ class Model_bencana extends CI_Model
                            c.fullname,
                            d.nm_bentuk,
                            e.nm_urusan_utama');
-        $this->db->from('ms_bencana a');
+        $this->db->from('ms_korban_jiwa a');
         $this->db->join('cx_urusan_utama b', 'a.id_urusan_utama = b.id_urusan_utama', 'inner');
-        $this->db->join('xi_sa_users c', 'a.create_by = c.token_bencana', 'inner');
-        $this->db->join('cx_bentuk_bencana d', 'a.id_bentuk_bencana = d.id_bentuk_bencana', 'inner');
+        $this->db->join('xi_sa_users c', 'a.create_by = c.token_korban_jiwa', 'inner');
+        $this->db->join('cx_bentuk_korban_jiwa d', 'a.id_bentuk_korban_jiwa = d.id_bentuk_korban_jiwa', 'inner');
         $this->db->join('cx_urusan_utama e', 'a.id_urusan_utama = e.id_urusan_utama', 'inner');
         if ($opd != '')
             $this->db->where('c.opd_id', $opd);

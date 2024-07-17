@@ -50,10 +50,10 @@ class Model_bencana extends CI_Model
                            a.token_bencana,
                            a.nama_bencana,
                            a.tanggal_bencana,
-                           a.id_status,
-                           b.nm_bencana as jenis_bencana');
+                           b.nm_regency');
         $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->join('wil_regency b', 'b.id_regency = a.id_regency', 'INNER');
+        // $this->db->join('cx_jenis_bencana b', 'a.id_jenis_bencana = b.id_jenis_bencana', 'inner');
         // if (!empty($id_tahapan_bencana)) {
         //     $this->db->where('a.id_tahapan_bencana', $id_tahapan_bencana);
         // }

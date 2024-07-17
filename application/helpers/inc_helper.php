@@ -60,6 +60,34 @@ if (!function_exists('generateToken')) {
 /**
  * Fungsi status
  */
+if (!function_exists('kategoriBencana')) {
+    function kategoriBencana()
+    {
+        $kategoriBencana = array(
+            2 => "Non Bencana",
+            1 => "Bencana"
+        );
+        return $kategoriBencana;
+    }
+}
+
+/**
+ * Fungsi status
+ */
+if (!function_exists('kategoriTanggap')) {
+    function kategoriTanggap()
+    {
+        $kategoriTanggap = array(
+            2 => "Non Tanggap Darurat",
+            1 => "Tanggap Darurat"
+        );
+        return $kategoriTanggap;
+    }
+}
+
+/**
+ * Fungsi status
+ */
 if (!function_exists('status')) {
     function status()
     {
@@ -99,6 +127,7 @@ if (!function_exists('convert_status')) {
         return $status[intval($id_status)];
     }
 }
+
 
 /**
  * Fungsi convert status
