@@ -43,7 +43,7 @@ class bencana extends SLP_Controller
         $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
         $this->session_info['jenis_bencana'] = $this->mmas->getDataJenisBencana();
         $this->session_info['pusdalops']         = $this->mmas->getDataPusdalops();
-        // $this->session_info['regency']      = $this->mmas->getDataRegency();
+        $this->session_info['regency']      = $this->mmas->getDataRegency();
         $this->session_info['data_opd']      = "";
         $this->template->build($this->_vwName . '/vpage', $this->session_info);
     }
@@ -132,15 +132,14 @@ class bencana extends SLP_Controller
                 } else {
                     $gambar = '<a target="_blank" href="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" > Lihat Gambar </a>';
                 }
-                $row['gambar']          = !empty($gambar) ? $gambar : '';
-                $row['token']           = !empty($data) ? $data['token_bencana'] : '';
-                $row['id_jenis_bencana']           = !empty($data) ? $data['id_jenis_bencana'] : '';
-                $row['nama_bencana']    = !empty($data) ? $data['nama_bencana'] : '';
-                $row['penyebab_bencana']    = !empty($data) ? $data['penyebab_bencana'] : '';
-                $row['kategori_bencana']    = !empty($data) ? $data['kategori_bencana'] : '';
-                $row['jumlah_kejadian']    = !empty($data) ? $data['jumlah_kejadian'] : '';
-                $row['kategori_tanggap']    = !empty($data) ? $data['kategori_tanggap'] : '';
+                $row['gambar']           = !empty($gambar) ? $gambar : '';
+                $row['token']            = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana'] = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['kategori_tanggap']    = !empty($data) ? $data['kategori_tanggap'] : '';
+                $row['id_jenis_bencana'] = !empty($data) ? $data['id_jenis_bencana'] : '';
+                $row['nama_bencana']     = !empty($data) ? $data['nama_bencana'] : '';
+                $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
+                $row['penyebab_bencana'] = !empty($data) ? $data['penyebab_bencana'] : '';
                 $row['latitude']        = !empty($data) ? $data['latitude'] : '';
                 $row['longitude']       = !empty($data) ? $data['longitude'] : '';
                 $row['id_status']       = !empty($data) ? $data['id_status'] : '';
@@ -165,15 +164,15 @@ class bencana extends SLP_Controller
         } else {
             $session  = $this->app_loader->current_account();
             $csrfHash = $this->security->get_csrf_hash();
-            $token_bencana_share   = $this->input->post('token_bencana_share', TRUE);
+            $token_bencana_detail   = $this->input->post('token_bencana_detail', TRUE);
             // var_dump($token);
             // die;
-            if (!empty($token_bencana_share) and !empty($session)) {
-                $data       = $this->mbencana->getDataBencanaShare($token_bencana_share);
+            if (!empty($token_bencana_detail) and !empty($session)) {
+                $data       = $this->mbencana->getDataBencanaShare($token_bencana_detail);
                 $row = array();
                 $row['token_bencana'] = !empty($data) ? $data['token_bencana'] : '';
-                $row['token_bencana_share'] = !empty($data) ? $data['token_bencana_share'] : '';
-                $row['id_users_penerima']   = !empty($data) ? $data['id_users_penerima'] : '';
+                $row['token_bencana_detail'] = !empty($data) ? $data['token_bencana_detail'] : '';
+                $row['id_regency_penerima']   = !empty($data) ? $data['id_regency_penerima'] : '';
                 $result = array('status' => (($data != '') ? 'RC200' : 'RC404'), 'message' => $data, 'csrfHash' => $csrfHash);
             } else {
                 $result = array('status' => 'RC404', 'message' => '', 'csrfHash' => $csrfHash);

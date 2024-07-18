@@ -88,7 +88,18 @@
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
-
+                <h6 class="control-label font-weight-bold">TITIK KOORDINAT LOKASI BENCANA</h6>
+                <div id="map-canvas" class="mb-3"></div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-6 required">
+                        <input type="text" class="form-control" name="latitude" id="latitude" placeholder="Latitude" value="<?= $this->input->post('latitude', TRUE); ?>" readonly required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <input type="text" class="form-control" name="longitude" id="longitude" placeholder="Longitude" value="<?= $this->input->post('longitude', TRUE); ?>" readonly required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-6 required">
                         <label for="nama_file_infografis" class="control-label font-weight-bold">Infografis <span class="text-danger">*</span></label>
@@ -111,8 +122,8 @@
                 </div>
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-12 required">
-                        <label for="id_users" class="control-label font-weight-bold">Pusdalop Bencana <span class="text-danger">*</span></label>
-                        <?php echo form_multiselect('id_users[]', isset($pusdalops) ? $pusdalops : array('' => 'Pusdalop Bencana'), $this->input->post('id_users[]', TRUE), 'class="form-control select-all" data-placeholder="Pilih Data"  style="width:100%" required=""'); ?>
+                        <label for="id_regency" class="control-label font-weight-bold">Pusdalop Bencana <span class="text-danger">*</span></label>
+                        <?php echo form_multiselect('id_regency[]', isset($pusdalops) ? $pusdalops : array('' => 'Pusdalop Bencana'), $this->input->post('id_regency[]', TRUE), 'class="form-control select-all" data-placeholder="Pilih Data"  style="width:100%" required=""'); ?>
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
@@ -120,7 +131,7 @@
                     <div class="col-12 col-md-12 required">
                         <div class="card">
                             <div class="card-header white-text primary-color-dark">
-                                Daftar Pusdalop Bencana
+                                Daftar Pusdalop Bencana Daerah
                             </div>
                             <!-- <div id="errEntryShare"></div> -->
                             <div class="card-body text-center px-4 mb-3">
@@ -169,12 +180,12 @@
             <?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/updateShare' : ''), array('id' => 'formEntryShare', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
             <div class="modal-body">
                 <div id="errEntry"></div>
-                <?php echo form_input('tokenId', ''); ?>
-                <?php echo form_input('tokenIdShare', ''); ?>
+                <?php echo form_hidden('tokenId', ''); ?>
+                <?php echo form_hidden('tokenIdShare', ''); ?>
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-12 required">
-                        <label for="id_users_penerima" class="control-label font-weight-bolder">OPD <span class="text-danger">*</span></label>
-                        <?php echo form_dropdown('id_users_penerima', isset($users) ? $users : array('' => 'Pilih Data'), $this->input->post('id_users_penerima', TRUE), 'class="form-control select-all" id="id_users_penerima" style="width:100%" required=""'); ?>
+                        <label for="id_regency_penerima" class="control-label font-weight-bolder">OPD <span class="text-danger">*</span></label>
+                        <?php echo form_dropdown('id_regency_penerima', isset($regency) ? $regency : array('' => 'Pilih Data'), $this->input->post('id_regency_penerima', TRUE), 'class="form-control select-all" id="id_regency_penerima" style="width:100%" required=""'); ?>
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>

@@ -81,16 +81,14 @@ class Model_bencana extends CI_Model
                            a.token_bencana,
                            a.tanggal_bencana,
                            a.kategori_tanggap,
-                           a.id_regency,
-                           a.id_district,
-                           a.id_village,
-                           a.jorong,
                            a.id_jenis_bencana,
                            a.nama_bencana,
                            a.keterangan_bencana,
                            a.penyebab_bencana,
                            a.nama_file,
                            a.nama_file_infografis,
+                           a.latitude,
+                           a.longitude,
                            a.id_status,
                            a.create_date,
                            b.nm_bencana as jenis_bencana');
@@ -111,16 +109,15 @@ class Model_bencana extends CI_Model
         $create_ip              = $this->input->ip_address();
         $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
-        $id_regency             = escape($this->input->post('id_regency', TRUE));
-        $id_district            = escape($this->input->post('id_district', TRUE));
-        $id_village             = escape($this->input->post('id_village', TRUE));
-        $jorong                 = escape($this->input->post('jorong', TRUE));
         $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
         $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
         $keterangan_bencana     = escape($this->input->post('keterangan_bencana', TRUE));
         $penyebab_bencana       = escape($this->input->post('penyebab_bencana', TRUE));
+        $latitude               = escape($this->input->post('latitude', TRUE));
+        $longitude              = escape($this->input->post('longitude', TRUE));
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
+        $id_regency             = escape($this->input->post('id_regency', TRUE));
 
         //cek nama fungsi duplicate
         $this->db->where('tanggal_bencana', $tanggal_bencana);
@@ -197,16 +194,14 @@ class Model_bencana extends CI_Model
                 'token_bencana'          => $token_bencana,
                 'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
                 'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
-                'id_regency'             => !empty($id_regency) ? $id_regency : '',
-                'id_district'            => !empty($id_district) ? $id_district : '',
-                'id_village'             => !empty($id_village) ? $id_village : '',
-                'jorong'                 => !empty($jorong) ? $jorong : '',
                 'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
                 'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
                 'keterangan_bencana'     => !empty($keterangan_bencana) ? $keterangan_bencana : '',
                 'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
                 'nama_file'              => $nama_file,
                 'nama_file_infografis'   => $nama_file_infografis,
+                'latitude'              => $latitude,
+                'longitude'             => $longitude,
                 'id_status'              => 1,
                 'create_by'              => $create_by,
                 'create_date'            => $create_date,
@@ -219,6 +214,22 @@ class Model_bencana extends CI_Model
             // die;
             /*query insert*/
             $this->db->insert('ms_bencana', $data);
+            foreach ($id_regency as $key => $id) {
+                $token_bencana_detail =  $this->uuid->v4(true);
+                $create_by_prov   = $this->app_loader->current_account();
+                /*cek data kontrol*/
+                $this->db->where('token_bencana_detail', $token_bencana_detail);
+                $qTot = $this->db->count_all_results('ms_bencana_detail');
+                if ($qTot <= 0) {
+                    $data = array(
+                        'token_bencana'         => $token_bencana,
+                        'token_bencana_detail'  => $token_bencana_detail,
+                        'id_regency_penerima'   => $id,
+                        'id_status'             => 1
+                    );
+                    $this->db->insert('ms_bencana_detail', $data);
+                }
+            }
             return array('response' => 'SUCCESS', 'nama' =>  $tanggal_bencana);
         }
     }
@@ -244,16 +255,15 @@ class Model_bencana extends CI_Model
         $token_bencana = escape($this->input->post('tokenId', TRUE));
         $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
-        $id_regency             = escape($this->input->post('id_regency', TRUE));
-        $id_district            = escape($this->input->post('id_district', TRUE));
-        $id_village             = escape($this->input->post('id_village', TRUE));
-        $jorong                 = escape($this->input->post('jorong', TRUE));
         $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
         $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
         $keterangan_bencana     = escape($this->input->post('keterangan_bencana', TRUE));
         $penyebab_bencana       = escape($this->input->post('penyebab_bencana', TRUE));
+        $latitude               = escape($this->input->post('latitude', TRUE));
+        $longitude              = escape($this->input->post('longitude', TRUE));
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
+        $id_regency             = escape($this->input->post('id_regency', TRUE));
         // var_dump($_FILES);
         // die;
         //cek data by id
@@ -314,14 +324,12 @@ class Model_bencana extends CI_Model
                 'token_bencana'     => $token_bencana,
                 'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
                 'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
-                'id_regency'             => !empty($id_regency) ? $id_regency : '',
-                'id_district'            => !empty($id_district) ? $id_district : '',
-                'id_village'             => !empty($id_village) ? $id_village : '',
-                'jorong'                 => !empty($jorong) ? $jorong : '',
                 'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
                 'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
                 'keterangan_bencana'     => !empty($keterangan_bencana) ? $keterangan_bencana : '',
                 'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
+                'latitude'              => $latitude,
+                'longitude'             => $longitude,
                 'mod_by'    => $create_by,
                 'mod_date'  => $create_date,
                 'mod_ip'    => $create_ip
@@ -329,6 +337,22 @@ class Model_bencana extends CI_Model
             /*query update*/
             $this->db->where('token_bencana ', $token_bencana);
             $this->db->update('ms_bencana', $dataBencana);
+            foreach ($id_regency as $key => $id) {
+                $token_bencana_detail =  $this->uuid->v4(true);
+                $create_by_prov   = $this->app_loader->current_account();
+                /*cek data kontrol*/
+                $this->db->where('token_bencana_detail', $token_bencana_detail);
+                $qTot = $this->db->count_all_results('ms_bencana_detail');
+                if ($qTot <= 0) {
+                    $data = array(
+                        'token_bencana'         => $token_bencana,
+                        'token_bencana_detail'  => $token_bencana_detail,
+                        'id_regency_penerima'   => $id,
+                        'id_status'             => 1
+                    );
+                    $this->db->insert('ms_bencana_detail', $data);
+                }
+            }
         }
         return array('response' => 'SUCCESS', 'nama' => $nama_bencana);
     }
@@ -341,23 +365,23 @@ class Model_bencana extends CI_Model
         $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip     = $this->input->ip_address();
         $token_bencana    = escape($this->input->post('tokenId', TRUE));
-        $token_bencana_share    = escape($this->input->post('tokenIdShare', TRUE));
-        $id_users_penerima   = escape($this->input->post('id_users_penerima', TRUE));
-        // print_r($token_bencana_share);
+        $token_bencana_detail    = escape($this->input->post('tokenIdShare', TRUE));
+        $id_regency_penerima   = escape($this->input->post('id_regency_penerima', TRUE));
+        // print_r($token_bencana_detail);
         // die;
         // var_dump($_FILES);
 
         $dataShare = array(
             'token_bencana' => !empty($token_bencana) ? $token_bencana : '',
-            'id_users_penerima' => !empty($id_users_penerima) ? $id_users_penerima : 0,
-            'mod_by_prov'    => $create_by,
-            'mod_date_prov'  => $create_date,
-            'mod_ip_prov'    => $create_ip
+            'id_regency_penerima' => !empty($id_regency_penerima) ? $id_regency_penerima : 0,
+            'mod_by'    => $create_by,
+            'mod_date'  => $create_date,
+            'mod_ip'    => $create_ip
         );
 
         /*query update*/
-        $this->db->where('token_bencana_share ', $token_bencana_share);
-        $this->db->update('ms_bencana_share', $dataShare);
+        $this->db->where('token_bencana_detail ', $token_bencana_detail);
+        $this->db->update('ms_bencana_detail', $dataShare);
 
         return array('response' => 'SUCCESS', 'nama' => '');
     }
@@ -382,34 +406,30 @@ class Model_bencana extends CI_Model
 
     public function getDataBencanaDetail($token_bencana)
     {
-        $this->db->select('	a.id_bencana_share, 
+        $this->db->select('	a.id_bencana_detail, 
 							a.token_bencana, 
-							a.token_bencana_share, 
-							a.id_users_penerima,
-                            c.fullname,
-                            d.nm_instansi,
-                            e.nm_regency');
-        $this->db->from('ms_bencana_share a');
+							a.token_bencana_detail, 
+							a.id_regency_penerima,
+                            c.nm_regency');
+        $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
-        $this->db->join('xi_sa_users c', 'c.id_users = a.id_users_penerima', 'INNER');
-        $this->db->join('cx_instansi_prov d', 'd.id_instansi = c.id_instansi', 'INNER');
-        $this->db->join('wil_regency e', 'e.id_regency = c.id_regency', 'INNER');
+        $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
         $this->db->where('a.token_bencana', $token_bencana);
-        // $this->db->order_by('a.id_bencana_share DESC');
+        $this->db->order_by('a.id_bencana_detail DESC');
         $query = $this->db->get();
         return $query->result_array();
     }
 
     /*Fungsi get data edit by id*/
-    public function getDataBencanaShare($token_bencana_share)
+    public function getDataBencanaShare($token_bencana_detail)
     {
-        $this->db->select('	a.id_bencana_share, 
+        $this->db->select('	a.id_bencana_detail, 
 							a.token_bencana, 
-							a.token_bencana_share, 
-							a.id_users_penerima');
-        $this->db->from('ms_bencana_share a');
+							a.token_bencana_detail, 
+							a.id_regency_penerima');
+        $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
-        $this->db->where('a.token_bencana_share', $token_bencana_share);
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
         $query = $this->db->get();
         return $query->row_array();
     }

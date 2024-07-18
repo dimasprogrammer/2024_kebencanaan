@@ -221,8 +221,6 @@
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
                     htmlBencana += '<thead>';
                     // htmlBencana += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
-                    htmlBencana += '<th width="20%" class="font-weight-bold"><left>Nama Penanggung Jawab</left></th>';
-                    htmlBencana += '<th width="20%" class="font-weight-bold"><left>Instansi</left></th>';
                     htmlBencana += '<th width="20%" class="font-weight-bold"><left>Kabupaten/Kota</left></th>';
                     htmlBencana += '<th width="20%" class="font-weight-bold"><left>Action</left></th>';
                     htmlBencana += '</thead>';
@@ -232,10 +230,8 @@
                             htmlBencana += '<tbody>';
                             htmlBencana += '<tr>';
                             // htmlBencana += '<td width="2%"> ' + no + '. </td><br>';
-                            htmlBencana += '<td width="25%" class="text-justify">' + val['fullname'] + '</td>';
-                            htmlBencana += '<td width="25%" class="text-justify">' + val['nm_instansi'] + '</td>';
                             htmlBencana += '<td width="25%" class="text-justify">' + val['nm_regency'] + '</td>';
-                            htmlBencana += '<td width="15%" class="text-center">' + '<button type="button" class="btn btn-primary btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnEditBencanaShare" data-id=' + val['token_bencana_share'] + '><i class="fas fa-box-open"></i> Edit </button>' + '</td>';
+                            htmlBencana += '<td width="15%" class="text-center">' + '<button type="button" class="btn btn-primary btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnEditBencanaShare" data-id=' + val['token_bencana_detail'] + '><i class="fas fa-box-open"></i> Edit </button>' + '</td>';
                             htmlBencana += '</tr>';
                             htmlBencana += '</tbody>';
                             no++;
@@ -256,21 +252,21 @@
     $(document).on('click', '.btnEditBencanaShare', function(e) {
         // formReset();
         $('#formEntryShare').attr('action', site + '/updateShare');
-        var token_bencana_share = $(this).data('id');
+        var token_bencana_detail = $(this).data('id');
         $('#modalEntryFormShare').modal({
             backdrop: 'static'
         });
 
-        getDataBencanaShare(token_bencana_share);
+        getDataBencanaShare(token_bencana_detail);
     });
 
-    function getDataBencanaShare(token_bencana_share) {
+    function getDataBencanaShare(token_bencana_detail) {
         run_waitMe($('#frmEntryShare'));
         $.ajax({
             type: 'POST',
             url: site + '/detailShare',
             data: {
-                'token_bencana_share': token_bencana_share,
+                'token_bencana_detail': token_bencana_detail,
                 '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
             },
             dataType: 'json',
@@ -278,8 +274,8 @@
                 $('input[name="' + csrfName + '"]').val(data.csrfHash);
                 if (data.status == 'RC200') {
                     $('input[name="tokenId"]').val(data.message.token_bencana);
-                    $('input[name="tokenIdShare"]').val(token_bencana_share);
-                    $('#id_users_penerima').select2().val(data.message.id_users_penerima).trigger("change");
+                    $('input[name="tokenIdShare"]').val(token_bencana_detail);
+                    $('#id_regency_penerima').select2().val(data.message.id_regency_penerima).trigger("change");
                 }
                 $('#frmEntryShare').waitMe('hide');
             }

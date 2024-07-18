@@ -15,7 +15,7 @@ class Model_bencana_daerah extends CI_Model
     }
 
     /*Fungsi Get Data List*/
-    var $search = array('a.token_bencana_share');
+    var $search = array('a.token_bencana_detail');
     public function get_datatables($param)
     {
         $this->_get_datatables_query($param);
@@ -34,7 +34,7 @@ class Model_bencana_daerah extends CI_Model
 
     public function count_all()
     {
-        return $this->db->count_all_results('ms_bencana_share');
+        return $this->db->count_all_results('ms_bencana_detail');
     }
 
     private function _get_datatables_query($param)
@@ -46,22 +46,17 @@ class Model_bencana_daerah extends CI_Model
             }
         }
 
-        $this->db->select('a.id_bencana_share,
+        $this->db->select('a.id_bencana_detail,
                            a.token_bencana,
-                           a.token_bencana_share,
-                           a.id_users_penerima,
+                           a.token_bencana_detail,
+                           a.id_regency_penerima,
                            b.nama_bencana,
                            b.penyebab_bencana,
                            b.tanggal_bencana,
-                           e.nm_regency');
-        $this->db->from('ms_bencana_share a');
-        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'inner');
-        $this->db->join('xi_sa_users c', 'c.id_users = a.id_users_penerima', 'inner');
-        $this->db->join('cx_instansi_prov d', 'd.id_instansi = c.id_instansi', 'INNER');
-        $this->db->join('wil_regency e', 'e.id_regency = c.id_regency', 'INNER');
-        // if (!empty($id_tahapan_bencana_daerah)) {
-        //     $this->db->where('a.id_tahapan_bencana_daerah', $id_tahapan_bencana_daerah);
-        // }
+                           c.nm_regency');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
         $i = 0;
         foreach ($this->search as $item) { // loop column
             if ($_POST['search']['value']) { // if datatable send POST for search
@@ -76,31 +71,19 @@ class Model_bencana_daerah extends CI_Model
             }
             $i++;
         }
-        $this->db->order_by('a.id_bencana_share DESC');
+        $this->db->order_by('a.id_bencana_detail DESC');
     }
 
-    /*Fungsi get data edit by id dan url*/
-    public function addDataDetailBencanaShare($token_bencana_share)
+    /*Fungsi get data edit by id*/
+    public function addDataDetailBencanaDetail($token_bencana_detail)
     {
-        $this->db->select('a.id_bencana_share,
-                           a.token_bencana,
-                           a.token_bencana_share,
-                           a.id_users_penerima,
-                           b.nama_bencana,
-                           b.penyebab_bencana,
-                           b.tanggal_bencana,
-                           b.id_jenis_bencana,
-                           b.kategori_bencana,
-                           b.penyebab_bencana,
-                           b.jumlah_kejadian,
-                           b.kategori_tanggap,
-                           b.latitude,
-                           b.longitude,
-                           c.nm_bencana as jenis_bencana');
-        $this->db->from('ms_bencana_share a');
-        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'inner');
-        $this->db->join('cx_jenis_bencana c', 'c.id_jenis_bencana = b.id_jenis_bencana', 'inner');
-        $this->db->where('a.token_bencana_share', $token_bencana_share);
+        $this->db->select('	a.id_bencana_detail, 
+							a.token_bencana, 
+							a.token_bencana_detail, 
+							a.id_regency_penerima');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
         $query = $this->db->get();
         return $query->row_array();
     }
