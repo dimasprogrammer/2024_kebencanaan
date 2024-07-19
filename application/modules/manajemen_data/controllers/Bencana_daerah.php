@@ -99,7 +99,17 @@ class Bencana_daerah extends SLP_Controller
 
         $this->session_info['page_name']        = "Detail Indikator";
         $this->session_info['page_js']          = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
-        $this->session_info['token_bencana_detail']    = $dataTokenBencana;
+        $this->session_info['token']    = $dataTokenBencana;
+        $this->session_info['kondisi_korban'] = $this->mbencana_daerah->getDataKorbanKondisi();
+        $this->session_info['master_data_korban'] = $this->mbencana_daerah->getMasterDataKorban();
+        $this->session_info['korban_bencana']         = $this->mbencana_daerah->getDataKorbanBencana();
+        $this->session_info['sarana_rusak'] = $this->mbencana_daerah->getDataJenisSaranaRusak();
+        $this->session_info['sarana_terendam'] = $this->mbencana_daerah->getDataJenisSaranaTerendam();
+        $this->session_info['sarana_lainnya'] = $this->mbencana_daerah->getDataJenisSaranaLainnya();
+        $this->session_info['jenis_ternak'] = $this->mbencana_daerah->getDataJenisTernak();
+        $this->session_info['bantuan_diterima'] = $this->mbencana_daerah->getDataJenisBantuanDiterima();
+        $this->session_info['bantuan_disalurkan'] = $this->mbencana_daerah->getDataJenisBantuanTersalurkan();
+        $this->session_info['jenis_sumber'] = $this->mbencana_daerah->getDataJenisSumber();
         $this->template->build($this->_vwName . '/vdetail', $this->session_info);
     }
 }

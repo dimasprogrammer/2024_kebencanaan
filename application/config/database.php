@@ -95,11 +95,34 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
+// $db['default'] = array(
+//     'DSN'      => '',
+//     'hostname' => 'localhost',
+//     'username' => 'postgres',
+//     'password' => 'postgres',
+//     'database' => '2024_kebencanaan',
+//     'dbdriver' => 'postgre',
+//     'dbprefix' => '',
+//     'pconnect' => false,
+//     'db_debug'  => (ENVIRONMENT !== 'production'),
+//     'cacheOn'  => false,
+//     'cacheDir' => '',
+//     'charset'  => 'utf8',
+//     'dbcollat' => 'utf8_general_ci',
+//     'swapPre'  => '',
+//     'encrypt'  => false,
+//     'compress' => false,
+//     'strictOn' => false,
+//     'failover' => array(),
+//     'port'     => 5432,
+//     'save_queries' => TRUE
+// );
+
 $db['default'] = array(
     'DSN'      => '',
-    'hostname' => 'localhost',
+    'hostname' => '10.100.1.75',
     'username' => 'postgres',
-    'password' => 'postgres',
+    'password' => '!@#serveraplikasidb2023!@#',
     'database' => '2024_kebencanaan',
     'dbdriver' => 'postgre',
     'dbprefix' => '',
