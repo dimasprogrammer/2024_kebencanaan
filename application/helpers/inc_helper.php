@@ -244,5 +244,17 @@ if (!function_exists('replace_backslases')) {
         return $to;
     }
 }
+
+if (!function_exists('dd')) {
+    function dd($data)
+    {
+        echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+        die();
+    }
+}
+
+
 /* End of file inc.php */
 /* Location: ./application/helpers/inc_helper.php */

@@ -97,8 +97,14 @@ class Bencana_daerah extends SLP_Controller
         $this->breadcrumb->add('Indikator', site_url($this->_uriName));
         $this->breadcrumb->add('create_nilai', '#');
 
+        $this->session_info['siteUri']       = $this->_uriName;
+
         $this->session_info['page_name']        = "Detail Indikator";
-        $this->session_info['page_js']          = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
+        $this->session_info['page_js']          = $this->load->view($this->_vwName . '/vjs', 
+                                                    array(
+                                                            'siteUri' => $this->_uriName,
+                                                            'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true)
+                                                        ), true);
         $this->session_info['token']    = $dataTokenBencana;
         $this->session_info['kondisi_korban'] = $this->mbencana_daerah->getDataKorbanKondisi();
         $this->session_info['master_data_korban'] = $this->mbencana_daerah->getMasterDataKorban();

@@ -32,4 +32,6 @@
         $('#tblList_filter input').addClass('form-control').attr('placeholder', 'Search Data');
         $('#tblList_length select').addClass('form-control');
     }
+
+    <?php echo $vkorbanjiwajs; ?>
 </script>

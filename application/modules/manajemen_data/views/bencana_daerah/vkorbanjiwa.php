@@ -1,47 +1,43 @@
-<!-- Panel 1 -->
-                                <div class="tab-pane fade in show active" id="panel1" role="tabpanel">
-                                    <br>
+                                <!-- Panel 1 -->
+                                <div class="tab-pane fade in show active" id="panel1" role="tabpanel"><br>
                                     <div class="card-body mb-0">
+                                        <form action="<?= site_url(isset($siteUri) ? $siteUri.'/create/korbanjiwa' : '') ?>" id="formEntry-korbanJiwa">
                                         <div class="table-responsive-md">
-                                            <table cellspacing="0" class="table table-striped table-bordered mb-0" width="100%">
+                                            <table cellspacing="0" class="table table-striped table-bordered table-sm table-hover mb-0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th width="30%" class="font-weight-bold text-center">Kondisi Korban Jiwa</th>
-                                                        <th width="30%" class="font-weight-bold text-center">Korban Jiwa</th>
-                                                        <th width="30%" class="font-weight-bold text-center">Jumlah Korban Jiwa</th>
+                                                        <th width="30%" class="font-weight-bold text-center align-middle" rowspan="2">Korban Jiwa</th>
+                                                        <th class="font-weight-bold text-center align-middle" colspan="<?= count($kondisi_korban); ?>">Kondisi Korban</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <?php foreach ($kondisi_korban as $index => $item) : ?>
+                                                            <th class="font-weight-bold text-center"><?php echo $item->nm_kondisi; ?></th>
+                                                        <?php endforeach; ?>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php echo form_hidden('tokenId', $token['token_bencana_detail']); ?>
                                                     <?php echo form_hidden('tokenId', $token['token_bencana']); ?>
-                                                    <?php $no_urut = 0;
-                                                    foreach ($kondisi_korban as $key => $list) :
-                                                    ?>
-                                                        <tr>
-                                                            <td rowspan="<?= count($master_data_korban); ?>" class="text-center align-middle">
-                                                                <?php echo $list->nm_kondisi; ?>
-                                                            </td>
-                                                            <td><?php echo $master_data_korban[0]['nm_jiwa']; ?></td>
-                                                            <td><input type="number" class="form-control" value="0" name="jumlah_korban" id="jumlah_korban" required> </td>
-                                                        </tr>
+                                                    
                                                     <?php
-                                                        foreach ($master_data_korban as $key => $item) :
-
-                                                            if ($key > 0) {
-                                                                echo "<tr>";
-                                                                echo "<td>" . $item['nm_jiwa'] . "</td>";
-                                                                echo '<td><input type="number" class="form-control" value="0" name="jumlah_korban" id="jumlah_korban" required> </td>';
-                                                                echo "</tr>";
-                                                            }
+                                                        foreach ($master_data_korban as $index => $item) :
+                                                            echo "<tr>";
+                                                            echo "<td>" . $item['nm_jiwa'] . "</td>";
+                                                            foreach ($kondisi_korban as $key => $list) :
+                                                                echo '<td><input type="number" class="form-control form-control-sm text-right" value="0" min="0"
+                                                                        name="jumlah_korban[' . $item['id'] . '][' . $list->id_kondisi . ']" 
+                                                                        id="jumlah_korban" required> </td>';
+                                                            endforeach;
+                                                            echo "</tr>";
                                                         endforeach;
-
-                                                    endforeach; ?>
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-success waves-effect waves-light px-3 py-2 font-weight-bold" name="save" id="save"><i class="fas fa-check"></i> Simpan Data </button>
                                         </div>
+                                        </form>
                                     </div>
                                 </div>
                                 <!-- Panel 1 -->
