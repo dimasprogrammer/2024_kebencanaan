@@ -14,7 +14,7 @@
                             <ul class="nav md-tabs nav-justified indigo" role="tablist">
 
                                 <li class="nav-item waves-effect waves-light">
-                                    <a class="nav-link active" data-toggle="tab" href="#panel1" role="tab"><i class="fas fa-user"></i>
+                                    <a class="nav-link active" data-toggle="tab" href="#panel1" role="tab"><i class="fas fa-hand-holding-medical"></i>
                                         Korban Jiwa </a>
                                 </li>
 
@@ -23,11 +23,11 @@
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light">
-                                    <a class="nav-link" data-toggle="tab" href="#panel3" role="tab"><i class="fas fa-envelope"></i> Ternak </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel3" role="tab"><i class="fas fa-fish"></i> Ternak </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light">
-                                    <a class="nav-link" data-toggle="tab" href="#panel4" role="tab"><i class="fas fa-envelope"></i> Bantuan Tersalurkan </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel4" role="tab"><i class="fas fa-dolly-flatbed"></i> Bantuan Tersalurkan </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light">
@@ -338,8 +338,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td><input type="number" class="form-control" value="0" name="nama_organisasi" id="nama_organisasi" required> </td>
-                                                        <td><input type="number" class="form-control" value="0" name="jml_relawan" id="jml_relawan" required> </td>
+                                                        <td><input type="text" class="form-control" value="0" name="nama_organisasi" id="nama_organisasi" required> </td>
+                                                        <td><input type="text" class="form-control" value="0" name="jml_relawan" id="jml_relawan" required> </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
