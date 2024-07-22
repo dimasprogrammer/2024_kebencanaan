@@ -110,6 +110,12 @@ class Bencana_daerah extends SLP_Controller
         $this->session_info['bantuan_diterima'] = $this->mbencana_daerah->getDataJenisBantuanDiterima();
         $this->session_info['bantuan_disalurkan'] = $this->mbencana_daerah->getDataJenisBantuanTersalurkan();
         $this->session_info['jenis_sumber'] = $this->mbencana_daerah->getDataJenisSumber();
+        $this->session_info['vkorbanjiwa'] = $this->load->view('bencana_daerah/vkorbanjiwa', $this->session_info, true);
+        $this->session_info['vkerusakan'] = $this->load->view('bencana_daerah/vkerusakan', $this->session_info, true);
+        $this->session_info['vternak'] = $this->load->view('bencana_daerah/vternak', $this->session_info, true);
+        $this->session_info['vbantuantersalurkan'] = $this->load->view('bencana_daerah/vbantuantersalurkan', $this->session_info, true);
+        $this->session_info['vbantuanditerima'] = $this->load->view('bencana_daerah/vbantuanditerima', $this->session_info, true);
+        $this->session_info['vbantuanrelawan'] = $this->load->view('bencana_daerah/vbantuanrelawan', $this->session_info, true);
         $this->template->build($this->_vwName . '/vdetail', $this->session_info);
     }
 }
