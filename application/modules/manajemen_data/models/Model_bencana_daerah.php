@@ -201,6 +201,52 @@ class Model_bencana_daerah extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function createKorbanJiwa()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time()+60*60*7);
+        $create_ip   = $this->input->ip_address();
+        
+        $waktu_data = $this->input->post('data_date');
+        $token_bencana_detail = $this->input->post('token_bencana_detail');
+        $token_bencana = $this->input->post('token_bencana');
+
+        $korbanjiwa = $this->input->post('jumlah_korban');
+        if(!isset($korbanjiwa))
+        {
+            return array('status' => 'not_found', 'message' => 'Data tidak ditemukan');
+        }
+
+        $insertRow = [];
+
+        foreach($korbanjiwa as $idkorban => $kondisi )
+        {
+            foreach($kondisi as $idkondisi => $value)
+            {
+                $insertRow[] = array(
+                    'token_bencana_detail' => $token_bencana_detail,
+                    'token_korban_jiwa' => $this->uuid->v4(true),
+
+                    'id_kondisi' => $idkondisi,
+                    'id_jiwa' => $idkorban,
+                    'jumlah_korban' => $value,
+                    'waktu_data' => $waktu_data,
+
+                    'create_by' => $create_by,
+                    'create_date' => $create_date,
+                    'create_ip' => $create_ip,
+
+                    'mod_by' => $create_by,
+                    'mod_date' => $create_date,
+                    'mod_ip' => $create_ip
+                );
+            }
+        }
+
+        $this->db->insert_batch('ms_bencana_korban', $insertRow);
+        return array('status' => 'success', 'message' => 'Data berhasil disimpan', 'affected_rows' => $this->db->affected_rows());
+    }
 }
 
 // This is the end of auth signin model

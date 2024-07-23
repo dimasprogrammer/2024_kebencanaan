@@ -33,5 +33,5 @@
         $('#tblList_length select').addClass('form-control');
     }
 
-    <?php echo $vkorbanjiwajs; ?>
+    <?php if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs; ?>
 </script>

@@ -1,6 +1,7 @@
                                 <!-- Panel 1 -->
                                 <div class="tab-pane fade in show active" id="panel1" role="tabpanel"><br>
                                     <div class="card-body mb-0">
+                                        <div id="errEntry-korbanjiwa"></div>
                                         <form action="<?= site_url(isset($siteUri) ? $siteUri.'/create/korbanjiwa' : '') ?>" id="formEntry-korbanJiwa">
                                         <div class="table-responsive-md">
                                             <table cellspacing="0" class="table table-striped table-bordered table-sm table-hover mb-0" width="100%">
@@ -16,8 +17,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php echo form_hidden('tokenId', $token['token_bencana_detail']); ?>
-                                                    <?php echo form_hidden('tokenId', $token['token_bencana']); ?>
+                                                    <?php echo form_hidden('token_bencana_detail', $token['token_bencana_detail']); ?>
+                                                    <?php echo form_hidden('token_bencana', $token['token_bencana']); ?>
                                                     
                                                     <?php
                                                         foreach ($master_data_korban as $index => $item) :
@@ -35,7 +36,7 @@
                                             </table>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-success waves-effect waves-light px-3 py-2 font-weight-bold" name="save" id="save"><i class="fas fa-check"></i> Simpan Data </button>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light px-3 py-2 font-weight-bold" name="save" id="save-korban-jiwa"><i class="fas fa-check"></i> Simpan Data </button>
                                         </div>
                                         </form>
                                     </div>

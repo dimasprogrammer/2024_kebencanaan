@@ -124,6 +124,30 @@ class Bencana_daerah extends SLP_Controller
         $this->session_info['vbantuanrelawan'] = $this->load->view('bencana_daerah/vbantuanrelawan', $this->session_info, true);
         $this->template->build($this->_vwName . '/vdetail', $this->session_info);
     }
+
+    public function create($type)
+    {
+        $csrfHash = $this->security->get_csrf_hash();
+        if($type == 'korbanjiwa')
+        {
+            $response = $this->mbencana_daerah->createKorbanJiwa();
+            if($response['status'] == 'success')
+            {
+                $result = $response;
+                $result['status'] = "RC200";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+            else{
+                $result = $response;
+                $result['status'] = "RC422";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        }
+        else
+            $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
+    }
 }
 
 // This is the end of fungsi class
