@@ -238,6 +238,7 @@ class Signin extends MY_Controller
             $session['nick_level']   = $dataUser['nick_level'];
             $session['user_id']      = $dataUser['token'];
             $session['iduser']       = $dataUser['id_users'];
+            $session['regencyID']       = $dataUser['id_regency'];
             // $session['unit_id']			    = $dataUser['unit_id'];
             // $session['unit_id_name']		= $dataUser['unit_id_name'];
             //simpan session

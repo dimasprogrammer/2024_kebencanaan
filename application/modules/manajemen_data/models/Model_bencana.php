@@ -39,6 +39,7 @@ class Model_bencana extends CI_Model
 
     private function _get_datatables_query($param)
     {
+
         $post = array();
         if (is_array($param)) {
             foreach ($param as $v) {
@@ -57,6 +58,7 @@ class Model_bencana extends CI_Model
         // if (!empty($id_tahapan_bencana)) {
         //     $this->db->where('a.id_tahapan_bencana', $id_tahapan_bencana);
         // }
+
         $i = 0;
         foreach ($this->search as $item) { // loop column
             if ($_POST['search']['value']) { // if datatable send POST for search

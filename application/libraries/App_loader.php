@@ -28,6 +28,12 @@ class App_loader
         return $id_user;
     }
 
+    public function current_regencyID()
+    {
+        $id_regency = $this->CI->session->userdata('regencyID');
+        return $id_regency;
+    }
+
     public function current_name()
     {
         $account_name = $this->CI->session->userdata('fullname');
