@@ -103,7 +103,8 @@ class Bencana_daerah extends SLP_Controller
         $this->session_info['page_js']          = $this->load->view($this->_vwName . '/vjs', 
                                                     array(
                                                             'siteUri' => $this->_uriName,
-                                                            'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true)
+                                                            'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true),
+                                                            'vkerusakanjs' => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true)
                                                         ), true);
 
         $this->session_info['data_village'] = $this->mbencana_daerah->getVillageBencana($token_bencana_detail);

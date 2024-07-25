@@ -14,29 +14,29 @@
                             <!-- Nav tabs -->
                             <ul class="nav md-tabs nav-justified indigo" role="tablist">
 
-                                <li class="nav-item waves-effect waves-light" onclick="activeTabSet(1)">
-                                    <a class="nav-link active" data-toggle="tab" href="#panel1" role="tab"><i class="fas fa-hand-holding-medical"></i>
+                                <li class="nav-item waves-effect waves-light" onclick="activeTabSet(1)" >
+                                    <a class="nav-link active" data-toggle="tab" href="#panel1" id="head-panel1" role="tab"><i class="fas fa-hand-holding-medical"></i>
                                         Korban Jiwa </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light" onclick="activeTabSet(2)">
-                                    <a class="nav-link" data-toggle="tab" href="#panel2" role="tab"><i class="fas fa-biohazard"></i> Kerusakan </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel2" id="head-panel2" role="tab"><i class="fas fa-biohazard"></i> Kerusakan </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light" onclick="activeTabSet(3)">
-                                    <a class="nav-link" data-toggle="tab" href="#panel3" role="tab"><i class="fas fa-fish"></i> Ternak </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel3" id="head-panel3" role="tab"><i class="fas fa-fish"></i> Ternak </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light" onclick="activeTabSet(4)">
-                                    <a class="nav-link" data-toggle="tab" href="#panel4" role="tab"><i class="fas fa-dolly-flatbed"></i> Bantuan Tersalurkan </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel4" id="head-panel4" role="tab"><i class="fas fa-dolly-flatbed"></i> Bantuan Tersalurkan </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light" onclick="activeTabSet(5)">
-                                    <a class="nav-link" data-toggle="tab" href="#panel5" role="tab"><i class="fas fa-envelope"></i> Bantuan Diterima </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel5" id="head-panel5" role="tab"><i class="fas fa-envelope"></i> Bantuan Diterima </a>
                                 </li>
 
                                 <li class="nav-item waves-effect waves-light" onclick="activeTabSet(6)">
-                                    <a class="nav-link" data-toggle="tab" href="#panel6" role="tab"><i class="fas fa-users"></i> Bantuan Relawan </a>
+                                    <a class="nav-link" data-toggle="tab" href="#panel6" id="head-panel6" role="tab"><i class="fas fa-users"></i> Bantuan Relawan </a>
                                 </li>
 
                             </ul>
@@ -59,7 +59,7 @@
                                                 <?php echo form_hidden('token_bencana_detail', $token['token_bencana_detail']); ?>
                                             </div>
                                             <div class="form-group text-right">
-                                                <button class="btn btn-primary btn-sm" id="btn-refresh-korban-jiwa">Refresh</button>
+                                                <button class="btn btn-primary btn-sm" id="btn-refresh-data">Refresh</button>
                                             </div>
                                         </div>
                                         <div class="col-md-4 align-middle" style="background-color: #f5f5f5; vertical-align: middle; padding: 18px; border-radius: 10px;">

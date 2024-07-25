@@ -24,7 +24,7 @@
                                                             echo "<td>" . $item['nm_jiwa'] . "</td>";
                                                             foreach ($kondisi_korban as $key => $list) :
                                                                 echo '<td><input type="number" class="form-control form-control-sm text-right" value="0" min="0"
-                                                                        onfocus="resetValueOnClick(this)"
+                                                                        onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)"
                                                                         name="jumlah_korban[' . $item['id'] . '][' . $list->id_kondisi . ']" 
                                                                         id="jumlah_korban-' . $item['id'] . '-' . $list->id_kondisi . '" required> </td>';
                                                             endforeach;
