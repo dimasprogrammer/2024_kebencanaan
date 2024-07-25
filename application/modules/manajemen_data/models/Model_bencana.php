@@ -14,6 +14,8 @@ class Model_bencana extends CI_Model
         parent::__construct();
     }
 
+    //---------------------------- FUNGSI MODEL UNTUK DATA KEBENCANAAN -------------------------//
+
     /*Fungsi Get Data List*/
     var $search = array('a.nama_bencana', 'a.tanggal_bencana');
     public function get_datatables($param)
@@ -55,10 +57,6 @@ class Model_bencana extends CI_Model
                            b.nm_bencana as jenis_bencana');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
-        // if (!empty($id_tahapan_bencana)) {
-        //     $this->db->where('a.id_tahapan_bencana', $id_tahapan_bencana);
-        // }
-
         $i = 0;
         foreach ($this->search as $item) { // loop column
             if ($_POST['search']['value']) { // if datatable send POST for search
@@ -284,6 +282,7 @@ class Model_bencana extends CI_Model
             mkdir('./' . $dirname, 0777, TRUE);
         }
 
+        $_FILES['file']['name']     = $_FILES['nama_file']['name'];
         $filename = $_FILES['file']['name'];
 
         if ($filename != '') {
@@ -344,12 +343,12 @@ class Model_bencana extends CI_Model
             /*query update*/
             $this->db->where('token_bencana ', $token_bencana);
             $this->db->update('ms_bencana', $dataBencana);
-            foreach ($id_regency as $key => $id) {
+            foreach ((array)$id_regency as $key => $id) {
                 $token_bencana_detail =  $this->uuid->v4(true);
                 /*cek data kontrol*/
-                $this->db->where('token_bencana_detail', $token_bencana_detail);
-                $qTot = $this->db->count_all_results('ms_bencana_detail');
-                if ($qTot <= 0) {
+
+                $cek = $this->db->get_where('ms_bencana_detail', array('token_bencana' => $token_bencana, 'id_regency_penerima' => $id));
+                if ($cek->num_rows() == 0) {
                     $data = array(
                         'token_bencana'         => $token_bencana,
                         'token_bencana_detail'  => $token_bencana_detail,
@@ -362,6 +361,23 @@ class Model_bencana extends CI_Model
         }
         return array('response' => 'SUCCESS', 'nama' => $nama_bencana);
     }
+
+    public function getDataUpload($token_bencana)
+    {
+        $this->db->select(' a.token_bencana, 
+                            create_date,
+                            a.nama_file,
+                            a.nama_file_infografis');
+        $this->db->from('ms_bencana a');
+        $this->db->where('a.token_bencana', $token_bencana);
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    //---------------------------- END FUNGSI MODEL UNTUK DATA KEBENCANAAN -------------------------//
+
+    //---------------------------- FUNGSI MODEL UNTUK KIRIM KEBENCANAAN ----------------------------//
 
     /* Fungsi untuk update data */
     public function kirimDataBencana()
@@ -377,52 +393,10 @@ class Model_bencana extends CI_Model
         return array('response' => 'SUCCESS', 'nama' => '');
     }
 
-    /* Fungsi untuk update data */
-    public function updateDataShare()
-    {
-        //get data
-        $create_by        = $this->app_loader->current_user();
-        $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
-        $create_ip     = $this->input->ip_address();
-        $token_bencana    = escape($this->input->post('tokenId', TRUE));
-        $token_bencana_detail    = escape($this->input->post('tokenIdShare', TRUE));
-        $id_regency_penerima   = escape($this->input->post('id_regency_penerima', TRUE));
-        // print_r($token_bencana_detail);
-        // die;
-        // var_dump($_FILES);
 
-        $dataShare = array(
-            'token_bencana' => !empty($token_bencana) ? $token_bencana : '',
-            'id_regency_penerima' => !empty($id_regency_penerima) ? $id_regency_penerima : 0,
-            'mod_by'    => $create_by,
-            'mod_date'  => $create_date,
-            'mod_ip'    => $create_ip
-        );
+    //---------------------------- END FUNGSI MODEL UNTUK KIRIM KEBENCANAAN ----------------------------//
 
-        /*query update*/
-        $this->db->where('token_bencana_detail ', $token_bencana_detail);
-        $this->db->update('ms_bencana_detail', $dataShare);
-
-        return array('response' => 'SUCCESS', 'nama' => '');
-    }
-
-    //--------------------------- FUNGSI UNTUK GET FILE BENCANA OPD -------------------------------//
-    public function getDataUpload($token_bencana)
-    {
-        $this->db->select(' a.token_bencana, 
-                            create_date,
-                            a.nama_file,
-                            a.nama_file_infografis');
-        $this->db->from('ms_bencana a');
-        $this->db->where('a.token_bencana', $token_bencana);
-        $this->db->limit(1);
-        $query = $this->db->get();
-        return $query->row_array();
-    }
-    //--------------------------- FUNGSI UNTUK GET FILE BENCANA OPD -------------------------------//
-    //--------------------------- FUNGSI UNTUK DELETE FILE bencana OPD -------------------------------//
-
-    //--------------------------- FUNGSI UNTUK DELETE FILE bencana OPD -------------------------------//
+    //---------------------------- FUNGSI MODEL UNTUK SHARE PUSDALOPS ----------------------------//
 
     public function getDataBencanaDetail($token_bencana)
     {
@@ -454,36 +428,45 @@ class Model_bencana extends CI_Model
         return $query->row_array();
     }
 
-    public function getDataCetakExcel($opd)
+    /* Fungsi untuk update data */
+    public function updateDataShare()
     {
-        $this->db->select('a.id_bencana,
-                           a.token_bencana,
-                           a.nama_bencana,
-                           a.id_jenis_bencana,
-                           a.id_inisiator_bencana,
-                           a.waktu_uji_coba,
-                           a.waktu_penerapan,
-                           a.id_tahapan_bencana,
-                           a.waktu_penerapan,
-                           a.status_bencana,
-                           a.status_permohonan,
-                           a.create_date,
-                           b.nm_urusan_utama,
-                           c.opd_id_name,
-                           c.fullname,
-                           d.nm_bentuk,
-                           e.nm_urusan_utama');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_urusan_utama b', 'a.id_urusan_utama = b.id_urusan_utama', 'inner');
-        $this->db->join('xi_sa_users c', 'a.create_by = c.token_bencana', 'inner');
-        $this->db->join('cx_bentuk_bencana d', 'a.id_bentuk_bencana = d.id_bentuk_bencana', 'inner');
-        $this->db->join('cx_urusan_utama e', 'a.id_urusan_utama = e.id_urusan_utama', 'inner');
-        if ($opd != '')
-            $this->db->where('c.opd_id', $opd);
-        $this->db->order_by('a.create_date DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+        //get data
+        $create_by        = $this->app_loader->current_user();
+        $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip     = $this->input->ip_address();
+        $token_bencana    = escape($this->input->post('tokenId', TRUE));
+        $token_bencana_detail    = escape($this->input->post('tokenIdShare', TRUE));
+        $id_regency_penerima   = escape($this->input->post('id_regency_penerima', TRUE));
+        // print_r($token_bencana_detail);
+        // die;
+        // var_dump($_FILES);
+
+        $dataShare = array(
+            'token_bencana' => !empty($token_bencana) ? $token_bencana : '',
+            'id_regency_penerima' => !empty($id_regency_penerima) ? $id_regency_penerima : 0,
+            'mod_by'    => $create_by,
+            'mod_date'  => $create_date,
+            'mod_ip'    => $create_ip
+        );
+
+        /*query update*/
+        $this->db->where('token_bencana_detail ', $token_bencana_detail);
+        $this->db->update('ms_bencana_detail', $dataShare);
+
+        return array('response' => 'SUCCESS', 'nama' => '');
     }
+
+    public function deleteDataPusdalops()
+    {
+        $token = escape($this->input->post('tokenId', TRUE));
+        $this->db->where('token_bencana_detail', $token);
+        $this->db->delete('ms_bencana_detail');
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    //---------------------------- END FUNGSI MODEL UNTUK SHARE PUSDALOPS ------------------------//
+
 }
 
 // This is the end of auth signin model

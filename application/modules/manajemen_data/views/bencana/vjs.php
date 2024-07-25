@@ -7,6 +7,7 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script type="text/javascript">
+    var base_url = 'http://localhost/2024/2024_kebencanaan/';
     $(document).ready(function(e) {
         getDataListbencana();
     });
@@ -86,6 +87,7 @@
         $('#modalEntryFormKirim').modal('toggle');
     });
 
+    // ------------------------------------- JAVASCRIPT PROSES DATA BENCANA ------------------------------------//
     $(document).on('click', '.btnEdit', function(e) {
         formReset();
         $('#formEntry').attr('action', site + '/update');
@@ -136,25 +138,27 @@
 
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
                     htmlBencana += '<thead>';
-                    // htmlBencana += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
-                    htmlBencana += '<th width="20%" class="font-weight-bold"><left>Kabupaten/Kota</left></th>';
-                    htmlBencana += '<th width="20%" class="font-weight-bold"><left>Action</left></th>';
+                    htmlBencana += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
+                    htmlBencana += '<th width="70%" class="font-weight-bold"><left>Kabupaten/Kota</left></th>';
+                    htmlBencana += '<th width="5%" class="font-weight-bold"><left>Action Button</center></th>';
                     htmlBencana += '</thead>';
                     if (Object.keys(data.message.dataDetailBencana).length > 0) {
+                        let no = 1;
+                        htmlBencana += '<tbody>';
                         $.each(data.message.dataDetailBencana, function(key, val) {
-                            let no = 1;
-                            htmlBencana += '<tbody>';
                             htmlBencana += '<tr>';
-                            // htmlBencana += '<td width="2%"> ' + no + '. </td><br>';
+                            htmlBencana += '<td width="2%"> ' + no + '. </td>';
                             htmlBencana += '<td width="25%" class="text-justify">' + val['nm_regency'] + '</td>';
-                            htmlBencana += '<td width="15%" class="text-center">' + '<button type="button" class="btn btn-primary btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnEditBencanaShare" data-id=' + val['token_bencana_detail'] + '><i class="fas fa-box-open"></i> Edit </button>' + '</td>';
+                            htmlBencana += '<td width="15%" class="text-center">';
+                            htmlBencana += '<button type="button" class="btn btn-primary btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnEditBencanaShare" data-id="' + val['token_bencana_detail'] + '"><i class="fas fa-pen-alt"></i> </button> ';
+                            htmlBencana += '<button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDeletePusdalops" data-id="' + val['token_bencana_detail'] + '"><i class="fas fa-minus-circle"></i> </button>';
+                            htmlBencana += '</td>';
                             htmlBencana += '</tr>';
-                            htmlBencana += '</tbody>';
                             no++;
-
                         });
+                        htmlBencana += '</tbody>';
                     } else {
-                        htmlBencana = '<tr><td colspan="2"><i>Data Bencana Belum Ada</i></td></tr>';
+                        htmlBencana = '<tr><td colspan="3"><i>Data Bencana Belum Ada</i></td></tr>';
                     }
 
                     $('#tblPenanggungJawab').html(htmlBencana);
@@ -258,6 +262,84 @@
         })
     });
 
+    $(document).on('click', '.btnDelete', function(e) {
+        e.preventDefault();
+        let postData = {
+            'tokenId': $(this).data('id'),
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i>');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menghapus data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/delete',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Hapus',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccess').html(msg.error(data.message));
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Hapus',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                getDataListbencana();
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccess').html(msg.error('Harap periksa kembali data yang akan dihapus'));
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $('.btnDelete').html('<i class="fas fa-trash-alt"></i>');
+                    $('.btnDelete').removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('.btnDelete').html('<i class="fas fa-trash-alt"></i>');
+                        $('.btnDelete').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    // ------------------------------------- JAVASCRIPT PROSES DATA BENCANA ------------------------------------//
+
+    // ------------------------------------- JAVASCRIPT PROSES KIRIM BENCANA KE DAERAH -------------------------//
+
     $(document).on('click', '.btnKirim', function(e) {
         formReset();
         $('#formEntryKirim').attr('action', site + '/kirim');
@@ -286,14 +368,40 @@
                 $('input[name="' + csrfName + '"]').val(data.csrfHash);
                 if (data.status == 'RC200') {
                     $('input[name="tokenId"]').val(token_bencana);
+                    // $('#token_bencana').after(`<span id="toket">${data.message.dataBencanaKirim.token_bencana}</span>`);
+                    // $('input[name="statusId"]').val(id_status);
                     $('#tanggal_kirim').val(data.message.dataBencanaKirim.tanggal_bencana);
                     $('#tanggap_kirim').val(data.message.dataBencanaKirim.nm_tanggap);
                     $('#jenis_bencana_kirim').val(data.message.dataBencanaKirim.jenis_bencana);
                     $('#nama_bencana_kirim').val(data.message.dataBencanaKirim.nama_bencana);
                     $('#keterangan_bencana_kirim').val(data.message.dataBencanaKirim.keterangan_bencana);
                     $('#penyebab_bencana_kirim').val(data.message.dataBencanaKirim.penyebab_bencana);
-                    $('#infografis_kirim').html(data.message.dataBencanaKirim.gambar);
+                    // $('#infografis_kirim').html(data.message.dataBencanaKirim.gambar);
+
+                    let year = data.message.dataBencanaKirim.create_date.substr(0, 4);
+                    let month = data.message.dataBencanaKirim.create_date.substr(5, 2);
+
+                    let gambarHtml = '';
+                    if (data.message.dataBencanaKirim.nama_file) {
+                        let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file;
+                        gambarHtml = '<img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid">';
+                    }
+                    $('#gambar_kirim').html(gambarHtml);
+
+                    let infografisHtml = '';
+                    if (data.message.dataBencanaKirim.nama_file_infografis) {
+                        let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file_infografis;
+                        infografisHtml = '<img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid">';
+                    }
+                    $('#infografis_kirim').html(infografisHtml);
+
                     $('#video_bencana_kirim').val(data.message.dataBencanaKirim.video_bencana);
+
+                    if (data.message.dataBencanaKirim.id_status == 0) {
+                        $(".status").show();
+                    } else {
+                        $(".status").hide();
+                    }
 
                     if (marker2) {
                         map2.removeLayer(marker2);
@@ -309,20 +417,25 @@
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
 
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
+                    htmlBencanaKirim += '<thead>';
+                    htmlBencanaKirim += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
+                    htmlBencanaKirim += '<th width="70%" class="font-weight-bold"><left>Kabupaten/Kota</left></th>';
+                    htmlBencanaKirim += '</thead>';
                     if (Object.keys(data.message.dataDetailBencana).length > 0) {
+                        let no = 1;
+                        htmlBencanaKirim += '<tbody>';
                         $.each(data.message.dataDetailBencana, function(key, val) {
-                            let no = 1;
-                            htmlBencanaKirim += '<tbody>';
                             htmlBencanaKirim += '<tr>';
-                            // htmlBencanaKirim += '<td width="2%"> ' + no + '. </td><br>';
+                            htmlBencanaKirim += '<td width="2%"> ' + no + '. </td>';
                             htmlBencanaKirim += '<td width="25%" class="text-justify">' + val['nm_regency'] + '</td>';
+                            htmlBencanaKirim += '<td width="15%" class="text-center">';
+                            htmlBencanaKirim += '</td>';
                             htmlBencanaKirim += '</tr>';
-                            htmlBencanaKirim += '</tbody>';
                             no++;
-
                         });
+                        htmlBencanaKirim += '</tbody>';
                     } else {
-                        htmlBencanaKirim = '<tr><td colspan="2"><i>Data Bencana Belum Ada</i></td></tr>';
+                        htmlBencanaKirim = '<tr><td colspan="3"><i>Data Bencana Belum Ada</i></td></tr>';
                     }
 
                     $('#tblKirim').html(htmlBencanaKirim);
@@ -425,6 +538,9 @@
             }
         })
     });
+    // ------------------------------------- JAVASCRIPT PROSES KIRIM BENCANA KE DAERAH -------------------------//
+
+    // ------------------------------------- JAVASCRIPT PROSES MEMILIH PUSDALOPS KE DAERAH ---------------------//
 
     $(document).on('click', '.btnEditBencanaShare', function(e) {
         // formReset();
@@ -552,7 +668,7 @@
         })
     });
 
-    $(document).on('click', '.btnDelete', function(e) {
+    $(document).on('click', '.btnDeletePusdalops', function(e) {
         e.preventDefault();
         let postData = {
             'tokenId': $(this).data('id'),
@@ -572,7 +688,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: site + '/delete',
+                    url: site + '/deletePusdalops',
                     type: "POST",
                     data: postData,
                     dataType: "json",
@@ -597,7 +713,9 @@
                             confirmButtonText: '<i class="fas fa-check"></i> Oke',
                         }).then((result) => {
                             if (result.value) {
-                                getDataListbencana();
+                                newKode = data.kode;
+                                $('#errSuccessShare').html(msg.success(data.message));
+                                getDataBencana(id_token_bencana);
                             }
                         })
                     }
@@ -625,7 +743,9 @@
             }
         })
     });
+    // ------------------------------------- JAVASCRIPT PROSES MEMILIH PUSDALOPS KE DAERAH ---------------------//
 </script>
+
 
 <script>
     var map1 = L.map("map1").setView([-0.7682504, 100.4866192], 10);

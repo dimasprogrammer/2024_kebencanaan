@@ -153,7 +153,7 @@
                             <!-- <div id="errEntryShare"></div> -->
                             <div class="card-body text-center px-4 mb-3">
                                 <div id="errSuccessShare"></div>
-                                <table class="table table-striped table-hover table-sm" width="100%" id="tblPenanggungJawab">
+                                <table class="table table-striped table-hover" width="100%" id="tblPenanggungJawab">
 
 
                                 </table>
@@ -270,7 +270,7 @@
                     </div>
                     <div class="col-12 col-md-4 required">
                         <label for="infografis_kirim" class="control-label font-weight-bold"> Gambar Bencana </label>
-                        <div id="infografis_kirim"></div>
+                        <div id="gambar_kirim"></div>
                     </div>
                     <div class="col-12 col-md-4 required">
                         <label for="video_bencana_kirim" class="control-label font-weight-bold">Video Bencana</label>
@@ -285,7 +285,7 @@
                             </div>
                             <!-- <div id="errEntryShare"></div> -->
                             <div class="card-body text-center px-4 mb-3">
-                                <table class="table table-striped table-hover table-sm" width="100%" id="tblKirim">
+                                <table class="table table-striped table-hover" width="100%" id="tblKirim">
 
 
                                 </table>
@@ -293,13 +293,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-primary">
+                <div class="alert alert-primary status">
                     <span><b>NB:</b> Perhatikan data yang anda inputkan apakah sudah sesuai, jika data sesuai silahkan tekan tombol kirim data</span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnCloseKirim"><i class="fas fa-times"></i> Close Data </button>
-                <button type="submit" class="btn btn-danger waves-effect waves-light px-3 py-2 font-weight-bold" name="saveKirim" id="saveKirim"><i class="fab fa-korvue"></i> Kirim Data </button>
+                <button type="submit" class="btn btn-danger waves-effect waves-light px-3 py-2 font-weight-bold status" name="saveKirim" id="saveKirim"><i class="fab fa-korvue"></i> Kirim Data </button>
             </div>
             <?php echo form_close(); ?>
         </div>

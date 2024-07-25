@@ -6,10 +6,6 @@
  * @author Dimas Dwi Randa
  */
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 class bencana extends SLP_Controller
 {
     protected $_vwName  = '';
@@ -49,6 +45,7 @@ class bencana extends SLP_Controller
         $this->template->build($this->_vwName . '/vpage', $this->session_info);
     }
 
+    //-------------------------------------- FUNGSI UNTUK PROSES DATA BENCANA ------------------------------//
     public function listview()
     {
         if (!$this->input->is_ajax_request()) {
@@ -71,7 +68,7 @@ class bencana extends SLP_Controller
                         <i class="fas fa-paper-plane"></i> Kirim Data
                         </a>';
                     } else {
-                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnEdit" title="Lihat Data">
+                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnKirim" title="Lihat Data">
                         <i class="fas fa-box-open"></i> Lihat Data';
                     }
 
@@ -168,6 +165,66 @@ class bencana extends SLP_Controller
         }
     }
 
+
+    public function update()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $contId   = escape($this->input->post('tokenId', TRUE));
+            if (!empty($session) and !empty($contId)) {
+                if ($this->validasiDataValue() == FALSE) {
+                    $result = array('status' => 'RC404', 'message' => $this->form_validation->error_array(), 'csrfHash' => $csrfHash);
+                } else {
+                    $data = $this->mbencana->updateDatabencana();
+                    if ($data['response'] == 'ERROR') {
+                        $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana gagal, karena data tidak ditemukan'), 'csrfHash' => $csrfHash);
+                    } else if ($data['response'] == 'ERRDATA') {
+                        $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana dengan nama ' . $data['nama'] . ' gagal, karena ditemukan nama yang sama'), 'csrfHash' => $csrfHash);
+                    } else if ($data['response'] == 'SUCCESS') {
+                        $result = array('status' => 'RC200', 'message' => 'Proses update data bencana dengan nama ' . $data['nama'] . ' sukses', 'csrfHash' => $csrfHash);
+                    }
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+
+    public function delete()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $contId   = escape($this->input->post('tokenId', TRUE));
+
+            if (!empty($session) and !empty($contId)) {
+                $data = $this->mbencana->deleteDatabencana();
+
+                if ($data['response'] == 'ERROR') {
+                    $result = array('status' => 'RC404', 'message' => 'Proses delete data bencana gagal, karena data tidak ditemukan', 'csrfHash' => $csrfHash);
+                } else if ($data['response'] == 'ERRDATA') {
+                    $result = array('status' => 'RC404', 'message' => 'Proses delete data bencana dengan nama ' . $data['nama'] . ' gagal, karena data sedang digunakan', 'csrfHash' => $csrfHash);
+                } else if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses delete data bencana dengan nama ' . $data['nama'] . ' sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 0, 'message' => 'Proses delete data bencana gagal, mohon coba kembali', 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    //-------------------------------------- FUNGSI UNTUK PROSES DATA BENCANA ------------------------------//
+
+    //-------------------------------------- FUNGSI UNTUK PROSES KIRIM BENCANA KE DAERAH -------------------//
+
     public function review()
     {
         if (!$this->input->is_ajax_request()) {
@@ -184,16 +241,6 @@ class bencana extends SLP_Controller
 
                 $row = array();
 
-                $year  = substr($data['create_date'], 0, 4);
-                $month = substr($data['create_date'], 5, 2);
-                if ($data['nama_file'] == '') {
-                    $gambar = '';
-                } else {
-                    $gambar = '<a target="_blank" href="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" > 
-                    <img src="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" alt="thumbnail" class="img-thumbnail rounded"  style="width: 100%; height:auto;"></a>';
-                }
-                // print_r($gambar);
-                // die;
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
                 $row['nm_tanggap']         = !empty($data) ? $data['nm_tanggap'] : '';
@@ -202,7 +249,10 @@ class bencana extends SLP_Controller
                 $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
                 $row['penyebab_bencana']   = !empty($data) ? $data['penyebab_bencana'] : '';
                 $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
-                $row['gambar']             = !empty($gambar) ? $gambar : '';
+                $row['id_status']          = !empty($data) ? $data['id_status'] : '';
+                $row['nama_file']          = !empty($data) ? $data['nama_file'] : '';
+                $row['nama_file_infografis']          = !empty($data) ? $data['nama_file_infografis'] : '';
+                // $row['gambar']             = !empty($gambar) ? $gambar : '';
                 $result = array(
                     'status' => 'RC200', 'message' => array(
                         'dataBencanaKirim'     => $data,
@@ -237,6 +287,10 @@ class bencana extends SLP_Controller
         }
     }
 
+    //-------------------------------------- FUNGSI UNTUK PROSES KIRIM BENCANA KE DAERAH -------------------//
+
+    //-------------------------------------- FUNGSI UNTUK PROSES SHARE PUSDALOPS DAERAH --------------------//
+
     public function detailShare()
     {
         if (!$this->input->is_ajax_request()) {
@@ -261,33 +315,6 @@ class bencana extends SLP_Controller
         }
     }
 
-    public function update()
-    {
-        if (!$this->input->is_ajax_request()) {
-            exit('No direct script access allowed');
-        } else {
-            $session  = $this->app_loader->current_account();
-            $csrfHash = $this->security->get_csrf_hash();
-            $contId   = escape($this->input->post('tokenId', TRUE));
-            if (!empty($session) and !empty($contId)) {
-                if ($this->validasiDataValue() == FALSE) {
-                    $result = array('status' => 'RC404', 'message' => $this->form_validation->error_array(), 'csrfHash' => $csrfHash);
-                } else {
-                    $data = $this->mbencana->updateDatabencana();
-                    if ($data['response'] == 'ERROR') {
-                        $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana gagal, karena data tidak ditemukan'), 'csrfHash' => $csrfHash);
-                    } else if ($data['response'] == 'ERRDATA') {
-                        $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana dengan nama ' . $data['nama'] . ' gagal, karena ditemukan nama yang sama'), 'csrfHash' => $csrfHash);
-                    } else if ($data['response'] == 'SUCCESS') {
-                        $result = array('status' => 'RC200', 'message' => 'Proses update data bencana dengan nama ' . $data['nama'] . ' sukses', 'csrfHash' => $csrfHash);
-                    }
-                }
-            } else {
-                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data bencana gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
-            }
-            $this->output->set_content_type('application/json')->set_output(json_encode($result));
-        }
-    }
 
     public function updateShare()
     {
@@ -313,171 +340,30 @@ class bencana extends SLP_Controller
         }
     }
 
-    public function delete()
+    public function deletePusdalops()
     {
         if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
         } else {
             $session  = $this->app_loader->current_account();
             $csrfHash = $this->security->get_csrf_hash();
-            $contId   = escape($this->input->post('tokenId', TRUE));
+            $tokenId   = escape($this->input->post('tokenId', TRUE));
 
-            if (!empty($session) and !empty($contId)) {
-                $data = $this->mbencana->deleteDatabencana();
-
+            if (!empty($session) and !empty($tokenId)) {
+                $data = $this->mbencana->deleteDataPusdalops();
                 if ($data['response'] == 'ERROR') {
-                    $result = array('status' => 'RC404', 'message' => 'Proses delete data bencana gagal, karena data tidak ditemukan', 'csrfHash' => $csrfHash);
-                } else if ($data['response'] == 'ERRDATA') {
-                    $result = array('status' => 'RC404', 'message' => 'Proses delete data bencana dengan nama ' . $data['nama'] . ' gagal, karena data sedang digunakan', 'csrfHash' => $csrfHash);
-                } else if ($data['response'] == 'SUCCESS') {
-                    $result = array('status' => 'RC200', 'message' => 'Proses delete data bencana dengan nama ' . $data['nama'] . ' sukses', 'csrfHash' => $csrfHash);
+                    $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data gagal, karena data tidak ditemukan'), 'csrfHash' => $csrfHash);
+                } else
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses delete data pusdalops berhasil', 'csrfHash' => $csrfHash);
                 }
             } else {
-                $result = array('status' => 0, 'message' => 'Proses delete data bencana gagal, mohon coba kembali', 'csrfHash' => $csrfHash);
+                $result = array('status' => 0, 'message' => 'Proses delete data pusdalops gagal, mohon coba kembali', 'csrfHash' => $csrfHash);
             }
             $this->output->set_content_type('application/json')->set_output(json_encode($result));
         }
     }
-
-    public function export_to_pdf()
-    {
-        $token = $this->input->get('token', TRUE);
-
-        $this->session_info['list_indikator']   = $this->mindi->getDataIndikator();
-        $data['data'] = $this->mbencana->getDatabencanaCetakPDF($token);
-        // $data['data'] = 'panggil';
-
-
-        // panggil library yang kita buat sebelumnya yang bernama pdfgenerator
-        // $view_data   = base_url() . 'assets/img/balitbang.png';
-        // var_dump($view_data);
-        // die;
-        // $path = $view_data;
-        // $type = pathinfo($path, PATHINFO_EXTENSION);
-        // $database = file_get_contents($path);
-
-        // $data['test'] = REALPATH . '/assets/img/balitbang.png';
-
-        // $data['base64'] = 'data:image/' . $type . ';base64,' . base64_encode($database);
-        $this->load->library('pdfgenerator');
-        // title dari pdf
-        // $data['title_pdf']  =   'DATA USULAN ' . $data['data']['nama_bencana'];
-        // filename dari pdf ketika didownload
-        $file_pdf = "testubg";
-        // setting paper
-        $paper = 'legal';
-        // $paper = 'legal';
-        //orientasi paper potrait / landscape
-        $orientation = "portrait";
-        $html = $this->load->view($this->_vwName . '/vprint', $data, true);
-        // run dompdf
-        $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
-    }
-
-
-
-    public function export_to_excel()
-    {
-        require realpath('vendor/autoload.php');
-
-        $opd    = escape($this->input->get('opd', TRUE));
-        $databencana = $this->mbencana->getDataCetakExcel($opd);
-
-        $noRow = 0;
-        $baseRow = 6;
-        $spreadsheet = new Spreadsheet();
-        $templatePath = 'repository/profil_excel.xlsx';
-        $spreadsheet = IOFactory::load($templatePath);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        if (count($databencana) > 0) {
-            foreach ($databencana as $key => $dInov) {
-
-                $dataBobot      = $this->mbencana->getTotalBobotByIdbencana($dInov['token']);
-                $checkDataLink  = $this->mbencana->cekDokumenLink($dInov['token']);
-                if ($dInov['id_jenis_bencana'] == 1) {
-                    $jenis = 'Digital';
-                } else {
-                    $jenis = 'Non Digital';
-                }
-
-                if ($dInov['id_inisiator_bencana'] == 1) {
-                    $inisiator = 'Kepala OPD';
-                } else if ($dInov['id_inisiator_bencana'] == 2) {
-                    $inisiator = 'Anggota DPRD';
-                } else if ($dInov['id_inisiator_bencana'] == 3) {
-                    $inisiator = 'OPD';
-                } else if ($dInov['id_inisiator_bencana'] == 4) {
-                    $inisiator = 'ASN';
-                } else {
-                    $inisiator = 'Masyarakat';
-                }
-                if ($dInov['id_tahapan_bencana'] == 1) {
-                    $tahapan = 'Inisiatif';
-                } else if ($dInov['id_tahapan_bencana'] == 2) {
-                    $tahapan = 'Uji Coba';
-                } else {
-                    $tahapan = 'Masyarakat';
-                }
-                $create_date = $dInov['create_date'];
-                $tanggal = tgl_indonesia($create_date);
-                $noRow++;
-                $row = $baseRow + $noRow;
-                $activeWorksheet->insertNewRowBefore($row, 1);
-                $activeWorksheet->setCellValue('A' . $row, $noRow);
-                $activeWorksheet->setCellValue('B' . $row, isset($dInov['nama_bencana']) ? $dInov['nama_bencana'] : '-');
-                $activeWorksheet->setCellValue('C' . $row, isset($dInov['opd_id_name']) ? $dInov['opd_id_name'] : '-');
-                $activeWorksheet->setCellValue('D' . $row, isset($dInov['fullname']) ? $dInov['fullname'] : '-');
-                $activeWorksheet->setCellValue('E' . $row, '-');
-                $activeWorksheet->setCellValue('F' . $row, isset($dInov['nm_bentuk']) ? $dInov['nm_bentuk'] : '-');
-                $activeWorksheet->setCellValue('G' . $row, isset($jenis) ? $jenis : '-');
-                $activeWorksheet->setCellValue('H' . $row, isset($inisiator) ? $inisiator : '-');
-                $activeWorksheet->setCellValue('I' . $row, isset($dInov['nm_urusan_utama']) ? $dInov['nm_urusan_utama'] : '-');
-                $activeWorksheet->setCellValue('J' . $row, isset($dataBobot) ? $dataBobot : 0);
-                $activeWorksheet->setCellValue('K' . $row, isset($tahapan) ? $tahapan : '-');
-                $activeWorksheet->setCellValue('L' . $row, isset($tanggal) ? $tanggal : '-');
-                $activeWorksheet->setCellValue('M' . $row, 'Tidak');
-                $activeWorksheet->setCellValue('N' . $row, '-');
-                $activeWorksheet->setCellValue('O' . $row, '-');
-                $activeWorksheet->setCellValue('P' . $row, isset($checkDataLink['thumbnail']) ? $checkDataLink['thumbnail'] : '-');
-            }
-        } else {
-            $row = $baseRow + 1;
-            $activeWorksheet->insertNewRowBefore($row, 1);
-            $activeWorksheet->setCellValue('A' . $row, 1);
-            $activeWorksheet->setCellValue('B' . $row, '');
-            $activeWorksheet->setCellValue('C' . $row, '');
-            $activeWorksheet->setCellValue('D' . $row, '');
-            $activeWorksheet->setCellValue('E' . $row, '');
-            $activeWorksheet->setCellValue('F' . $row, '');
-            $activeWorksheet->setCellValue('G' . $row, '');
-            $activeWorksheet->setCellValue('H' . $row, '');
-            $activeWorksheet->setCellValue('I' . $row, '');
-            $activeWorksheet->setCellValue('J' . $row, '');
-            $activeWorksheet->setCellValue('K' . $row, '');
-            $activeWorksheet->setCellValue('L' . $row, '');
-            $activeWorksheet->setCellValue('M' . $row, '');
-            $activeWorksheet->setCellValue('N' . $row, '');
-            $activeWorksheet->setCellValue('O' . $row, '');
-            $activeWorksheet->setCellValue('P' . $row, '');
-        }
-        $activeWorksheet->removeRow($baseRow, 1);
-
-        $fileName = 'contoh_spreadsheet.xlsx';
-
-        // Atur header HTTP agar file dapat diunduh
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $fileName . '"');
-        header('Cache-Control: max-age=0');
-        header('Cache-Control: max-age=1');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Tanggal di masa lalu
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // Selalu modifikasi
-        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-        header('Pragma: public'); // HTTP/1.0
-
-        // Tulis file ke output
-        $writer = new Xlsx($spreadsheet);
-        $writer->save('php://output');
-    }
+    //-------------------------------------- FUNGSI UNTUK PROSES SHARE PUSDALOPS DAERAH --------------------//
 }
 
 // This is the end of fungsi class
