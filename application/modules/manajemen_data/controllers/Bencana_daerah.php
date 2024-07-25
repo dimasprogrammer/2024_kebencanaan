@@ -148,6 +148,23 @@ class Bencana_daerah extends SLP_Controller
                 $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
         }
+        else if($type == 'kerusakan')
+        {
+            $response = $this->mbencana_daerah->createKerusakan();
+            if($response['status'] == 'success')
+            {
+                $result = $response;
+                $result['status'] = "RC200";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+            else{
+                $result = $response;
+                $result['status'] = "RC422";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        }
         else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
     }
@@ -159,6 +176,13 @@ class Bencana_daerah extends SLP_Controller
             $wil_village = $this->input->get('wil_village');
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataKorbanJiwa($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+        else if($type == 'getDataKerusakan')
+        {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataKerusakan($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
         else

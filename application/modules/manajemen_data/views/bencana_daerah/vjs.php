@@ -68,6 +68,9 @@
         if(activeTabs == 1) {
             getDataKorbanJiwa();
         }
+        else if(activeTabs == 2) {
+            getDataKerusakan();
+        }
     }
 
     // fungsi untuk mengaktifkan tab sesuai dengan url
@@ -76,6 +79,9 @@
         let tab = url.split('#panel')[1];
         if(tab) {
             $('#head-panel' + tab).click();
+        }
+        else {
+            $('#head-panel1').click();
         }
     }
 

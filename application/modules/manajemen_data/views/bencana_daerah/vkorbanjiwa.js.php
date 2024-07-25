@@ -114,6 +114,3 @@ function getDataKorbanJiwa(){
     });
 }
 
-$(document).ready(function() {
-    getDataKorbanJiwa();
-});
