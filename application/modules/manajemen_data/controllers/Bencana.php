@@ -42,8 +42,9 @@ class bencana extends SLP_Controller
         $this->session_info['page_css']      = $this->load->view($this->_vwName . '/vcss', '', true);
         $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
         $this->session_info['jenis_bencana'] = $this->mmas->getDataJenisBencana();
-        $this->session_info['pusdalops']         = $this->mmas->getDataPusdalops();
-        $this->session_info['regency']      = $this->mmas->getDataRegency();
+        $this->session_info['tanggap_bencana'] = $this->mmas->getDataTanggapBencana();
+        $this->session_info['pusdalops']     = $this->mmas->getDataPusdalops();
+        $this->session_info['regency']       = $this->mmas->getDataRegency();
         $this->session_info['data_opd']      = "";
         $this->template->build($this->_vwName . '/vpage', $this->session_info);
     }
@@ -63,14 +64,23 @@ class bencana extends SLP_Controller
                     $no++;
                     $row = array();
 
+                    if ($dl['id_status'] == 0) {
+                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnEdit" title="Draft Data">
+                        <i class="fas fa-business-time"></i> Draft Data
+                        </a> <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-success btn-sm px-2 waves-effect waves-light btnKirim" title="Kirim Data">
+                        <i class="fas fa-paper-plane"></i> Kirim Data
+                        </a>';
+                    } else {
+                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnEdit" title="Lihat Data">
+                        <i class="fas fa-box-open"></i> Lihat Data';
+                    }
+
                     $row[] = $no;
                     $row[] = $dl['jenis_bencana'];
                     $row[] = $dl['nama_bencana'];
                     $row[] = $dl['tanggal_bencana'];
-                    $row[] = $dl['id_status'];
-                    $row[] = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnEdit" title="Indikator Satuan">
-                        <i class="far fa-folder-open"></i> Lihat Data
-                        </a>';
+                    $row[] = convert_status_bencana($dl['id_status']);
+                    $row[] =  $status;
                     $data[] = $row;
                 }
                 $output = array(
@@ -125,24 +135,25 @@ class bencana extends SLP_Controller
                 $dataDetail = $this->mbencana->getDataBencanaDetail($data['token_bencana']);
 
                 $row = array();
-                $year    = substr($data['create_date'], 0, 4);
-                $month  = substr($data['create_date'], 5, 2);
+                $year  = substr($data['create_date'], 0, 4);
+                $month = substr($data['create_date'], 5, 2);
                 if ($data['nama_file'] == '') {
                     $gambar = '';
                 } else {
                     $gambar = '<a target="_blank" href="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" > Lihat Gambar </a>';
                 }
-                $row['gambar']           = !empty($gambar) ? $gambar : '';
-                $row['token']            = !empty($data) ? $data['token_bencana'] : '';
-                $row['tanggal_bencana'] = !empty($data) ? $data['tanggal_bencana'] : '';
-                $row['kategori_tanggap']    = !empty($data) ? $data['kategori_tanggap'] : '';
-                $row['id_jenis_bencana'] = !empty($data) ? $data['id_jenis_bencana'] : '';
-                $row['nama_bencana']     = !empty($data) ? $data['nama_bencana'] : '';
+                $row['logo']               = !empty($gambar) ? $gambar : '';
+                $row['token']              = !empty($data) ? $data['token_bencana'] : '';
+                $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['kategori_tanggap']   = !empty($data) ? $data['kategori_tanggap'] : '';
+                $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
+                $row['id_jenis_bencana']   = !empty($data) ? $data['id_jenis_bencana'] : '';
+                $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';
                 $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
-                $row['penyebab_bencana'] = !empty($data) ? $data['penyebab_bencana'] : '';
-                $row['latitude']        = !empty($data) ? $data['latitude'] : '';
-                $row['longitude']       = !empty($data) ? $data['longitude'] : '';
-                $row['id_status']       = !empty($data) ? $data['id_status'] : '';
+                $row['penyebab_bencana']   = !empty($data) ? $data['penyebab_bencana'] : '';
+                $row['latitude']           = !empty($data) ? $data['latitude'] : '';
+                $row['longitude']          = !empty($data) ? $data['longitude'] : '';
+                $row['id_status']          = !empty($data) ? $data['id_status'] : '';
                 $result = array(
                     'status' => 'RC200', 'message' => array(
                         'dataBencana'     => $data,
@@ -152,6 +163,75 @@ class bencana extends SLP_Controller
                 );
             } else {
                 $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function review()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $token_bencana   = $this->input->post('token_bencana', TRUE);
+            // var_dump($token);
+            // die;
+            if (!empty($token_bencana) and !empty($session)) {
+                $data       = $this->mbencana->getDataDetailBencana($token_bencana);
+                $dataDetail = $this->mbencana->getDataBencanaDetail($data['token_bencana']);
+
+                $row = array();
+
+                $year  = substr($data['create_date'], 0, 4);
+                $month = substr($data['create_date'], 5, 2);
+                if ($data['nama_file'] == '') {
+                    $gambar = '';
+                } else {
+                    $gambar = '<a target="_blank" href="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" > 
+                    <img src="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" alt="thumbnail" class="img-thumbnail rounded"  style="width: 100%; height:auto;"></a>';
+                }
+                // print_r($gambar);
+                // die;
+                $row['token']              = !empty($data) ? $data['token_bencana'] : '';
+                $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['nm_tanggap']         = !empty($data) ? $data['nm_tanggap'] : '';
+                $row['jenis_bencana']      = !empty($data) ? $data['jenis_bencana'] : '';
+                $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';
+                $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
+                $row['penyebab_bencana']   = !empty($data) ? $data['penyebab_bencana'] : '';
+                $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
+                $row['gambar']             = !empty($gambar) ? $gambar : '';
+                $result = array(
+                    'status' => 'RC200', 'message' => array(
+                        'dataBencanaKirim'     => $data,
+                        'dataDetailBencana' => $dataDetail
+                    ),
+                    'csrfHash' => $csrfHash
+                );
+            } else {
+                $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function kirim()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $contId   = escape($this->input->post('tokenId', TRUE));
+            if (!empty($session) and !empty($contId)) {
+                $data = $this->mbencana->kirimDatabencana();
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses kirim data bencana sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses kirim data bencana gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
             }
             $this->output->set_content_type('application/json')->set_output(json_encode($result));
         }

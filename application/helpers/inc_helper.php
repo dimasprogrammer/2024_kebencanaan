@@ -132,14 +132,12 @@ if (!function_exists('convert_status')) {
 /**
  * Fungsi convert status
  */
-if (!function_exists('convert_status_inovasi')) {
-    function convert_status_inovasi($id_status)
+if (!function_exists('convert_status_bencana')) {
+    function convert_status_bencana($id_status)
     {
         $status = array(
             0 => '<span class="badge badge-pill badge-gray">DRAFT</span>',
-            1 => '<span class="badge badge-pill badge-primary">VERIFIKASI</span>',
-            2 => '<span class="badge badge-pill badge-warning">DIKEMBALIKAN</span>',
-            3 => '<span class="badge badge-pill badge-success">FINAL</span>',
+            1 => '<span class="badge badge-pill badge-primary">TERKIRIM</span>',
         );
         return $status[intval($id_status)];
     }

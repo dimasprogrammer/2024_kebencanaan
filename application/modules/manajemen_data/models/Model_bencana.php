@@ -15,7 +15,7 @@ class Model_bencana extends CI_Model
     }
 
     /*Fungsi Get Data List*/
-    var $search = array('a.nama_bencana');
+    var $search = array('a.nama_bencana', 'a.tanggal_bencana');
     public function get_datatables($param)
     {
         $this->_get_datatables_query($param);
@@ -73,7 +73,7 @@ class Model_bencana extends CI_Model
             }
             $i++;
         }
-        $this->db->order_by('a.id_bencana DESC');
+        $this->db->order_by('a.tanggal_bencana DESC');
     }
 
     /*Fungsi get data edit by id*/
@@ -89,13 +89,16 @@ class Model_bencana extends CI_Model
                            a.penyebab_bencana,
                            a.nama_file,
                            a.nama_file_infografis,
+                           a.video_bencana,
                            a.latitude,
                            a.longitude,
                            a.id_status,
                            a.create_date,
-                           b.nm_bencana as jenis_bencana');
+                           b.nm_bencana as jenis_bencana,
+                           c.nm_tanggap');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'a.id_jenis_bencana = b.id_jenis_bencana', 'inner');
+        $this->db->join('cx_tanggap_bencana c', 'a.kategori_tanggap = c.id_tanggap_bencana', 'inner');
         $this->db->where('token_bencana', $token_bencana);
         $query = $this->db->get();
         return $query->row_array();
@@ -119,6 +122,7 @@ class Model_bencana extends CI_Model
         $longitude              = escape($this->input->post('longitude', TRUE));
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
+        $video_bencana          = escape($this->input->post('video_bencana', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
 
         //cek nama fungsi duplicate
@@ -202,9 +206,10 @@ class Model_bencana extends CI_Model
                 'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
                 'nama_file'              => $nama_file,
                 'nama_file_infografis'   => $nama_file_infografis,
-                'latitude'              => $latitude,
-                'longitude'             => $longitude,
-                'id_status'              => 1,
+                'video_bencana'          => !empty($video_bencana) ? $video_bencana : '',
+                'latitude'               => $latitude,
+                'longitude'              => $longitude,
+                'id_status'              => 0,
                 'create_by'              => $create_by,
                 'create_date'            => $create_date,
                 'create_ip'              => $create_ip,
@@ -218,7 +223,6 @@ class Model_bencana extends CI_Model
             $this->db->insert('ms_bencana', $data);
             foreach ($id_regency as $key => $id) {
                 $token_bencana_detail =  $this->uuid->v4(true);
-                $create_by_prov   = $this->app_loader->current_account();
                 /*cek data kontrol*/
                 $this->db->where('token_bencana_detail', $token_bencana_detail);
                 $qTot = $this->db->count_all_results('ms_bencana_detail');
@@ -227,7 +231,7 @@ class Model_bencana extends CI_Model
                         'token_bencana'         => $token_bencana,
                         'token_bencana_detail'  => $token_bencana_detail,
                         'id_regency_penerima'   => $id,
-                        'id_status'             => 1
+                        'id_status'             => 0
                     );
                     $this->db->insert('ms_bencana_detail', $data);
                 }
@@ -266,6 +270,7 @@ class Model_bencana extends CI_Model
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
+        $video_bencana          = escape($this->input->post('video_bencana', TRUE));
         // var_dump($_FILES);
         // die;
         //cek data by id
@@ -279,7 +284,6 @@ class Model_bencana extends CI_Model
             mkdir('./' . $dirname, 0777, TRUE);
         }
 
-        $_FILES['file']['name']     = $_FILES['nama_file']['name'];
         $filename = $_FILES['file']['name'];
 
         if ($filename != '') {
@@ -323,25 +327,25 @@ class Model_bencana extends CI_Model
             }
         } else {
             $dataBencana = array(
-                'token_bencana'     => $token_bencana,
-                'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
-                'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
-                'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
-                'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
-                'keterangan_bencana'     => !empty($keterangan_bencana) ? $keterangan_bencana : '',
-                'penyebab_bencana'       => !empty($penyebab_bencana) ? $penyebab_bencana : '',
-                'latitude'              => $latitude,
-                'longitude'             => $longitude,
-                'mod_by'    => $create_by,
-                'mod_date'  => $create_date,
-                'mod_ip'    => $create_ip
+                'token_bencana'      => $token_bencana,
+                'tanggal_bencana'    => !empty($tanggal_bencana) ? $tanggal_bencana : '',
+                'kategori_tanggap'   => !empty($kategori_tanggap) ? $kategori_tanggap : '',
+                'id_jenis_bencana'   => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
+                'nama_bencana'       => !empty($nama_bencana) ? $nama_bencana : '',
+                'keterangan_bencana' => !empty($keterangan_bencana) ? $keterangan_bencana : '',
+                'penyebab_bencana'   => !empty($penyebab_bencana) ? $penyebab_bencana : '',
+                'video_bencana'      => !empty($video_bencana) ? $video_bencana : '',
+                'latitude'           => $latitude,
+                'longitude'          => $longitude,
+                'mod_by'             => $create_by,
+                'mod_date'           => $create_date,
+                'mod_ip'             => $create_ip
             );
             /*query update*/
             $this->db->where('token_bencana ', $token_bencana);
             $this->db->update('ms_bencana', $dataBencana);
             foreach ($id_regency as $key => $id) {
                 $token_bencana_detail =  $this->uuid->v4(true);
-                $create_by_prov   = $this->app_loader->current_account();
                 /*cek data kontrol*/
                 $this->db->where('token_bencana_detail', $token_bencana_detail);
                 $qTot = $this->db->count_all_results('ms_bencana_detail');
@@ -350,13 +354,27 @@ class Model_bencana extends CI_Model
                         'token_bencana'         => $token_bencana,
                         'token_bencana_detail'  => $token_bencana_detail,
                         'id_regency_penerima'   => $id,
-                        'id_status'             => 1
+                        'id_status'             => 0
                     );
                     $this->db->insert('ms_bencana_detail', $data);
                 }
             }
         }
         return array('response' => 'SUCCESS', 'nama' => $nama_bencana);
+    }
+
+    /* Fungsi untuk update data */
+    public function kirimDataBencana()
+    {
+        $token_bencana = escape($this->input->post('tokenId', TRUE));
+        $dataBencana = array(
+            'id_status'      => 1
+        );
+        /*query update*/
+        $this->db->where('token_bencana ', $token_bencana);
+        $this->db->update('ms_bencana', $dataBencana);
+
+        return array('response' => 'SUCCESS', 'nama' => '');
     }
 
     /* Fungsi untuk update data */

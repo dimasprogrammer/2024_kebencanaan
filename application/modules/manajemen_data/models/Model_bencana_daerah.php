@@ -60,6 +60,7 @@ class Model_bencana_daerah extends CI_Model
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
+        $this->db->where('a.id_status', 1);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }
