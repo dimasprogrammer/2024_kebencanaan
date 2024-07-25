@@ -201,6 +201,297 @@ class Model_bencana_daerah extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getVillageBencana($token_bencana_detail)
+    {
+        $this->db->select('c.id_village, b.name as nm_district, c.name as nm_village');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('wil_district b', 'b.id_regency = a.id_regency_penerima', 'INNER');
+        $this->db->join('wil_village c', 'c.id_district = b.id_district', 'INNER');
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
+        $query = $this->db->get();
+        $datakelnag = $query->result();
+        $data[''] = 'Pilih Kelurahan/ Nagari/ Desa';
+        foreach($datakelnag as $kln)
+        {
+            $data[$kln->id_village] = $kln->nm_district . " - " . str_replace('\n', " ", $kln->nm_village);
+        }
+        return $data;
+    }
+
+    public function createKorbanJiwa()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time()+60*60*7);
+        $create_ip   = $this->input->ip_address();
+        
+        $waktu_data = $this->input->post('data_date');
+        $wil_village = $this->input->post('wil_village');
+        $token_bencana_detail = $this->input->post('token_bencana_detail');
+        $token_bencana = $this->input->post('token_bencana');
+
+        $korbanjiwa = $this->input->post('jumlah_korban');
+        if(!isset($korbanjiwa))
+        {
+            return array('status' => 'not_found', 'message' => 'Data tidak ditemukan');
+        }
+
+        $insertRow = [];
+
+        foreach($korbanjiwa as $idkorban => $kondisi )
+        {
+            foreach($kondisi as $idkondisi => $value)
+            {
+                $insertRow[] = array(
+                    'token_bencana_detail' => $token_bencana_detail,
+                    'token_korban_jiwa' => $this->uuid->v4(true),
+
+                    'id_kondisi' => $idkondisi,
+                    'id_jiwa' => $idkorban,
+                    'jumlah_korban' => $value,
+                    'waktu_data' => $waktu_data,
+                    'wil_village' => $wil_village,
+
+                    'create_by' => $create_by,
+                    'create_date' => $create_date,
+                    'create_ip' => $create_ip,
+
+                    'mod_by' => $create_by,
+                    'mod_date' => $create_date,
+                    'mod_ip' => $create_ip
+                );
+            }
+        }
+
+        $this->db->insert_batch('ms_bencana_korban', $insertRow);
+        return array('status' => 'success', 'message' => 'Data berhasil disimpan', 'affected_rows' => $this->db->affected_rows());
+    }
+
+    public function createKerusakan()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time()+60*60*7);
+        $create_ip   = $this->input->ip_address();
+        
+        $waktu_data = $this->input->post('data_date');
+        $wil_village = $this->input->post('wil_village');
+        $token_bencana_detail = $this->input->post('token_bencana_detail');
+
+        $rusak_ringan = $this->input->post('rusak_ringan');
+        $rusak_sedang = $this->input->post('rusak_sedang');
+        $rusak_berat = $this->input->post('rusak_berat');
+
+        $dataKerusakan = [];
+        foreach($rusak_ringan as $key => $value)
+        {
+            $dataKerusakan[] = array(
+                'token_bencana_detail' => $token_bencana_detail,
+                'token_kerusakan' => $this->uuid->v4(true),
+
+                'id_kerusakan' => $key,
+                'rusak_ringan' => $value,
+                'rusak_sedang' => $rusak_sedang[$key],
+                'rusak_berat' => $rusak_berat[$key],
+
+                'create_by' => $create_by,
+                'create_date' => $create_date,
+                'create_ip' => $create_ip,
+
+                'mod_by' => $create_by,
+                'mod_date' => $create_date,
+                'mod_ip' => $create_ip,
+
+                'waktu_data' => $waktu_data,
+                'wil_village' => $wil_village
+            );
+        }
+        $this->db->trans_start();
+        $this->db->insert_batch('ms_bencana_kerusakan', $dataKerusakan);
+
+        $dataTerendam = [];
+        $jml_terendam = $this->input->post('jml_terendam');
+        foreach($jml_terendam as $key => $value)
+        {
+            $dataTerendam[] = array(
+                'token_bencana_detail' => $token_bencana_detail,
+                'token_terendam' => $this->uuid->v4(true),
+
+                'id_kerusakan' => $key,
+                'jml_terendam' => $value,
+
+                'create_by' => $create_by,
+                'create_date' => $create_date,
+                'create_ip' => $create_ip,
+
+                'waktu_data' => $waktu_data,
+                'wil_village' => $wil_village
+            );
+        }
+        $this->db->insert_batch('ms_bencana_terendam', $dataTerendam);
+
+        $dataSaranaLainnya = [];
+        $jml_sarana_lainnya = $this->input->post('jml_sarana_lainnya');
+        foreach($jml_sarana_lainnya as $key => $value)
+        {
+            $dataSaranaLainnya[] = array(
+                'token_bencana_detail' => $token_bencana_detail,
+                'token_sarana' => $this->uuid->v4(true),
+
+                'id_kerusakan' => $key,
+                'jumlah_sarana' => $value,
+
+                'create_by' => $create_by,
+                'create_date' => $create_date,
+                'create_ip' => $create_ip,
+
+                'waktu_data' => $waktu_data,
+                'wil_village' => $wil_village
+            );
+        }
+        $this->db->insert_batch('ms_bencana_sarana_lain', $dataSaranaLainnya);
+        $this->db->trans_complete();
+        if( $this->db-> trans_status ()  ===  FALSE ) 
+        { 
+                return array('status' => 'error', 'message' => 'Data gagal disimpan', 'affected_rows' => $this->db->affected_rows());
+        }
+        return array('status' => 'success', 'message' => 'Data berhasil disimpan', 'affected_rows' => $this->db->affected_rows());
+
+    }
+
+    public function getDataKorbanJiwa($token = "", $wil_village = "")
+    {
+        $status = "RC422";
+        $message = "Data tidak ditemukan";
+        $waktu_data = "";
+        $create_date = "";
+        $nm_village = "";
+        $dataKorbanJiwa = [];
+
+
+        if($wil_village != "")
+        {
+            $this->db->where('a.wil_village', $wil_village);
+        }
+        
+        $this->db->where('a.token_bencana_detail', $token);
+        $this->db->select('a.wil_village,
+        a.waktu_data,
+        a.create_date,
+        count(a.id) as jumlah_data,
+        b.name as nm_village');
+        $this->db->from('ms_bencana_korban a');
+        $this->db->join('wil_village b', 'b.id_village = a.wil_village', 'INNER');
+        $this->db->group_by('a.wil_village, b.name, a.waktu_data, a.create_date');
+        $this->db->order_by('a.waktu_data DESC, a.create_date DESC');
+        $this->db->limit(1);
+        $latest_data = $this->db->get()->row_array();
+        
+        if($latest_data)
+        {
+            $status = "RC200";
+            $message = "Data ditemukan";
+            $wil_village = $latest_data['wil_village'];
+            $waktu_data = tgl_indo_time($latest_data['waktu_data']);
+            $create_date = tgl_indo_time($latest_data['create_date']);
+            $nm_village = $latest_data['nm_village'];
+
+            $this->db->select('id, id_jiwa, id_kondisi, jumlah_korban');
+            $this->db->from('ms_bencana_korban');
+            $this->db->where('wil_village', $latest_data['wil_village']);
+            $this->db->where('waktu_data', $latest_data['waktu_data']);
+            $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->order_by('id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataKorbanJiwa = $this->db->get()->result_array();
+        }
+        return array(   'status' => $status, 
+                        'message' => $message, 
+                        'data' => $dataKorbanJiwa, 
+                        'waktu_data' => $waktu_data, 
+                        'create_date' => $create_date,
+                        'wil_village' => $wil_village,
+                        'nm_village' => $nm_village
+                    );
+    }
+    public function getDataKerusakan($token = "", $wil_village = "")
+    {
+        $status = "RC422";
+        $message = "Data tidak ditemukan";
+        $waktu_data = "";
+        $create_date = "";
+        $nm_village = "";
+        $result = [];
+
+
+        if($wil_village != "")
+        {
+            $this->db->where('a.wil_village', $wil_village);
+        }
+        
+        $this->db->where('a.token_bencana_detail', $token);
+        $this->db->select('a.wil_village,
+        a.waktu_data,
+        a.create_date,
+        count(a.id) as jumlah_data,
+        b.name as nm_village');
+        $this->db->from('ms_bencana_kerusakan a');
+        $this->db->join('wil_village b', 'b.id_village = a.wil_village', 'INNER');
+        $this->db->group_by('a.wil_village, b.name, a.waktu_data, a.create_date');
+        $this->db->order_by('a.waktu_data DESC, a.create_date DESC');
+        $this->db->limit(1);
+        $latest_data = $this->db->get()->row_array();
+        
+        if($latest_data)
+        {
+            $status = "RC200";
+            $message = "Data ditemukan";
+            $wil_village = $latest_data['wil_village'];
+            $waktu_data = tgl_indo_time($latest_data['waktu_data']);
+            $create_date = tgl_indo_time($latest_data['create_date']);
+            $nm_village = $latest_data['nm_village'];
+
+            $this->db->select('id, id_kerusakan, rusak_ringan, rusak_sedang, rusak_berat');
+            $this->db->from('ms_bencana_kerusakan');
+            $this->db->where('wil_village', $latest_data['wil_village']);
+            $this->db->where('waktu_data', $latest_data['waktu_data']);
+            $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->order_by('id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataKerusakan = $this->db->get()->result_array();
+
+            $this->db->select('id, id_kerusakan, jml_terendam');
+            $this->db->from('ms_bencana_terendam');
+            $this->db->where('wil_village', $latest_data['wil_village']);
+            $this->db->where('waktu_data', $latest_data['waktu_data']);
+            $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->order_by('id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataTerendam = $this->db->get()->result_array();
+
+            $this->db->select('id, id_kerusakan, jumlah_sarana');
+            $this->db->from('ms_bencana_sarana_lain');
+            $this->db->where('wil_village', $latest_data['wil_village']);
+            $this->db->where('waktu_data', $latest_data['waktu_data']);
+            $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->order_by('id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataSaranaLainnya = $this->db->get()->result_array();
+            
+            $result = array(
+                'kerusakan' => $dataKerusakan,
+                'terendam' => $dataTerendam,
+                'sarana_lainnya' => $dataSaranaLainnya
+            );
+        }
+        return array(   'status' => $status, 
+                        'message' => $message, 
+                        'data' => $result, 
+                        'waktu_data' => $waktu_data, 
+                        'create_date' => $create_date,
+                        'wil_village' => $wil_village,
+                        'nm_village' => $nm_village
+                    );
+    }
 }
 
 // This is the end of auth signin model
