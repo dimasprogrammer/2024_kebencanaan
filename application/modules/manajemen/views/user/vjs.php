@@ -359,12 +359,10 @@
                 $('form#formEntry #regency').select2().val(regency).trigger("change");
             }
         } else {
-            if ($(this).data('level') == 1 || $(this).data('level') == 2 || $(this).data('level') == 3) {
-                $('.showreg').hide();
-                $('.showreg2').hide();
-                $('form#formEntry #instansi').select2().val('').trigger("change");
-                $('form#formEntry #regency').select2().val('').trigger("change");
-            }
+            $('.showreg').hide();
+            $('.showreg2').hide();
+            $('form#formEntry #instansi').select2().val('').trigger("change");
+            $('form#formEntry #regency').select2().val('').trigger("change");
         }
     });
 

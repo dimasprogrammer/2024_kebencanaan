@@ -26,6 +26,19 @@ class Model_master extends CI_Model
         return $jenis;
     }
 
+    public function getDataTanggapBencana()
+    {
+        $this->db->order_by('id_tanggap_bencana  ASC');
+        $query = $this->db->get('cx_tanggap_bencana');
+        $jenis[''] = 'Pilih Tanggap Bencana';
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $jenis[$row['id_tanggap_bencana']] = $row['nm_tanggap'];
+            }
+        }
+        return $jenis;
+    }
+
     public function getDataPusdalops()
     {
         $this->db->select('a.id_regency,

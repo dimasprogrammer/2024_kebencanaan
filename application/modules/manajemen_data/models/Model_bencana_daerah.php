@@ -39,6 +39,9 @@ class Model_bencana_daerah extends CI_Model
 
     private function _get_datatables_query($param)
     {
+        $id_regency = $this->app_loader->current_regencyID();
+        // print_r($id_regency);
+        // die;
         $post = array();
         if (is_array($param)) {
             foreach ($param as $v) {
@@ -57,6 +60,10 @@ class Model_bencana_daerah extends CI_Model
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
+        $this->db->where('a.id_status', 1);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
         $i = 0;
         foreach ($this->search as $item) { // loop column
             if ($_POST['search']['value']) { // if datatable send POST for search

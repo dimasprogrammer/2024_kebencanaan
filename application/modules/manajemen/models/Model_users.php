@@ -208,26 +208,26 @@ class Model_users extends CI_Model
 		$id_regency = escape($this->input->post('id_regency', TRUE));
 		$token		 = generateToken($username, $fullname);
 		$data = array(
-			'token'				  	    => $token,
-			'id_instansi'               => $id_instansi,
-			'id_regency'				=> $id_regency,
-			'username' 					=> $username,
-			'password' 					=> $this->bcrypt->hash_password($password),
-			'fullname' 					=> $fullname,
-			'foto_profile' 				=> 'default-user-icon.jpg',
-			'blokir' 					=> escape($this->input->post('blokir', TRUE)),
-			'id_status' 				=> escape($this->input->post('status', TRUE)),
-			'validate_email_code'		=> '',
-			'validate_email_status'		=> 0,
-			'reset_password_code'		=> '',
-			'reset_password_status'		=> 0,
-			'reset_password_expired'	=> 0,
-			'create_by' 				=> $create_by,
-			'create_date' 				=> $create_date,
-			'create_ip' 				=> $create_ip,
-			'mod_by' 					=> $create_by,
-			'mod_date' 					=> $create_date,
-			'mod_ip' 					=> $create_ip
+			'token'				  	 => $token,
+			'id_instansi'            => !empty($id_instansi) ? $id_instansi : 0,
+			'id_regency'             => !empty($id_regency) ? $id_regency : 0,
+			'username'               => !empty($username) ? $username : '',
+			'password' 				 => $this->bcrypt->hash_password($password),
+			'fullname'               => !empty($fullname) ? $fullname : '',
+			'foto_profile' 			 => 'default-user-icon.jpg',
+			'blokir' 				 => escape($this->input->post('blokir', TRUE)),
+			'id_status' 			 => escape($this->input->post('status', TRUE)),
+			'validate_email_code'	 => '',
+			'validate_email_status'	 => 0,
+			'reset_password_code'	 => '',
+			'reset_password_status'	 => 0,
+			'reset_password_expired' => 0,
+			'create_by' 			 => $create_by,
+			'create_date' 			 => $create_date,
+			'create_ip' 		     => $create_ip,
+			'mod_by' 				 => $create_by,
+			'mod_date' 				 => $create_date,
+			'mod_ip' 				 => $create_ip
 		);
 		/*cek username yang diinputkan*/
 		$this->db->where('username', $username);
