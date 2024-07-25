@@ -17,8 +17,6 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php echo form_hidden('token_bencana_detail', $token['token_bencana_detail']); ?>
-                                                    <?php echo form_hidden('token_bencana', $token['token_bencana']); ?>
                                                     
                                                     <?php
                                                         foreach ($master_data_korban as $index => $item) :
@@ -26,8 +24,9 @@
                                                             echo "<td>" . $item['nm_jiwa'] . "</td>";
                                                             foreach ($kondisi_korban as $key => $list) :
                                                                 echo '<td><input type="number" class="form-control form-control-sm text-right" value="0" min="0"
+                                                                        onfocus="resetValueOnClick(this)"
                                                                         name="jumlah_korban[' . $item['id'] . '][' . $list->id_kondisi . ']" 
-                                                                        id="jumlah_korban" required> </td>';
+                                                                        id="jumlah_korban-' . $item['id'] . '-' . $list->id_kondisi . '" required> </td>';
                                                             endforeach;
                                                             echo "</tr>";
                                                         endforeach;

@@ -105,6 +105,8 @@ class Bencana_daerah extends SLP_Controller
                                                             'siteUri' => $this->_uriName,
                                                             'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true)
                                                         ), true);
+
+        $this->session_info['data_village'] = $this->mbencana_daerah->getVillageBencana($token_bencana_detail);
         $this->session_info['token']    = $dataTokenBencana;
         $this->session_info['kondisi_korban'] = $this->mbencana_daerah->getDataKorbanKondisi();
         $this->session_info['master_data_korban'] = $this->mbencana_daerah->getMasterDataKorban();
@@ -147,6 +149,19 @@ class Bencana_daerah extends SLP_Controller
         }
         else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
+    }
+
+    public function review($type)
+    {
+        if($type == 'getDataKorbanJiwa')
+        {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataKorbanJiwa($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+        else
+            $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found')));
     }
 }
 

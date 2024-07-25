@@ -1,6 +1,9 @@
 <script type="text/javascript">
+    let activeTabs = 1;
+    const siteUri = '<?php echo site_url() . $siteUri; ?>';
     $(document).ready(function(e) {
         getDataListbencana();
+        $('.select-all').select2();
     });
 
 
@@ -33,5 +36,25 @@
         $('#tblList_length select').addClass('form-control');
     }
 
+    function resetValueOnClick(element)
+    {
+        $(element).val('');
+    }
+
     <?php if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs; ?>
+
+    function activeTabSet(tab) {
+        activeTabs = tab;
+        console.log(tab);
+        loadData();
+    }
+    $('#btn-refresh-korban-jiwa').click(function() {
+        loadData();
+    });
+    function loadData() {
+
+        if(activeTabs == 1) {
+            getDataKorbanJiwa();
+        }
+    }
 </script>
