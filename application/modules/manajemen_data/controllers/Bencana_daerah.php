@@ -6,10 +6,6 @@
  * @author Dimas Dwi Randa
  */
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 class Bencana_daerah extends SLP_Controller
 {
     protected $_vwName  = '';
@@ -97,95 +93,142 @@ class Bencana_daerah extends SLP_Controller
         $this->breadcrumb->add('Indikator', site_url($this->_uriName));
         $this->breadcrumb->add('create_nilai', '#');
 
-        $this->session_info['siteUri']       = $this->_uriName;
+        $this->session_info['siteUri']   = $this->_uriName;
+        $this->session_info['page_name'] = "Detail Bencana";
+        $this->session_info['page_js']   = $this->load->view(
+            $this->_vwName . '/vjs',
+            array(
+                'siteUri'       => $this->_uriName,
+                'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true),
+                'vkerusakanjs'  => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true),
+                'vternakjs'     => $this->load->view('bencana_daerah/vternak.js.php', '', true),
+                'vtersalurkanjs' => $this->load->view('bencana_daerah/vtersalurkan.js.php', '', true),
+                'vditerimajs' => $this->load->view('bencana_daerah/vditerima.js.php', '', true)
+            ),
+            true
+        );
 
-        $this->session_info['page_name']        = "Detail Indikator";
-        $this->session_info['page_js']          = $this->load->view($this->_vwName . '/vjs', 
-                                                    array(
-                                                            'siteUri' => $this->_uriName,
-                                                            'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true),
-                                                            'vkerusakanjs' => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true)
-                                                        ), true);
-
-        $this->session_info['data_village'] = $this->mbencana_daerah->getVillageBencana($token_bencana_detail);
-        $this->session_info['token']    = $dataTokenBencana;
-        $this->session_info['kondisi_korban'] = $this->mbencana_daerah->getDataKorbanKondisi();
-        $this->session_info['master_data_korban'] = $this->mbencana_daerah->getMasterDataKorban();
-        $this->session_info['korban_bencana']         = $this->mbencana_daerah->getDataKorbanBencana();
-        $this->session_info['sarana_rusak'] = $this->mbencana_daerah->getDataJenisSaranaRusak();
-        $this->session_info['sarana_terendam'] = $this->mbencana_daerah->getDataJenisSaranaTerendam();
-        $this->session_info['sarana_lainnya'] = $this->mbencana_daerah->getDataJenisSaranaLainnya();
-        $this->session_info['jenis_ternak'] = $this->mbencana_daerah->getDataJenisTernak();
-        $this->session_info['bantuan_diterima'] = $this->mbencana_daerah->getDataJenisBantuanDiterima();
-        $this->session_info['bantuan_disalurkan'] = $this->mbencana_daerah->getDataJenisBantuanTersalurkan();
-        $this->session_info['jenis_sumber'] = $this->mbencana_daerah->getDataJenisSumber();
-        $this->session_info['vkorbanjiwa'] = $this->load->view('bencana_daerah/vkorbanjiwa', $this->session_info, true);
-        $this->session_info['vkerusakan'] = $this->load->view('bencana_daerah/vkerusakan', $this->session_info, true);
-        $this->session_info['vternak'] = $this->load->view('bencana_daerah/vternak', $this->session_info, true);
+        $this->session_info['data_village']        = $this->mbencana_daerah->getVillageBencana($token_bencana_detail);
+        $this->session_info['token']               = $dataTokenBencana;
+        $this->session_info['kondisi_korban']      = $this->mbencana_daerah->getDataKorbanKondisi();
+        $this->session_info['master_data_korban']  = $this->mbencana_daerah->getMasterDataKorban();
+        $this->session_info['korban_bencana']      = $this->mbencana_daerah->getDataKorbanBencana();
+        $this->session_info['sarana_rusak']        = $this->mbencana_daerah->getDataJenisSaranaRusak();
+        $this->session_info['sarana_terendam']     = $this->mbencana_daerah->getDataJenisSaranaTerendam();
+        $this->session_info['sarana_lainnya']      = $this->mbencana_daerah->getDataJenisSaranaLainnya();
+        $this->session_info['jenis_ternak']        = $this->mbencana_daerah->getDataJenisTernak();
+        $this->session_info['bantuan_diterima']    = $this->mbencana_daerah->getDataJenisBantuanDiterima();
+        $this->session_info['bantuan_disalurkan']  = $this->mbencana_daerah->getDataJenisBantuanTersalurkan();
+        $this->session_info['jenis_sumber']        = $this->mbencana_daerah->getDataJenisSumber();
+        $this->session_info['vkorbanjiwa']         = $this->load->view('bencana_daerah/vkorbanjiwa', $this->session_info, true);
+        $this->session_info['vkerusakan']          = $this->load->view('bencana_daerah/vkerusakan', $this->session_info, true);
+        $this->session_info['vternak']             = $this->load->view('bencana_daerah/vternak', $this->session_info, true);
         $this->session_info['vbantuantersalurkan'] = $this->load->view('bencana_daerah/vbantuantersalurkan', $this->session_info, true);
-        $this->session_info['vbantuanditerima'] = $this->load->view('bencana_daerah/vbantuanditerima', $this->session_info, true);
-        $this->session_info['vbantuanrelawan'] = $this->load->view('bencana_daerah/vbantuanrelawan', $this->session_info, true);
+        $this->session_info['vbantuanditerima']    = $this->load->view('bencana_daerah/vbantuanditerima', $this->session_info, true);
+        $this->session_info['vbantuanrelawan']     = $this->load->view('bencana_daerah/vbantuanrelawan', $this->session_info, true);
         $this->template->build($this->_vwName . '/vdetail', $this->session_info);
     }
 
     public function create($type)
     {
         $csrfHash = $this->security->get_csrf_hash();
-        if($type == 'korbanjiwa')
-        {
+        if ($type == 'korbanjiwa') {
             $response = $this->mbencana_daerah->createKorbanJiwa();
-            if($response['status'] == 'success')
-            {
+            if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
                 $result['csrfHash'] = $csrfHash;
                 $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            }
-            else{
+            } else {
                 $result = $response;
                 $result['status'] = "RC422";
                 $result['csrfHash'] = $csrfHash;
                 $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
-        }
-        else if($type == 'kerusakan')
-        {
+        } else if ($type == 'kerusakan') {
             $response = $this->mbencana_daerah->createKerusakan();
-            if($response['status'] == 'success')
-            {
+            if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
                 $result['csrfHash'] = $csrfHash;
                 $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            }
-            else{
+            } else {
                 $result = $response;
                 $result['status'] = "RC422";
                 $result['csrfHash'] = $csrfHash;
                 $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
-        }
-        else
+        } else if ($type == 'ternak') {
+            $response = $this->mbencana_daerah->createTernak();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        } else if ($type == 'tersalurkan') {
+            $response = $this->mbencana_daerah->createTersalurkan();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        } else if ($type == 'diterima') {
+            $response = $this->mbencana_daerah->createDiterima();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
+                $result['csrfHash'] = $csrfHash;
+                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        } else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
     }
 
     public function review($type)
     {
-        if($type == 'getDataKorbanJiwa')
-        {
+        if ($type == 'getDataKorbanJiwa') {
             $wil_village = $this->input->get('wil_village');
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataKorbanJiwa($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        }
-        else if($type == 'getDataKerusakan')
-        {
+        } else if ($type == 'getDataKerusakan') {
             $wil_village = $this->input->get('wil_village');
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataKerusakan($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        }
-        else
+        } else if ($type == 'getDataTernak') {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataTernak($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } else if ($type == 'getDataTersalurkan') {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataTersalurkan($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } else if ($type == 'getDataDiterima') {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataDiterima($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found')));
     }
 }

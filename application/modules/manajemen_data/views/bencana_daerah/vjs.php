@@ -39,14 +39,13 @@
     }
 
     // trigger ketika focus ke form input value akan di kosongkan
-    function resetValueOnClick(element)
-    {
+    function resetValueOnClick(element) {
         lastValue = element.value;
         $(element).val('');
     }
-    function restoreValueOnClick(element)
-    {
-        if(element.value == "") {
+
+    function restoreValueOnClick(element) {
+        if (element.value == "") {
             $(element).val(lastValue);
         }
     }
@@ -65,11 +64,16 @@
     // fungsi untuk load data sesuai dengan tab yang aktif
     function loadData() {
 
-        if(activeTabs == 1) {
+        if (activeTabs == 1) {
             getDataKorbanJiwa();
-        }
-        else if(activeTabs == 2) {
+        } else if (activeTabs == 2) {
             getDataKerusakan();
+        } else if (activeTabs == 3) {
+            getDataTernak();
+        } else if (activeTabs == 4) {
+            getDataTersalurkan();
+        } else if (activeTabs == 5) {
+            getDataDiterima();
         }
     }
 
@@ -77,20 +81,18 @@
     function activedTabUrl() {
         let url = window.location.href;
         let tab = url.split('#panel')[1];
-        if(tab) {
+        if (tab) {
             $('#head-panel' + tab).click();
-        }
-        else {
+        } else {
             $('#head-panel1').click();
         }
     }
 
-    function validasiWaktuDanVillage()
-    {
+    function validasiWaktuDanVillage() {
         let data_date = $('#data_date').val();
         let wil_village = $('#wil_village').val();
         // validasi waktu tanggal data
-        if(data_date == ""){
+        if (data_date == "") {
             swalAlert.fire({
                 title: 'Perhatian!',
                 text: 'Silahkan pilih waktu dan tanggal data terlebih dahulu',
@@ -104,8 +106,8 @@
             return false;
         }
         // validasi kelurahan/nagari/desa
-        
-        if(wil_village == ""){
+
+        if (wil_village == "") {
             swalAlert.fire({
                 title: 'Perhatian!',
                 text: 'Silahkan pilih kelurahan/nagari/desa terlebih dahulu',
@@ -120,9 +122,12 @@
         }
         return true;
     }
-    
-    <?php 
-        if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs; 
-        if (isset($vkerusakanjs)) echo $vkerusakanjs; 
+
+    <?php
+    if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs;
+    if (isset($vkerusakanjs)) echo $vkerusakanjs;
+    if (isset($vternakjs)) echo $vternakjs;
+    if (isset($vtersalurkanjs)) echo $vtersalurkanjs;
+    if (isset($vditerimajs)) echo $vditerimajs;
     ?>
 </script>

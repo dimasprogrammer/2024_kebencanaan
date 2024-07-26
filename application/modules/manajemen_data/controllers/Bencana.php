@@ -132,13 +132,6 @@ class bencana extends SLP_Controller
                 $dataDetail = $this->mbencana->getDataBencanaDetail($data['token_bencana']);
 
                 $row = array();
-                $year  = substr($data['create_date'], 0, 4);
-                $month = substr($data['create_date'], 5, 2);
-                if ($data['nama_file'] == '') {
-                    $gambar = '';
-                } else {
-                    $gambar = '<a target="_blank" href="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" > Lihat Gambar </a>';
-                }
                 $row['logo']               = !empty($gambar) ? $gambar : '';
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
@@ -151,6 +144,8 @@ class bencana extends SLP_Controller
                 $row['latitude']           = !empty($data) ? $data['latitude'] : '';
                 $row['longitude']          = !empty($data) ? $data['longitude'] : '';
                 $row['id_status']          = !empty($data) ? $data['id_status'] : '';
+                $row['nama_file']          = !empty($data) ? $data['nama_file'] : '';
+                $row['nama_file_infografis']          = !empty($data) ? $data['nama_file_infografis'] : '';
                 $result = array(
                     'status' => 'RC200', 'message' => array(
                         'dataBencana'     => $data,

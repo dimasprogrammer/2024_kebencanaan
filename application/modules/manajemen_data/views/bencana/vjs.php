@@ -136,6 +136,23 @@
                     $('#latitude').val(data.message.dataBencana.latitude);
                     $('#longitude').val(data.message.dataBencana.longitude);
 
+                    let year = data.message.dataBencana.create_date.substr(0, 4);
+                    let month = data.message.dataBencana.create_date.substr(5, 2);
+
+                    let gambarHtml = '';
+                    if (data.message.dataBencana.nama_file) {
+                        let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencana.nama_file;
+                        gambarHtml = '<img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid">';
+                    }
+                    $('#gambar').html(gambarHtml);
+
+                    let infografisHtml = '';
+                    if (data.message.dataBencana.nama_file_infografis) {
+                        let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencana.nama_file_infografis;
+                        infografisHtml = '<img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid">';
+                    }
+                    $('#infografis').html(infografisHtml);
+
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
                     htmlBencana += '<thead>';
                     htmlBencana += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
