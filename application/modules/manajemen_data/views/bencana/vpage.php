@@ -129,7 +129,7 @@
                             <label class="custom-file-label" for="nama_file"> </i>Silahkan Pilih File</label>
                         </div>
                         <div class="invalid-feedback"></div>
-                        <div id="logo"></div>
+                        <div id="gambar"></div>
                     </div>
                     <div class="col-12 col-md-4 required">
                         <label for="video_bencana" class="control-label font-weight-bold"> Video Bencana</label>
