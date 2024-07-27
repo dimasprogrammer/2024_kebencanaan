@@ -71,6 +71,9 @@
         else if(activeTabs == 2) {
             getDataKerusakan();
         }
+        else if(activeTabs == 6) {
+            getDataRelawan();
+        }
     }
 
     // fungsi untuk mengaktifkan tab sesuai dengan url
@@ -124,5 +127,6 @@
     <?php 
         if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs; 
         if (isset($vkerusakanjs)) echo $vkerusakanjs; 
+        if (isset($vbantuanrelawanjs)) echo $vbantuanrelawanjs; 
     ?>
 </script>

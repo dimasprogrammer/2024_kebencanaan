@@ -104,7 +104,8 @@ class Bencana_daerah extends SLP_Controller
                                                     array(
                                                             'siteUri' => $this->_uriName,
                                                             'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true),
-                                                            'vkerusakanjs' => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true)
+                                                            'vkerusakanjs' => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true),
+                                                            'vbantuanrelawanjs' => $this->load->view('bencana_daerah/vbantuanrelawan.js.php', '', true)
                                                         ), true);
 
         $this->session_info['data_village'] = $this->mbencana_daerah->getVillageBencana($token_bencana_detail);
@@ -130,7 +131,9 @@ class Bencana_daerah extends SLP_Controller
 
     public function create($type)
     {
+        $result = array();
         $csrfHash = $this->security->get_csrf_hash();
+        $result['csrfHash'] = $csrfHash;
         if($type == 'korbanjiwa')
         {
             $response = $this->mbencana_daerah->createKorbanJiwa();
@@ -138,14 +141,10 @@ class Bencana_daerah extends SLP_Controller
             {
                 $result = $response;
                 $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
             else{
                 $result = $response;
                 $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
         }
         else if($type == 'kerusakan')
@@ -155,18 +154,30 @@ class Bencana_daerah extends SLP_Controller
             {
                 $result = $response;
                 $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
             else{
                 $result = $response;
                 $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            }
+        }
+        else if($type == 'relawan')
+        {
+            $response = $this->mbencana_daerah->createRelawan();
+            if($response['status'] == 'success')
+            {
+                $result = $response;
+                $result['status'] = "RC200";
+            }
+            else{
+                $result = $response;
+                $result['status'] = "RC422";
             }
         }
         else
-            $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
+            $result = array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash);
+
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
 
     public function review($type)
@@ -183,6 +194,13 @@ class Bencana_daerah extends SLP_Controller
             $wil_village = $this->input->get('wil_village');
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataKerusakan($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+        else if($type == 'getDataRelawan')
+        {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataRelawan($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
         else
