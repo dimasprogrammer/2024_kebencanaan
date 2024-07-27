@@ -467,7 +467,7 @@ class Model_bencana_daerah extends CI_Model
         $wil_village = $this->input->post('wil_village');
         $token_bencana_detail = $this->input->post('token_bencana_detail');
 
-        $jumlah_bantuan = $this->input->post('jumlah_bantuan');
+        $jumlah_bantuan = $this->input->post('jml_bantuan_diterima');
         $dataDiterima = [];
         foreach ($jumlah_bantuan as $key => $value) {
             $dataDiterima[] = array(
@@ -488,7 +488,7 @@ class Model_bencana_daerah extends CI_Model
         $this->db->trans_start();
         $this->db->insert_batch('ms_bencana_diterima', $dataDiterima);
 
-        $jumlah_sumber = $this->input->post('jumlah_sumber');
+        $jumlah_sumber = $this->input->post('jml_sumber_diterima');
         $dataSumber = [];
         foreach ($jumlah_sumber as $key => $value) {
             $dataSumber[] = array(
@@ -500,7 +500,8 @@ class Model_bencana_daerah extends CI_Model
                 'create_date'           => $create_date,
                 'create_ip'             => $create_ip,
                 'waktu_data'            => $waktu_data,
-                'wil_village'           => $wil_village
+                'wil_village'           => $wil_village,
+                'diterima'              => 1
             );
         }
         $this->db->insert_batch('ms_bencana_sumber', $dataSumber);
@@ -794,6 +795,7 @@ class Model_bencana_daerah extends CI_Model
             $this->db->where('wil_village', $latest_data['wil_village']);
             $this->db->where('waktu_data', $latest_data['waktu_data']);
             $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->where('diterima', 0);
             $this->db->order_by('id ASC');
             $this->db->limit($latest_data['jumlah_data']);
             $dataSumber = $this->db->get()->result_array();
@@ -863,6 +865,7 @@ class Model_bencana_daerah extends CI_Model
             $this->db->where('wil_village', $latest_data['wil_village']);
             $this->db->where('waktu_data', $latest_data['waktu_data']);
             $this->db->where('create_date', $latest_data['create_date']);
+            $this->db->where('diterima', 1);
             $this->db->order_by('id ASC');
             $this->db->limit($latest_data['jumlah_data']);
             $dataSumber = $this->db->get()->result_array();

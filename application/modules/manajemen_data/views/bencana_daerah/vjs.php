@@ -130,8 +130,8 @@
     if (isset($vkorbanjiwajs)) echo $vkorbanjiwajs;
     if (isset($vkerusakanjs)) echo $vkerusakanjs;
     if (isset($vternakjs)) echo $vternakjs;
-    if (isset($vtersalurkanjs)) echo $vtersalurkanjs;
-    if (isset($vditerimajs)) echo $vditerimajs;
+    if (isset($vbantuantersalurkanjs)) echo $vbantuantersalurkanjs;
+    if (isset($vbantuanditerimajs)) echo $vbantuanditerimajs;
     if (isset($vbantuanrelawanjs)) echo $vbantuanrelawanjs; 
     ?>
 </script>

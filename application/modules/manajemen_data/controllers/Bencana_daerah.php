@@ -101,8 +101,8 @@ class Bencana_daerah extends SLP_Controller
                 'vkorbanjiwajs' => $this->load->view('bencana_daerah/vkorbanjiwa.js.php', '', true),
                 'vkerusakanjs'  => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true),
                 'vternakjs'     => $this->load->view('bencana_daerah/vternak.js.php', '', true),
-                'vtersalurkanjs' => $this->load->view('bencana_daerah/vtersalurkan.js.php', '', true),
-                'vditerimajs' => $this->load->view('bencana_daerah/vditerima.js.php', '', true),
+                'vbantuantersalurkanjs' => $this->load->view('bencana_daerah/vbantuantersalurkan.js.php', '', true),
+                'vbantuanditerimajs' => $this->load->view('bencana_daerah/vbantuanditerima.js.php', '', true),
                 'vbantuanrelawanjs' => $this->load->view('bencana_daerah/vbantuanrelawan.js.php', '', true)
             ),
             true

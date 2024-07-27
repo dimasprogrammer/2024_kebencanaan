@@ -22,7 +22,10 @@
                                         <td><?php echo $list->nm_jenis_bantuan; ?></td>
                                         <td><?php echo $list->satuan; ?></td>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm text-right" onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" name="jumlah_bantuan[<?= $list->id_jenis_bantuan ?>]" id="jumlah_bantuan-<?= $list->id_jenis_bantuan ?>" required>
+                                            <input type="number" class="form-control form-control-sm text-right" 
+                                                onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" 
+                                                name="jml_bantuan_diterima[<?= $list->id_jenis_bantuan ?>]" id="jml_bantuan_diterima-<?= $list->id_jenis_bantuan ?>" 
+                                            required>
                                         </td>
                                     </tr>
                                 <?php
@@ -48,7 +51,10 @@
                                     <tr>
                                         <td><?php echo $list->nm_jenis_bantuan; ?></td>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm text-right" onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" name="jumlah_sumber[<?= $list->id_jenis_bantuan ?>]" id="jumlah_sumber-<?= $list->id_jenis_bantuan ?>" required>
+                                            <input type="number" class="form-control form-control-sm text-right" 
+                                                onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" 
+                                                name="jml_sumber_diterima[<?= $list->id_jenis_bantuan ?>]" id="jml_sumber_diterima-<?= $list->id_jenis_bantuan ?>" 
+                                            required>
                                         </td>
                                     </tr>
                                 <?php
