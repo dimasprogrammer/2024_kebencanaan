@@ -92,7 +92,6 @@ class Bencana_daerah extends SLP_Controller
         $this->breadcrumb->add('Konfirmasi Indikator', '#');
         $this->breadcrumb->add('Indikator', site_url($this->_uriName));
         $this->breadcrumb->add('create_nilai', '#');
-
         $this->session_info['siteUri']   = $this->_uriName;
         $this->session_info['page_name'] = "Detail Bencana";
         $this->session_info['page_js']   = $this->load->view(
@@ -103,7 +102,8 @@ class Bencana_daerah extends SLP_Controller
                 'vkerusakanjs'  => $this->load->view('bencana_daerah/vkerusakan.js.php', '', true),
                 'vternakjs'     => $this->load->view('bencana_daerah/vternak.js.php', '', true),
                 'vtersalurkanjs' => $this->load->view('bencana_daerah/vtersalurkan.js.php', '', true),
-                'vditerimajs' => $this->load->view('bencana_daerah/vditerima.js.php', '', true)
+                'vditerimajs' => $this->load->view('bencana_daerah/vditerima.js.php', '', true),
+                'vbantuanrelawanjs' => $this->load->view('bencana_daerah/vbantuanrelawan.js.php', '', true)
             ),
             true
         );
@@ -131,74 +131,75 @@ class Bencana_daerah extends SLP_Controller
 
     public function create($type)
     {
+        $result = array();
         $csrfHash = $this->security->get_csrf_hash();
-        if ($type == 'korbanjiwa') {
+        if($type == 'korbanjiwa')
+        {
             $response = $this->mbencana_daerah->createKorbanJiwa();
             if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            } else {
+            }
+            else{
                 $result = $response;
                 $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
         } else if ($type == 'kerusakan') {
             $response = $this->mbencana_daerah->createKerusakan();
             if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            } else {
+            }
+            else{
                 $result = $response;
                 $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
         } else if ($type == 'ternak') {
             $response = $this->mbencana_daerah->createTernak();
             if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             } else {
                 $result = $response;
                 $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
             }
         } else if ($type == 'tersalurkan') {
-            $response = $this->mbencana_daerah->createTersalurkan();
-            if ($response['status'] == 'success') {
-                $result = $response;
-                $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            } else {
-                $result = $response;
-                $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
+              $response = $this->mbencana_daerah->createTersalurkan();
+              if ($response['status'] == 'success') {
+                  $result = $response;
+                  $result['status'] = "RC200";
+              } else {
+                  $result = $response;
+                  $result['status'] = "RC422";
+              }
+          } else if ($type == 'diterima') {
+              $response = $this->mbencana_daerah->createDiterima();
+              if ($response['status'] == 'success') {
+                  $result = $response;
+                  $result['status'] = "RC200";
+              } else {
+                  $result = $response;
+                  $result['status'] = "RC422";
+              }
+          } else if($type == 'relawan')
+            {
+                $response = $this->mbencana_daerah->createRelawan();
+                if($response['status'] == 'success')
+                {
+                    $result = $response;
+                    $result['status'] = "RC200";
+                }
+                else{
+                    $result = $response;
+                    $result['status'] = "RC422";
+                }
             }
-        } else if ($type == 'diterima') {
-            $response = $this->mbencana_daerah->createDiterima();
-            if ($response['status'] == 'success') {
-                $result = $response;
-                $result['status'] = "RC200";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            } else {
-                $result = $response;
-                $result['status'] = "RC422";
-                $result['csrfHash'] = $csrfHash;
-                $this->output->set_content_type('application/json')->set_output(json_encode($result));
-            }
-        } else
-            $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash)));
+        else
+            $result = array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash);
+
+        
+        $result['csrfHash'] = $csrfHash;
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
 
     public function review($type)
@@ -228,7 +229,13 @@ class Bencana_daerah extends SLP_Controller
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataDiterima($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        } else
+        } else if($type == 'getDataRelawan') {
+            $wil_village = $this->input->get('wil_village');
+            $token_bencana_detail = $this->input->get('token_bencana_detail');
+            $data = $this->mbencana_daerah->getDataRelawan($token_bencana_detail, $wil_village);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+          else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found')));
     }
 }

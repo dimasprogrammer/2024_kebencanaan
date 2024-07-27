@@ -75,6 +75,9 @@
         } else if (activeTabs == 5) {
             getDataDiterima();
         }
+        else if(activeTabs == 6) {
+            getDataRelawan();
+        }
     }
 
     // fungsi untuk mengaktifkan tab sesuai dengan url
@@ -129,5 +132,6 @@
     if (isset($vternakjs)) echo $vternakjs;
     if (isset($vtersalurkanjs)) echo $vtersalurkanjs;
     if (isset($vditerimajs)) echo $vditerimajs;
+    if (isset($vbantuanrelawanjs)) echo $vbantuanrelawanjs; 
     ?>
 </script>
