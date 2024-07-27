@@ -49,7 +49,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryForm" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" id="frmEntry">
+    <div class="modal-dialog modal-xxl" id="frmEntry">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Entri Data bencana</h4>
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-4 required">
+                    <div class="col-12 col-md-6 required">
                         <label for="nama_file_infografis" class="control-label font-weight-bold">Infografis</label>
                         <div class="custom-file">
                             <input type="file" class="customFile" name="nama_file_infografis" id="nama_file_infografis" lang="in" value="<?= $this->input->post('nama_file_infografis', TRUE); ?>">
@@ -122,23 +122,23 @@
                         <div class="invalid-feedback"></div>
                         <div id="infografis"></div>
                     </div>
-                    <div class="col-12 col-md-4 required">
+                    <div class="col-12 col-md-6 required">
                         <label for="nama_file" class="control-label font-weight-bold">Foto Bencana</label>
                         <div class="custom-file">
                             <input type="file" class="customFile" name="nama_file" id="nama_file">
                             <label class="custom-file-label" for="nama_file"> </i>Silahkan Pilih File</label>
                         </div>
                         <div class="invalid-feedback"></div>
-                        <div id="logo"></div>
+                        <div id="gambar"></div>
                     </div>
-                    <div class="col-12 col-md-4 required">
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-6 required">
                         <label for="video_bencana" class="control-label font-weight-bold"> Video Bencana</label>
                         <input type="text" class="form-control" name="video_bencana" id="video_bencana" placeholder="Video Bencana" required>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="form-row mb-3">
-                    <div class="col-12 col-md-12 required">
+                    <div class="col-12 col-md-6 required">
                         <label for="id_regency" class="control-label font-weight-bold">Pusdalop Bencana <span class="text-danger">*</span></label>
                         <?php echo form_multiselect('id_regency[]', isset($pusdalops) ? $pusdalops : array('' => 'Pusdalop Bencana'), $this->input->post('id_regency[]', TRUE), 'class="form-control select-all" data-placeholder="Pilih Data"  style="width:100%" required=""'); ?>
                         <div class="invalid-feedback"></div>
@@ -186,7 +186,7 @@
 
 <!------------------------------------ FORM EDIT DATA BENCANA SHARE-------------------------------------------->
 <div class="modal fade" id="modalEntryFormShare" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" id="frmEntryShare">
+    <div class="modal-dialog modal-xxl" id="frmEntryShare">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Update Data </h4>
@@ -219,7 +219,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA KIRIM -------------------------------------------->
 <div class="modal fade" id="modalEntryFormKirim" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" id="frmEntryKirim">
+    <div class="modal-dialog modal-xxl" id="frmEntryKirim">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
@@ -228,7 +228,7 @@
                 </button>
             </div>
             <?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/create' : ''), array('id' => 'formEntryKirim', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
-            <div id="errSuccess"></div>
+            <div id="errSuccessKirim"></div>
             <div class="modal-body">
                 <div id="errEntry"></div>
                 <?php echo form_hidden('tokenId', ''); ?>
@@ -264,15 +264,17 @@
                 <h6 class="control-label font-weight-bold">TITIK KOORDINAT LOKASI BENCANA</h6>
                 <div id="map2" class="mb-3"></div>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-4 required">
+                    <div class="col-12 col-md-6 required">
                         <label for="infografis_kirim" class="control-label font-weight-bold"> Infografis </label>
                         <div id="infografis_kirim"></div>
                     </div>
-                    <div class="col-12 col-md-4 required">
+                    <div class="col-12 col-md-6 required">
                         <label for="infografis_kirim" class="control-label font-weight-bold"> Gambar Bencana </label>
                         <div id="gambar_kirim"></div>
                     </div>
-                    <div class="col-12 col-md-4 required">
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 required">
                         <label for="video_bencana_kirim" class="control-label font-weight-bold">Video Bencana</label>
                         <input type="text" class="form-control" id="video_bencana_kirim" disabled>
                     </div>
@@ -283,7 +285,6 @@
                             <div class="card-header white-text primary-color-dark">
                                 Daftar Pusdalop Bencana Daerah
                             </div>
-                            <!-- <div id="errEntryShare"></div> -->
                             <div class="card-body text-center px-4 mb-3">
                                 <table class="table table-striped table-hover" width="100%" id="tblKirim">
 

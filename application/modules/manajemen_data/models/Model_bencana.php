@@ -146,7 +146,7 @@ class Model_bencana extends CI_Model
             $config = array(
                 'upload_path'      => './' . $dirname . '/',
                 'allowed_types'    => 'png|jpg|jpeg|pdf',
-                'file_name'        => 'file_' . date('YmdHis', strtotime($create_date)),
+                'file_name'        => 'file_bencana_' . date('YmdHis', strtotime($create_date)),
                 'file_ext_tolower' => TRUE,
                 'max_size'         => 5024,
                 'max_filename'     => 0,
@@ -177,7 +177,7 @@ class Model_bencana extends CI_Model
             $config = array(
                 'upload_path'      => './' . $dirname . '/',
                 'allowed_types'    => 'png|jpg|jpeg|pdf',
-                'file_name'        => 'file_' . date('YmdHis', strtotime($create_date)),
+                'file_name'        => 'file_infografis_' . date('YmdHis', strtotime($create_date)),
                 'file_ext_tolower' => TRUE,
                 'max_size'         => 5024,
                 'max_filename'     => 0,
@@ -219,7 +219,7 @@ class Model_bencana extends CI_Model
             // die;
             /*query insert*/
             $this->db->insert('ms_bencana', $data);
-            foreach ($id_regency as $key => $id) {
+            foreach ((array)$id_regency as $key => $id) {
                 $token_bencana_detail =  $this->uuid->v4(true);
                 /*cek data kontrol*/
                 $this->db->where('token_bencana_detail', $token_bencana_detail);

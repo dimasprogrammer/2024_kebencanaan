@@ -289,3 +289,21 @@ ERROR - 2024-07-25 16:38:14 --> 404 Page Not Found: /index
 ERROR - 2024-07-25 16:38:15 --> 404 Page Not Found: /index
 ERROR - 2024-07-25 16:39:18 --> 404 Page Not Found: /index
 ERROR - 2024-07-25 16:39:18 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:02 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:07 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:09 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:11 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:12 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:15 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:15 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:46 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:45:46 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:47:40 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:47:40 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:04 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:04 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:33 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:34 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:41 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:48:41 --> 404 Page Not Found: /index
+ERROR - 2024-07-25 16:52:37 --> Severity: Warning --> foreach() argument must be of type array|object, string given D:\APPLICATION\PHP\PHP8\2024\2024_kebencanaan\application\modules\manajemen_data\models\Model_bencana.php 222
