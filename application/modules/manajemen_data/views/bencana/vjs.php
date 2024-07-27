@@ -393,7 +393,6 @@
                     $('#nama_bencana_kirim').val(data.message.dataBencanaKirim.nama_bencana);
                     $('#keterangan_bencana_kirim').val(data.message.dataBencanaKirim.keterangan_bencana);
                     $('#penyebab_bencana_kirim').val(data.message.dataBencanaKirim.penyebab_bencana);
-                    // $('#infografis_kirim').html(data.message.dataBencanaKirim.gambar);
 
                     let year = data.message.dataBencanaKirim.create_date.substr(0, 4);
                     let month = data.message.dataBencanaKirim.create_date.substr(5, 2);
@@ -401,14 +400,14 @@
                     let gambarHtml = '';
                     if (data.message.dataBencanaKirim.nama_file) {
                         let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file;
-                        gambarHtml = '<img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid">';
+                        gambarHtml = '<div class="img-container"><img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid"></div>';
                     }
                     $('#gambar_kirim').html(gambarHtml);
 
                     let infografisHtml = '';
                     if (data.message.dataBencanaKirim.nama_file_infografis) {
                         let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file_infografis;
-                        infografisHtml = '<img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid">';
+                        infografisHtml = '<div class="img-container"><img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid"></div>';
                     }
                     $('#infografis_kirim').html(infografisHtml);
 
@@ -518,7 +517,7 @@
                         })
                     } else {
                         $('#frmEntryKirim').waitMe('hide');
-                        $('#modalEntryForm').modal('toggle');
+                        $('#modalEntryFormKirim').modal('toggle');
                         swalAlert.fire({
                             title: 'Berhasil Simpan',
                             text: data.message,
@@ -527,7 +526,7 @@
                         }).then((result) => {
                             if (result.value) {
                                 newKode = data.kode;
-                                $('#errSuccess').html(msg.success(data.message));
+                                $('#errSuccessKirim').html(msg.success(data.message));
                                 getDataListbencana();
                             }
                         })

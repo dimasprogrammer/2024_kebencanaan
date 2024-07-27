@@ -247,6 +247,9 @@ class bencana extends SLP_Controller
                 $row['id_status']          = !empty($data) ? $data['id_status'] : '';
                 $row['nama_file']          = !empty($data) ? $data['nama_file'] : '';
                 $row['nama_file_infografis']          = !empty($data) ? $data['nama_file_infografis'] : '';
+
+                // $row['id_regency_penerima']          = !empty($dataDetail) ? $dataDetail['id_regency_penerima'] : '';
+
                 // $row['gambar']             = !empty($gambar) ? $gambar : '';
                 $result = array(
                     'status' => 'RC200', 'message' => array(

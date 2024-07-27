@@ -60,7 +60,7 @@ class Model_bencana_daerah extends CI_Model
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
-        $this->db->where('a.id_status', 1);
+        $this->db->where('b.id_status', 1);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }
@@ -655,17 +655,16 @@ class Model_bencana_daerah extends CI_Model
         $nm_village = "";
         $result = [];
 
-
         if ($wil_village != "") {
             $this->db->where('a.wil_village', $wil_village);
         }
 
         $this->db->where('a.token_bencana_detail', $token);
-        $this->db->select('a.wil_village,
-        a.waktu_data,
-        a.create_date,
-        count(a.id) as jumlah_data,
-        b.name as nm_village');
+        $this->db->select(' a.wil_village,
+                            a.waktu_data,
+                            a.create_date,
+                            count(a.id) as jumlah_data,
+                            b.name as nm_village');
         $this->db->from('ms_bencana_ternak a');
         $this->db->join('wil_village b', 'b.id_village = a.wil_village', 'INNER');
         $this->db->group_by('a.wil_village, b.name, a.waktu_data, a.create_date');
@@ -695,13 +694,13 @@ class Model_bencana_daerah extends CI_Model
             );
         }
         return array(
-            'status' => $status,
-            'message' => $message,
-            'data' => $result,
-            'waktu_data' => $waktu_data,
+            'status'      => $status,
+            'message'     => $message,
+            'data'        => $result,
+            'waktu_data'  => $waktu_data,
             'create_date' => $create_date,
             'wil_village' => $wil_village,
-            'nm_village' => $nm_village
+            'nm_village'  => $nm_village
         );
     }
 
