@@ -62,6 +62,7 @@
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success waves-effect waves-light px-3 py-2 font-weight-bold" name="save" id="save-diterima"><i class="fas fa-check"></i> Simpan Data </button>
             </div>
+        </form>
     </div>
 </div>
 <!-- Panel 4 -->
