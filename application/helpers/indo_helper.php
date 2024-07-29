@@ -45,6 +45,12 @@ if (!function_exists('bulan')) {
 	}
 }
 
+
+function convert_to_rupiah($angka)
+{
+	return 'Rp. ' . strrev(implode('.', str_split(strrev(strval($angka)), 3)));
+}
+
 //untuk mengetahui bulan bulan
 if (!function_exists('nama_bulan')) {
 	function nama_bulan($bln)

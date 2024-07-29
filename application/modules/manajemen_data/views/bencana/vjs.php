@@ -124,7 +124,10 @@
                     $('#tanggal_bencana').val(data.message.dataBencana.tanggal_bencana);
                     $('#jumlah_kejadian').val(data.message.dataBencana.jumlah_kejadian);
                     $('#video_bencana').val(data.message.dataBencana.video_bencana);
+                    $('#taksiran_kerugian').val(data.message.dataBencana.taksiran_kerugian);
                     $('#logo').html(data.message.dataBencana.logo);
+
+
                     if (marker) {
                         map1.removeLayer(marker);
                     }
@@ -142,16 +145,16 @@
                     let gambarHtml = '';
                     if (data.message.dataBencana.nama_file) {
                         let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencana.nama_file;
-                        gambarHtml = '<img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid">';
+                        gambarHtml = '<img style="width: 100%; height: 400px;" src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid card-img-top">';
                     }
-                    $('#gambar').html(gambarHtml);
+                    $('.gambar').html(gambarHtml);
 
                     let infografisHtml = '';
                     if (data.message.dataBencana.nama_file_infografis) {
                         let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencana.nama_file_infografis;
-                        infografisHtml = '<img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid">';
+                        infografisHtml = '<img style="width: 100%; height: 400px;" src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid card-img-top">';
                     }
-                    $('#infografis').html(infografisHtml);
+                    $('.infografis').html(infografisHtml);
 
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
                     htmlBencana += '<thead>';
@@ -400,18 +403,19 @@
                     let gambarHtml = '';
                     if (data.message.dataBencanaKirim.nama_file) {
                         let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file;
-                        gambarHtml = '<div class="img-container"><img src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid"></div>';
+                        gambarHtml = '<img style="width: 100%; height: 400px;" src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid card-img-top">';
                     }
-                    $('#gambar_kirim').html(gambarHtml);
+                    $('.gambar').html(gambarHtml);
 
                     let infografisHtml = '';
                     if (data.message.dataBencanaKirim.nama_file_infografis) {
                         let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file_infografis;
-                        infografisHtml = '<div class="img-container"><img src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid"></div>';
+                        infografisHtml = '<img style="width: 100%; height: 400px;" src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid card-img-top">';
                     }
-                    $('#infografis_kirim').html(infografisHtml);
+                    $('.infografis').html(infografisHtml);
 
                     $('#video_bencana_kirim').val(data.message.dataBencanaKirim.video_bencana);
+                    $('#taksiran_kerugian_kirim').val(data.message.dataBencanaKirim.taksiran_kerugian);
 
                     if (data.message.dataBencanaKirim.id_status == 0) {
                         $(".status").show();
@@ -427,8 +431,8 @@
                         lng: data.message.dataBencanaKirim.longitude
                     };
                     marker2 = L.marker(latlng).addTo(map2);
-                    $('#latitude').val(data.message.dataBencanaKirim.latitude);
-                    $('#longitude').val(data.message.dataBencanaKirim.longitude);
+                    $('#latitude_kirim').val(data.message.dataBencanaKirim.latitude);
+                    $('#longitude_kirim').val(data.message.dataBencanaKirim.longitude);
 
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
 

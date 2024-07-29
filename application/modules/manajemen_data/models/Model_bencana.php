@@ -53,6 +53,7 @@ class Model_bencana extends CI_Model
                            a.token_bencana,
                            a.nama_bencana,
                            a.tanggal_bencana,
+                           a.taksiran_kerugian,
                            a.id_status,
                            b.nm_bencana as jenis_bencana');
         $this->db->from('ms_bencana a');
@@ -88,6 +89,7 @@ class Model_bencana extends CI_Model
                            a.nama_file,
                            a.nama_file_infografis,
                            a.video_bencana,
+                           a.taksiran_kerugian,
                            a.latitude,
                            a.longitude,
                            a.id_status,
@@ -121,6 +123,7 @@ class Model_bencana extends CI_Model
         $nama_file              = escape($this->input->post('nama_file', TRUE));
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
         $video_bencana          = escape($this->input->post('video_bencana', TRUE));
+        $taksiran_kerugian          = escape($this->input->post('taksiran_kerugian', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
 
         //cek nama fungsi duplicate
@@ -205,6 +208,7 @@ class Model_bencana extends CI_Model
                 'nama_file'              => $nama_file,
                 'nama_file_infografis'   => $nama_file_infografis,
                 'video_bencana'          => !empty($video_bencana) ? $video_bencana : '',
+                'taksiran_kerugian'      => !empty($taksiran_kerugian) ? $taksiran_kerugian : 0,
                 'latitude'               => $latitude,
                 'longitude'              => $longitude,
                 'id_status'              => 0,
@@ -269,6 +273,7 @@ class Model_bencana extends CI_Model
         $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
         $id_regency             = escape($this->input->post('id_regency', TRUE));
         $video_bencana          = escape($this->input->post('video_bencana', TRUE));
+        $taksiran_kerugian      = escape($this->input->post('taksiran_kerugian', TRUE));
         // var_dump($_FILES);
         // die;
         //cek data by id
@@ -285,6 +290,16 @@ class Model_bencana extends CI_Model
         $_FILES['file']['name']     = $_FILES['nama_file']['name'];
         $filename = $_FILES['file']['name'];
 
+        $dirname_infografis = 'dokumen/infografis/' . $year . '/' . $month . '/';
+        if (!is_dir($dirname_infografis)) {
+            mkdir('./' . $dirname_infografis, 0777, TRUE);
+        }
+
+        $_FILES['file']['name']     = $_FILES['nama_file_infografis']['name'];
+        $filename_infografis = $_FILES['file']['name'];
+        // var_dump($filename_infografis);
+        // die;
+
         if ($filename != '') {
             $_FILES['file']['name']     = $_FILES['nama_file']['name'];
             $_FILES['file']['type']     = $_FILES['nama_file']['type'];
@@ -294,7 +309,7 @@ class Model_bencana extends CI_Model
             $config = array(
                 'upload_path'         => './' . $dirname . '/',
                 'allowed_types'     => 'png|jpg|jpeg|pdf',
-                'file_name'            => 'file_' . date('YmdHis', strtotime($create_date)),
+                'file_name'            => 'file_bencana_' . date('YmdHis', strtotime($create_date)),
                 'file_ext_tolower'    => TRUE,
                 'max_size'             => 1024,
                 'max_filename'         => 0,
@@ -324,6 +339,45 @@ class Model_bencana extends CI_Model
                 $this->db->where('token_bencana ', $token_bencana);
                 $this->db->update('ms_bencana', $dataGambar);
             }
+        } else if ($filename_infografis != '') {
+            $_FILES['file']['name']     = $_FILES['nama_file_infografis']['name'];
+            $_FILES['file']['type']     = $_FILES['nama_file_infografis']['type'];
+            $_FILES['file']['tmp_name'] = $_FILES['nama_file_infografis']['tmp_name'];
+            $_FILES['file']['error']    = $_FILES['nama_file_infografis']['error'];
+            $_FILES['file']['size']     = $_FILES['nama_file_infografis']['size'];
+            $config = array(
+                'upload_path'         => './' . $dirname_infografis . '/',
+                'allowed_types'     => 'png|jpg|jpeg|pdf',
+                'file_name'            => 'file_infografis_' . date('YmdHis', strtotime($create_date)),
+                'file_ext_tolower'    => TRUE,
+                'max_size'             => 1024,
+                'max_filename'         => 0,
+                'remove_spaces'     => TRUE,
+            );
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload('file')) {
+                $nama_file_infografis = '';
+            } else {
+                $upload_data = $this->upload->data();
+                $nama_file_infografis   = $upload_data['file_name'];
+                $checkFile   = $this->getDataUpload($token_bencana);
+                $file        = $checkFile['nama_file_infografis'];
+                $year        = substr($checkFile['create_date'], 0, 4);
+                $month       = substr($checkFile['create_date'], 5, 2);
+
+                $dirname_infografis = 'dokumen/infografis/' . $year . '/' . $month . '/' . $file;
+                if (file_exists($dirname_infografis)) {
+                    unlink($dirname_infografis);
+                }
+                $dataGambar = array(
+                    'nama_file_infografis'      => $nama_file_infografis
+                );
+                /*query update*/
+                $this->db->where('token_bencana ', $token_bencana);
+                $this->db->update('ms_bencana', $dataGambar);
+            }
         } else {
             $dataBencana = array(
                 'token_bencana'      => $token_bencana,
@@ -334,6 +388,7 @@ class Model_bencana extends CI_Model
                 'keterangan_bencana' => !empty($keterangan_bencana) ? $keterangan_bencana : '',
                 'penyebab_bencana'   => !empty($penyebab_bencana) ? $penyebab_bencana : '',
                 'video_bencana'      => !empty($video_bencana) ? $video_bencana : '',
+                'taksiran_kerugian'  => !empty($taksiran_kerugian) ? $taksiran_kerugian : 0,
                 'latitude'           => $latitude,
                 'longitude'          => $longitude,
                 'mod_by'             => $create_by,
