@@ -122,6 +122,7 @@
                     $('#kategori_bencana').select2().val(data.message.dataBencana.kategori_bencana).trigger("change");
                     $('#kategori_tanggap').select2().val(data.message.dataBencana.kategori_tanggap).trigger("change");
                     $('#tanggal_bencana').val(data.message.dataBencana.tanggal_bencana);
+                    $('#jam_bencana').val(data.message.dataBencana.jam_bencana);
                     $('#jumlah_kejadian').val(data.message.dataBencana.jumlah_kejadian);
                     $('#video_bencana').val(data.message.dataBencana.video_bencana);
                     $('#taksiran_kerugian').val(data.message.dataBencana.taksiran_kerugian);
@@ -391,6 +392,7 @@
                     // $('#token_bencana').after(`<span id="toket">${data.message.dataBencanaKirim.token_bencana}</span>`);
                     // $('input[name="statusId"]').val(id_status);
                     $('#tanggal_kirim').val(data.message.dataBencanaKirim.tanggal_bencana);
+                    $('#jam_kirim').val(data.message.dataBencanaKirim.jam_bencana);
                     $('#tanggap_kirim').val(data.message.dataBencanaKirim.nm_tanggap);
                     $('#jenis_bencana_kirim').val(data.message.dataBencanaKirim.jenis_bencana);
                     $('#nama_bencana_kirim').val(data.message.dataBencanaKirim.nama_bencana);
@@ -764,6 +766,10 @@
         })
     });
     // ------------------------------------- JAVASCRIPT PROSES MEMILIH PUSDALOPS KE DAERAH ---------------------//
+
+    $('#jam_bencana').pickatime({
+        twelvehour: false
+    });
 </script>
 
 

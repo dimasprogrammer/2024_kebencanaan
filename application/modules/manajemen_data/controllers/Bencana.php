@@ -75,7 +75,7 @@ class bencana extends SLP_Controller
                     $row[] = $no;
                     $row[] = $dl['jenis_bencana'];
                     $row[] = $dl['nama_bencana'];
-                    $row[] = $dl['tanggal_bencana'];
+                    $row[] = hari($dl['tanggal_bencana']) . ', ' . tgl_indonesia($dl['tanggal_bencana']) . ', ' . $dl['jam_bencana'] . ' WIB';
                     $row[] = convert_to_rupiah($dl['taksiran_kerugian']);
                     $row[] = convert_status_bencana($dl['id_status']);
                     $row[] =  $status;
@@ -136,6 +136,7 @@ class bencana extends SLP_Controller
                 $row['logo']               = !empty($gambar) ? $gambar : '';
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['jam_bencana']        = !empty($data) ? $data['jam_bencana'] : '';
                 $row['kategori_tanggap']   = !empty($data) ? $data['kategori_tanggap'] : '';
                 $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
                 $row['taksiran_kerugian']  = !empty($data) ? $data['taksiran_kerugian'] : '';
@@ -240,6 +241,7 @@ class bencana extends SLP_Controller
 
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['jam_bencana']        = !empty($data) ? $data['jam_bencana'] : '';
                 $row['nm_tanggap']         = !empty($data) ? $data['nm_tanggap'] : '';
                 $row['jenis_bencana']      = !empty($data) ? $data['jenis_bencana'] : '';
                 $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';

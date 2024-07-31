@@ -53,6 +53,7 @@ class Model_bencana extends CI_Model
                            a.token_bencana,
                            a.nama_bencana,
                            a.tanggal_bencana,
+                           a.jam_bencana,
                            a.taksiran_kerugian,
                            a.id_status,
                            b.nm_bencana as jenis_bencana');
@@ -81,6 +82,7 @@ class Model_bencana extends CI_Model
         $this->db->select('a.id_bencana,
                            a.token_bencana,
                            a.tanggal_bencana,
+                           a.jam_bencana,
                            a.kategori_tanggap,
                            a.id_jenis_bencana,
                            a.nama_bencana,
@@ -113,6 +115,7 @@ class Model_bencana extends CI_Model
         $create_date            = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip              = $this->input->ip_address();
         $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
+        $jam_bencana            = escape($this->input->post('jam_bencana', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
         $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
         $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
@@ -200,6 +203,7 @@ class Model_bencana extends CI_Model
             $data = array(
                 'token_bencana'          => $token_bencana,
                 'tanggal_bencana'        => !empty($tanggal_bencana) ? $tanggal_bencana : '',
+                'jam_bencana'            => !empty($jam_bencana) ? $jam_bencana : '',
                 'kategori_tanggap'       => !empty($kategori_tanggap) ? $kategori_tanggap : '',
                 'id_jenis_bencana'       => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
                 'nama_bencana'           => !empty($nama_bencana) ? $nama_bencana : '',
@@ -262,6 +266,7 @@ class Model_bencana extends CI_Model
         // $token_bencana     = escape($this->input->post('token_bencana', TRUE));
         $token_bencana = escape($this->input->post('tokenId', TRUE));
         $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
+        $jam_bencana            = escape($this->input->post('jam_bencana', TRUE));
         $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
         $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
         $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
@@ -382,6 +387,7 @@ class Model_bencana extends CI_Model
             $dataBencana = array(
                 'token_bencana'      => $token_bencana,
                 'tanggal_bencana'    => !empty($tanggal_bencana) ? $tanggal_bencana : '',
+                'jam_bencana'        => !empty($jam_bencana) ? $jam_bencana : '',
                 'kategori_tanggap'   => !empty($kategori_tanggap) ? $kategori_tanggap : '',
                 'id_jenis_bencana'   => !empty($id_jenis_bencana) ? $id_jenis_bencana : '',
                 'nama_bencana'       => !empty($nama_bencana) ? $nama_bencana : '',

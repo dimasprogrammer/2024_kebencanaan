@@ -23,10 +23,13 @@ class Home extends SLP_Controller
         $this->breadcrumb->add('Dashboard', site_url('home'));
         $this->breadcrumb->add('Nontpp', '#');
         $this->breadcrumb->add('Module', site_url($this->_uriName));
-        $this->session_info['page_name'] = "Home";
-        $this->session_info['page_css']     = '';
-        $this->session_info['page_js']         = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
-        $this->session_info['data_pembayaran']   = "";
+        $this->session_info['page_name']     = "Home";
+        $this->session_info['page_css']      = '';
+        $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
+        $this->session_info['longsor']       = $this->mHome->getBencanaLongsor();
+        $this->session_info['banjir']        = $this->mHome->getBencanaBanjir();
+        $this->session_info['kebakaran']     = $this->mHome->getBencanaKebakaran();
+        $this->session_info['bencana']       = $this->mHome->getBencanaAll();
         $this->template->build('vpage', $this->session_info);
     }
 

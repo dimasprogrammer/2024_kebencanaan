@@ -140,7 +140,11 @@
 }
 
 .red-text {
-  color: #f44336 !important;
+  color: #ed0c0c !important;
+}
+
+.biru-text {
+  color: #211853 !important;
 }
 
 .rgba-red-slight,

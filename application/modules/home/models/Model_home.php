@@ -94,6 +94,73 @@ class Model_home extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function getBencanaLongsor()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_longsor
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 1);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaAll()
+    {
+        $this->db->select('a.id_bencana,
+                           a.token_bencana,
+                           a.nama_bencana,
+                           a.tanggal_bencana,
+                           a.taksiran_kerugian,
+                           a.kategori_tanggap,
+                           a.id_status,
+                           b.nm_bencana as jenis_bencana,
+                           c.nm_tanggap');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->join('cx_tanggap_bencana c', 'c.id_tanggap_bencana = a.kategori_tanggap', 'inner');
+        $this->db->order_by('a.tanggal_bencana DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getBencanaBanjir()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_banjir
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 3);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaKebakaran()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_kebakaran
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 5);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
 }
 
 // This is the end of auth signin model

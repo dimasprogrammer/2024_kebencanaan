@@ -19,6 +19,7 @@
     $('#formFilter').submit(function(e) {
         e.preventDefault();
         getDataListbencana();
+        refreshMap();
     });
 
     function getDataListbencana() {

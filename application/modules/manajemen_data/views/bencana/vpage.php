@@ -17,16 +17,16 @@
                 </div>
                 <div class="card-body mb-0">
                     <div class="table-responsive-md">
-                        <table cellspacing="0" class="table table-striped table-borderless table-hover table-sm" id="tblList" width="100%">
+                        <table cellspacing="0" class="table table-striped table-borderless table-hover" id="tblList" width="100%">
                             <thead>
                                 <tr>
                                     <th width="3%" class="font-weight-bold">#</th>
-                                    <th width="10%" class="font-weight-bold">Jenis Bencana</th>
-                                    <th width="30%" class="font-weight-bold">Nama Bencana</th>
-                                    <th width="10%" class="font-weight-bold">Tanggal Bencana</th>
-                                    <th width="10%" class="font-weight-bold">Taksiran Kerugian</th>
-                                    <th width="10%" class="font-weight-bold">Status</th>
-                                    <th width="15%" class="font-weight-bold">Action</th>
+                                    <th width="15%" class="font-weight-bold">Jenis Bencana</th>
+                                    <th width="25%" class="font-weight-bold">Nama Bencana</th>
+                                    <th width="18%" class="font-weight-bold">Tanggal Bencana</th>
+                                    <th width="15%" class="font-weight-bold">Taksiran Kerugian</th>
+                                    <th width="5%" class="font-weight-bold">Status</th>
+                                    <th width="20%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -64,11 +64,16 @@
                 <div id="errEntry"></div>
                 <?php echo form_hidden('tokenId', ''); ?>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label for="tanggal_bencana" class="control-label font-weight-bold">Pilih Tanggal <span class="text-danger">*</span></label>
                         <input type="date" class="form-control datepickerindo" name="tanggal_bencana" id="tanggal_bencana" style="background-color: white;" required>
                     </div>
-                    <div class="col-12 col-md-6 required">
+                    <div class="col-12 col-md-4 required">
+                        <label for="jam_bencana" class="control-label font-weight-bold">Jam Bencana <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control timepicker" placeholder="Select time" name="jam_bencana" id="jam_bencana" required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-4 required">
                         <label for="kategori_tanggap" class="control-label font-weight-bold">TD/TND<span class="text-danger">*</span></label>
                         <?php echo form_dropdown('kategori_tanggap', isset($tanggap_bencana) ? $tanggap_bencana : array('' => 'Pilih Jenis Pedagang '), $this->input->post('kategori_tanggap', TRUE), 'class="form-control select-all" id="kategori_tanggap" style="width:100%" required=""'); ?>
                         <div class="invalid-feedback"></div>
@@ -252,19 +257,25 @@
                 <div id="errEntry"></div>
                 <?php echo form_hidden('tokenId', ''); ?>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-2">
+                    <div class="col-12 col-md-4">
                         <label for="tanggal_kirim" class="control-label font-weight-bold"> Tanggal </label>
                         <input type="text" class="form-control" id="tanggal_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-2">
-                        <label for="tanggap_kirim" class="control-label font-weight-bold"> Tanggap Bencana </label>
+                    <div class="col-12 col-md-4">
+                        <label for="jam_bencana" class="control-label font-weight-bold"> Jam Bencana </label>
+                        <input type="text" class="form-control" id="jam_bencana" disabled>
+                    </div>
+                    <div class="col-12 col-md-4 required">
+                        <label for="tanggap_kirim" class="control-label font-weight-bold">Tanggap Bencana</label>
                         <input type="text" class="form-control" id="tanggap_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-2 required">
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-4 required">
                         <label for="jenis_bencana_kirim" class="control-label font-weight-bold">Jenis Bencana</label>
                         <input type="text" class="form-control" id="jenis_bencana_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-6 required">
+                    <div class="col-12 col-md-8 required">
                         <label for="nama_bencana_kirim" class="control-label font-weight-bold"> Nama Bencana </label>
                         <input type="text" class="form-control" id="nama_bencana_kirim" disabled>
                     </div>
