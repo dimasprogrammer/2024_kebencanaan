@@ -1,0 +1,10 @@
+//untuk get infografis berdasarkan id bencana.
+{
+    "success": true,
+    "kode":200,
+    "message": "success",
+    "data": {
+        "updatedAt":"Selasa, 23 Juli 2024 - 10:20 Wib",
+        "linkInfoGrafis":"www.html.com/info.png"
+    }
+}
