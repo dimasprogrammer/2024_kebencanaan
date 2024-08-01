@@ -23,4 +23,14 @@ class Dashboard extends SLP_Controller
         $result['data'] = $data;
         $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
+
+    public function get_dampak_bencana($token)
+    {
+        $data = $this->m_dashboard->get_dampak_bencana($token);
+        $result['success'] = true;
+        $result['kode'] = 200;
+        $result['message'] = 'Success';
+        $result['data'] = $data;
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+    }
 }
