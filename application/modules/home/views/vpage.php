@@ -319,6 +319,12 @@
             <div class="card-body">
               <?php $no_urut = 0;
               foreach ($bencana as $key => $list) :
+                $dataDetail = $this->mHome->getDataPusdalopsTerdampak($list->token_bencana);
+                $regencies = array();
+                foreach ($dataDetail as $value) {
+                  $regency = !empty($value['nm_regency']) ? ucwords(strtolower($value['nm_regency'])) : 'Data not available';
+                  $regencies[] = $regency;
+                }
               ?>
                 <div class="row">
                   <div class="col-md-12 mb-4">
@@ -327,16 +333,20 @@
                       <div class="row">
                         <div class="col-md-6 col-12">
                           <div class="card-body">
-                            <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?> </h5>
-                            <div class="table-responsive-md">
-                              <table width="100%">
+                            <div>
+                              <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?> </h5>
+                              <table class="tablehome">
                                 <tbody>
                                   <tr>
-                                    <td>
+                                    <td style="width: 18%;">
                                       <h6 class="gray-text">Waktu Kejadian</h6>
                                     </td>
-                                    <td>
-                                      <h6 class="gray-text">: <font class="red-text"> Update Tanggal <?php echo tgl_indonesia($list->tanggal_bencana); ?> Pukul: 21.05 WIB </font>
+                                    <td style="width: 2%;">
+                                      <h6 class="gray-text">:</h6>
+                                    </td>
+                                    <td style="width: 65%;">
+                                      <h6 class="gray-text">
+                                        <span class="red-text">Update Tanggal <?php echo tgl_indonesia($list->tanggal_bencana); ?> Pukul: <?php echo $list->jam_bencana; ?> WIB</span>
                                       </h6>
                                     </td>
                                   </tr>
@@ -345,7 +355,10 @@
                                       <h6 class="gray-text">Lokasi Kejadian</h6>
                                     </td>
                                     <td>
-                                      <h6 class="gray-text">: Kabupaten Agam, Kabupaten Tanah Datar, Kota Padang Panjang</h6>
+                                      <h6 class="gray-text">:</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="gray-text"><?php echo implode(', ', $regencies); ?></h6>
                                     </td>
                                   </tr>
                                   <tr>
@@ -353,19 +366,28 @@
                                       <h6 class="gray-text">Titik Koordinat</h6>
                                     </td>
                                     <td>
-                                      <h6 class="gray-text">: 1010101001, 1010101010</h6>
+                                      <h6 class="gray-text">:</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="gray-text"><?php echo $list->latitude; ?>, <?php echo $list->longitude; ?></h6>
                                     </td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                             <div class="clearfix">
-                              <button type="button" class="btn btn-purple waves-effect waves-light px-4 py-2 font-weight-bold" id="btnAdd">Lihat Data <i class="fas fa-chevron-down"></i> </button>
-                              <button type="button" class="btn btn-warning  waves-effect waves-light px-4 py-2 font-weight-bold" id="btnAdd"> Foto Bencana</button>
-                              <button type="button" class="btn btn-success  waves-effect waves-light px-4 py-2 font-weight-bold" id="btnAdd"> Lihat Infografis</button>
-
+                              <a href="javascript:void(0);" class="btnFilter btn btn-purple waves-effect waves-light px-4 py-2 font-weight-bold">
+                                <i class="fas fa-chevron-down"></i> Lihat Data
+                              </a>
+                              <?php echo form_close(); ?>
+                              <a type="button" data-id="<?php echo $list->token_bencana; ?>" class="btn btn-warning waves-effect waves-light px-4 py-2 font-weight-bold btnFoto" title="Foto dan Video Bencana">
+                                <i class="fas fa-paper-plane"></i> Foto Bencana
+                              </a>
+                              <button type="button" class="btn btn-success  waves-effect waves-light px-4 py-2 font-weight-bold" id="btnAdd"> Infografis</button>
                             </div>
+
                           </div>
+
                         </div>
 
 
@@ -380,6 +402,66 @@
 
                       </div>
                       <!-- Card Data -->
+
+                      <!-- Card Data -->
+                      <?php echo form_open(site_url('#'), array('id' => 'formFilter', 'style' => 'display:none;')); ?>
+                      <div class="card rgba-white-slight">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-6 col-12">
+                              <h6 class="biru-text font-weight-bold"> AKUMULASI DATA YANG TERDAMPAK </h6>
+                              <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; border-style: solid;">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Jumlah Pengungsi </font>
+                                    </td>
+                                    <td>
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Jumlah Terdampak </font>
+                                    </td>
+                                    <td>
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Korban Meninggal </font>
+                                    </td>
+                                    <td>
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Korban Luka Berat/Sedang/Ringan </font>
+                                    </td>
+                                    <td>
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Jumlah Penduduk Hilang </font>
+                                    </td>
+                                    <td>
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="col-md-6 col-12">
+                              <h6 class="biru-text font-weight-bold"> FASILITAS UMUM TERDAMPAK </h6>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -399,62 +481,38 @@
     </div>
     <!-- Grid row -->
 
-
-
-    <!-- Card -->
-    <div class="card card-cascade narrower">
-      <br>
-
-      <div class="card card-cascade narrower z-depth-0">
-
-        <div class="view view-cascade gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
-
-          <div>
-            <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-th-large mt-0"></i></button>
-            <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-columns mt-0"></i></button>
-          </div>
-
-          <a href="" class="white-text mx-3">DATA KESELURUHAN BENCANA SUMATERA BARAT</a>
-
-          <div>
-            <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-pencil-alt mt-0"></i></button>
-            <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-eraser mt-0"></i></button>
-            <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-info-circle mt-0"></i></button>
-          </div>
-
-        </div>
-
-        <div class="px-4">
-
-          <div class="table-responsive">
-
-            <!--Table-->
-            <table cellspacing="0" class="table table-hover mb-0 " id="tblList">
-
-              <!-- Table head -->
-              <thead>
-                <tr>
-                  <th width="7%"><a>No <i class="fas fa-sort ml-1"></i></a></th>
-                  <th width="11%"><a>Tanggal Bencana<i class="fas fa-sort ml-1"></i></a></th>
-                  <th width="11%"><a>Jenis Bencana<i class="fas fa-sort ml-1"></i></a></th>
-                  <th width="25%"><a>Nama Bencana<i class="fas fa-sort ml-1"></i></a></th>
-                  <th width="30%"><a>Kabupaten/Kota<i class="fas fa-sort ml-1"></i></a></th>
-                </tr>
-              </thead>
-              <!-- Table head -->
-            </table>
-            <!-- Table -->
-
-          </div>
-        </div>
-
-      </div>
-
-
-    </div>
-    <!-- Card -->
   </section>
   <!-- Section: Intro -->
 
 
 </div>
+
+<!------------------------------------ FORM VIEW FOTO BENCANA -------------------------------------------->
+<div class="modal fade" id="modalEntryFormFoto" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xxl" id="frmEntryFoto">
+    <div class="modal-content">
+      <div class="modal-header blue-gradient-rgba">
+        <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
+        <button type="button" class="close btnCloseFoto" aria-label="Close">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div><?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/create' : ''), array('id' => 'formEntryFoto', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
+      <div class="modal-body">
+        <?php echo form_hidden('tokenId', ''); ?>
+        <div class="form-row mb-3">
+          <div class="col-12 col-md-6 required">
+            <label for="video_bencana" class="control-label font-weight-bold">Video Bencana</label>
+            <div id="video_bencana"></div>
+          </div>
+          <div class="col-12 col-md-6 required">
+            <label for="nama_file" class="control-label font-weight-bold">Foto Bencana</label>
+            <div id="nama_file"></div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnCloseFoto"><i class="fas fa-times"></i> Close Data </button>
+      </div>
+      <?php echo form_close(); ?>
+    </div>
+  </div>
+</div>
+<!------------------------------------ FORM VIEW FOTO BENCANA -------------------------------------------->

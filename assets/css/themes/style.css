@@ -105,3 +105,32 @@
 .modal {
   overflow: auto !important;
 }
+
+.tablehome {
+  width: 100%;
+  margin: 20px 0;
+  font-size: 1em;
+  border-collapse: collapse;
+}
+
+.tablehome-sm td {
+  padding: 10px;
+}
+
+.tablehome-sm h6 {
+  margin: 0;
+  font-size: 1em;
+  color: gray;
+}
+
+.red-text {
+  color: red;
+}
+
+.tablehome-sm tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tablehome-sm tr:hover {
+  background-color: #e9e9e9;
+}

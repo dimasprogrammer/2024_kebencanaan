@@ -81,6 +81,53 @@ class Home extends SLP_Controller
             $this->output->set_content_type('application/json')->set_output(json_encode($output));
         }
     }
+
+    public function detailFoto()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $bencana_Id = $this->input->post('token_bencana', TRUE);
+            if (!empty($bencana_Id) && !empty($session)) {
+                $data = $this->mHome->getDataUpload($bencana_Id);
+                $row['nama_file'] = !empty($data) ? $data['nama_file'] : '';
+
+                if (!empty($data['create_date'])) {
+                    $year = substr($data['create_date'], 0, 4);
+                    $month = substr($data['create_date'], 5, 2);
+                    if (!empty($row['nama_file'])) {
+                        $image_html = '<img src="' . site_url('dokumen/bencana/' . $year . '/' . $month . '/' . $data['nama_file']) . '" alt="thumbnail" class="img-thumbnail rounded" style="width: 100%; height:400px;">';
+                        $row['nama_file'] = $image_html;
+                    } else {
+                        $row['nama_file'] = '';
+                    }
+                }
+
+                if (!empty($data['video_bencana'])) {
+                    $video_url = $data['video_bencana'];
+                    // Extract the YouTube video ID from the URL
+                    parse_str(parse_url($video_url, PHP_URL_QUERY), $url_params);
+                    $video_id = isset($url_params['v']) ? $url_params['v'] : '';
+                    if ($video_id) {
+                        // Generate the iframe HTML
+                        $iframe = '<iframe class="img-thumbnail rounded"style="width: 100%; height:400px;" src="https://www.youtube.com/embed/' . $video_id . '" frameborder="0" allowfullscreen></iframe>';
+                        $row['video_bencana'] = $iframe;
+                    } else {
+                        $row['video_bencana'] = '';
+                    }
+                } else {
+                    $row['video_bencana'] = '';
+                }
+
+                $result = array('status' => 'RC200', 'message' => $row, 'csrfHash' => $csrfHash);
+            } else {
+                $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
 }
 
 // This is the end of home clas

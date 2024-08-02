@@ -17,7 +17,7 @@
                 </div>
                 <div class="card-body mb-0">
                     <div class="table-responsive-md">
-                        <table cellspacing="0" class="table table-striped table-borderless table-hover" id="tblList" width="100%">
+                        <table cellspacing="0" class="table table-striped table-borderless table-hover table-sm" id="tblList" width="100%">
                             <thead>
                                 <tr>
                                     <th width="3%" class="font-weight-bold">#</th>
@@ -262,8 +262,8 @@
                         <input type="text" class="form-control" id="tanggal_kirim" disabled>
                     </div>
                     <div class="col-12 col-md-4">
-                        <label for="jam_bencana" class="control-label font-weight-bold"> Jam Bencana </label>
-                        <input type="text" class="form-control" id="jam_bencana" disabled>
+                        <label for="jam_kirim" class="control-label font-weight-bold"> Jam Bencana </label>
+                        <input type="text" class="form-control" id="jam_kirim" disabled>
                     </div>
                     <div class="col-12 col-md-4 required">
                         <label for="tanggap_kirim" class="control-label font-weight-bold">Tanggap Bencana</label>

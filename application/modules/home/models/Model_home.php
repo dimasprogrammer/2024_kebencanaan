@@ -95,6 +95,25 @@ class Model_home extends CI_Model
         return $query->result_array();
     }
 
+    public function getDataKorbanBencana($token_bencana)
+    {
+        $this->db->select('	a.id as id_bencana_korban, 
+							a.token_bencana_detail, 
+							a.jumlah_korban, 
+							b.token_bencana, 
+                            c.nm_kondisi,
+                            d.nm_jiwa');
+        $this->db->from('ms_bencana_korban a');
+        $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->join('cx_korban_kondisi c', 'c.id = a.id_kondisi', 'INNER');
+        $this->db->join('cx_korban_jiwa d', 'd.id = a.id_jiwa', 'INNER');
+        $this->db->where('b.token_bencana', $token_bencana);
+        $this->db->where('c.id_kondisi', 5);
+        $this->db->order_by('a.id DESC');
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
     public function getBencanaLongsor()
     {
         $id_regency = $this->app_loader->current_regencyID();
@@ -117,14 +136,19 @@ class Model_home extends CI_Model
                            a.token_bencana,
                            a.nama_bencana,
                            a.tanggal_bencana,
+                           a.jam_bencana,
                            a.taksiran_kerugian,
                            a.kategori_tanggap,
                            a.id_status,
+                           a.latitude,
+                           a.longitude,
                            b.nm_bencana as jenis_bencana,
                            c.nm_tanggap');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
         $this->db->join('cx_tanggap_bencana c', 'c.id_tanggap_bencana = a.kategori_tanggap', 'inner');
+        $this->db->where('a.id_status', 1);
+        $this->db->limit(3);
         $this->db->order_by('a.tanggal_bencana DESC');
         $query = $this->db->get();
         return $query->result();
@@ -158,6 +182,20 @@ class Model_home extends CI_Model
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getDataUpload($token_bencana)
+    {
+        $this->db->select(' a.token_bencana, 
+                            a.create_date,
+                            a.nama_file,
+                            a.video_bencana,
+                            a.nama_file_infografis');
+        $this->db->from('ms_bencana a');
+        $this->db->where('a.token_bencana', $token_bencana);
+        $this->db->limit(1);
         $query = $this->db->get();
         return $query->row_array();
     }
