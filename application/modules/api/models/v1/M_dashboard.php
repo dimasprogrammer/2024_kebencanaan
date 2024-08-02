@@ -271,6 +271,115 @@ class M_dashboard extends CI_Model
             $this->db->limit($latest_data['jumlah_data']);
             $dataKorbanJiwa = $this->db->get()->result_array();
         }
-        return $dataKorbanJiwa;
+
+        $tJiwa_1 = 0;
+        $tJiwa_2 = 0;
+        $tJiwa_3 = 0;
+        $tJiwa_4 = 0;
+        $tJiwa_5 = 0;
+        $tJiwa_6 = 0;
+        $tJiwa_7 = 0;
+
+        $tKondisi_1 = 0;
+        $tKondisi_2 = 0;
+        $tKondisi_3 = 0;
+        $tKondisi_4 = 0;
+        $tKondisi_5 = 0;
+
+        foreach($dataKorbanJiwa as $row){
+            if($row['id_kondisi'] == 1){
+                $tKondisi_1 = $tKondisi_1 + $row['jumlah_korban'];
+            }
+            if($row['id_kondisi'] == 2){
+                $tKondisi_2 = $tKondisi_2 + $row['jumlah_korban'];
+            }
+            if($row['id_kondisi'] == 3){
+                $tKondisi_3 = $tKondisi_3 + $row['jumlah_korban'];
+            }
+            if($row['id_kondisi'] == 4){
+                $tKondisi_4 = $tKondisi_4 + $row['jumlah_korban'];
+            }
+            if($row['id_kondisi'] == 5){
+                $tKondisi_5 = $tKondisi_5 + $row['jumlah_korban'];
+            }
+
+            if($row['id_jiwa'] == 1){
+                $tJiwa_1 = $tJiwa_1 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 2){
+                $tJiwa_2 = $tJiwa_2 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 3){
+                $tJiwa_3 = $tJiwa_3 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 4){
+                $tJiwa_4 = $tJiwa_4 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 5){
+                $tJiwa_5 = $tJiwa_5 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 6){
+                $tJiwa_6 = $tJiwa_6 + $row['jumlah_korban'];
+            }
+            if($row['id_jiwa'] == 7){
+                $tJiwa_7 = $tJiwa_7 + $row['jumlah_korban'];
+            }
+        }
+
+        $total = [
+            [
+                'id_kondisi' => "1",
+                'total' => (string) $tKondisi_1
+            ],
+            [
+                'id_kondisi' => "2",
+                'total' => (string) $tKondisi_2
+            ],
+            [
+                'id_kondisi' => "3",
+                'total' => (string) $tKondisi_3
+            ],
+            [
+                'id_kondisi' => "4",
+                'total' => (string) $tKondisi_4
+            ],
+            [
+                'id_kondisi' => "5",
+                'total' => (string) $tKondisi_5
+            ],
+            [
+                'id_jiwa' => "1",
+                'total' => (string) $tJiwa_1
+            ],
+            [
+                'id_jiwa' => "2",
+                'total' => (string) $tJiwa_2
+            ],
+            [
+                'id_jiwa' => "3",
+                'total' => (string) $tJiwa_3
+            ],
+            [
+                'id_jiwa' => "4",
+                'total' => (string) $tJiwa_4
+            ],
+            [
+                'id_jiwa' => "5",
+                'total' => (string) $tJiwa_5
+            ],
+            [
+                'id_jiwa' => "6",
+                'total' => (string) $tJiwa_6
+            ],
+            [
+                'id_jiwa' => "7",
+                'total' => (string) $tJiwa_7
+            ]
+        ];
+
+        return [
+            "data_korban_jiwa" => $dataKorbanJiwa,
+            "total" => $total
+        ];
     }
 }
