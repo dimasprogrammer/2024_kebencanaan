@@ -187,19 +187,123 @@ class M_dashboard extends CI_Model
 
     public function get_dampak_bencana($token_bencana)
     {
-        $wilayah_terdampak = $this->_get_wilayah_terdampak($token_bencana);
-        $kelnag_terdampak = [];
-        if(count($wilayah_terdampak) > 0){
-           foreach($wilayah_terdampak as $kd_kabkota => $kabkota){
-                foreach($kabkota['data_kecamatan'] as $kd_kecamatan => $kecamatan){
-                    foreach($kecamatan['data_kelnag'] as $kd_kelnag => $kelnag){
-                        $data_korban = $this->_getDataKorbanJiwa($token_bencana, $kd_kelnag);
-                        $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_kelnag'][$kd_kelnag]['data_korban'] = $data_korban;
-                    }
-                }
-           }
+        $data = $this->_get_data_dampak_bencana($token_bencana);
+        return $data;
+    }
+
+    private function _get_data_dampak_bencana($token)
+    {
+        $batas_waktu = 60 * 5; // 5 menit
+        $batas_waktu = gmdate('Y-m-d H:i:s', (time() + 60 * 60 * 7) + $batas_waktu);
+
+        $this->db->where('timestamps <', $batas_waktu);
+        $this->db->order_by('timestamps', 'desc');
+        $this->db->where('token_bencana', $token);
+        $this->db->from('log_dampak_bencana');
+        $this->db->limit(1);
+        $raw = $this->db->get()->row_array();
+        if(isset($raw['data'])){
+            $data = json_decode($raw['data'], true);
         }
-        return $wilayah_terdampak;
+        else{
+            $data = $this->_create_stat_dampak_bencana($token);
+            $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+
+            $create['token_bencana'] = $token;
+            $create['data'] = json_encode($data, JSON_PRETTY_PRINT);
+            $create['timestamps'] = $create_date;
+
+            $this->db->insert('log_dampak_bencana', $create);
+        }
+        return $data;
+    }
+
+    private function _create_stat_dampak_bencana($token)
+    {
+        $wilayah_terdampak = $this->_get_wilayah_terdampak($token);
+        $stat_total = [];
+        if(count($wilayah_terdampak) > 0){
+            $korban_total = [];
+            $kerusakan_total = [];
+            $ternak_total = [];
+            $i_total = 0;
+            foreach($wilayah_terdampak as $kd_kabkota => $kabkota){
+                $korban_kabkota = [];
+                $kerusakan_kabkota = [];
+                $ternak_kabkota = [];
+                $i_kabkota = 0;
+                foreach($kabkota['data_kecamatan'] as $kd_kecamatan => $kecamatan){
+                    $korban_kec = [];
+                    $kerusakan_kec = [];
+                    $ternak_kec = [];
+                    $i_kec = 0;
+                    foreach($kecamatan['data_kelnag'] as $kd_kelnag => $kelnag){
+
+                        // get data korban
+                        $data_korban = $this->_getDataKorbanJiwa($token, $kd_kelnag);
+                        $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_kelnag'][$kd_kelnag]['data_korban'] = $data_korban;
+
+                        // get data kerusakan
+                        $data_kerusakan = $this->_getDataKerusakan($token, $kd_kelnag);
+                        $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_kelnag'][$kd_kelnag]['data_kerusakan'] = $data_kerusakan;
+
+                        // get data ternak terdampak benana
+                        $data_ternak = $this->_getDataTernak($token, $kd_kelnag);
+                        $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_kelnag'][$kd_kelnag]['data_ternak'] = $data_ternak;
+
+                        if($i_kec == 0){
+                            $korban_kec = $data_korban;
+                            $kerusakan_kec = $data_kerusakan;
+                            $ternak_kec = $data_ternak;
+                        }
+                        else{
+                            // hitung akumulasi stat dampak bencana tingkat kecamatan
+                            $korban_kec = $this->_sum_data_korban($korban_kec, $data_korban);
+                            $kerusakan_kec = $this->_sum_data_kerusakan($kerusakan_kec, $data_kerusakan);
+                            $ternak_kec = $this->_sum_data_ternak($ternak_kec, $data_ternak);
+                        }
+                        $i_kec++;
+                    }
+                    $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_korban'] = $korban_kec;
+                    $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_kerusakan'] = $kerusakan_kec;
+                    $wilayah_terdampak[$kd_kabkota]['data_kecamatan'][$kd_kecamatan]['data_ternak'] = $ternak_kec;
+                }
+                if($i_kabkota == 0){
+                    $korban_kabkota = $korban_kec;
+                    $kerusakan_kabkota = $kerusakan_kec;
+                    $ternak_kabkota = $ternak_kec;
+                }
+                else{
+                    // hitung akumulasi stat dampak bencana tingkat kabkota
+                    $korban_kabkota = $this->_sum_data_korban($korban_kabkota, $korban_kec);
+                    $kerusakan_kabkota = $this->_sum_data_kerusakan($kerusakan_kabkota, $kerusakan_kec);
+                    $ternak_kabkota = $this->_sum_data_ternak($ternak_kabkota, $ternak_kec);
+                }
+                $i_kabkota++;
+                $wilayah_terdampak[$kd_kabkota]['data_korban'] = $korban_kabkota;
+                $wilayah_terdampak[$kd_kabkota]['data_kerusakan'] = $kerusakan_kabkota;
+                $wilayah_terdampak[$kd_kabkota]['data_ternak'] = $ternak_kabkota;
+                
+                if($i_total == 0){
+                    $korban_total = $korban_kabkota;
+                    $kerusakan_total = $kerusakan_kabkota;
+                    $ternak_total = $ternak_kabkota;
+                }
+                else{
+                    $korban_total = $this->_sum_data_korban($korban_total, $korban_kabkota);
+                    $kerusakan_total = $this->_sum_data_kerusakan($kerusakan_total, $kerusakan_kabkota);
+                    $ternak_total = $this->_sum_data_ternak($ternak_total, $ternak_kabkota);
+                }
+                $i_total++;
+            }
+            $total_stat['data_korban'] = $korban_total;
+            $total_stat['data_kerusakan'] = $kerusakan_total;
+            $total_stat['data_ternak'] = $ternak_total;
+        }
+        return [
+            "wilayah_terdampak" => $wilayah_terdampak,
+            "stat_total" => $total_stat
+        ];
     }
 
     private function _get_wilayah_terdampak($token_bencana)
@@ -381,5 +485,153 @@ class M_dashboard extends CI_Model
             "data_korban_jiwa" => $dataKorbanJiwa,
             "total" => $total
         ];
+    }
+
+    private function _getDataKerusakan($token = "", $wil_village = "")
+    {
+        $result = [];
+        $this->db->where('a.wil_village', $wil_village);
+        $this->db->where('c.token_bencana', $token);
+        $this->db->select('a.wil_village,
+        a.waktu_data,
+        a.create_date,
+        count(a.id) as jumlah_data,
+        b.name as nm_village');
+        $this->db->from('ms_bencana_kerusakan a');
+        $this->db->join('wil_village b', 'b.id_village = a.wil_village', 'INNER');
+        $this->db->join('ms_bencana_detail c', 'c.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->group_by('a.wil_village, b.name, a.waktu_data, a.create_date');
+        $this->db->order_by('a.waktu_data DESC, a.create_date DESC');
+        $this->db->limit(1);
+        $latest_data = $this->db->get()->row_array();
+
+        if ($latest_data) {
+
+            $this->db->select('a.id_kerusakan, b.nm_jenis_sarana, a.rusak_ringan, a.rusak_sedang, a.rusak_berat');
+            $this->db->from('ms_bencana_kerusakan a');
+            $this->db->join('cx_jenis_sarana b', 'b.id = a.id_kerusakan', 'INNER');
+            $this->db->where('a.wil_village', $latest_data['wil_village']);
+            $this->db->where('a.waktu_data', $latest_data['waktu_data']);
+            $this->db->where('a.create_date', $latest_data['create_date']);
+            $this->db->order_by('a.id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataKerusakan = $this->db->get()->result_array();
+
+            $this->db->select('a.id_kerusakan, b.nm_jenis_sarana, a.jml_terendam as jml');
+            $this->db->from('ms_bencana_terendam a');
+            $this->db->join('cx_jenis_sarana b', 'b.id = a.id_kerusakan', 'INNER');
+            $this->db->where('a.wil_village', $latest_data['wil_village']);
+            $this->db->where('a.waktu_data', $latest_data['waktu_data']);
+            $this->db->where('a.create_date', $latest_data['create_date']);
+            $this->db->order_by('a.id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataTerendam = $this->db->get()->result_array();
+
+            $this->db->select('a.id_kerusakan, b.nm_jenis_sarana, a.jumlah_sarana as jml');
+            $this->db->from('ms_bencana_sarana_lain a');
+            $this->db->join('cx_jenis_sarana b', 'b.id = a.id_kerusakan', 'INNER');
+            $this->db->where('a.wil_village', $latest_data['wil_village']);
+            $this->db->where('a.waktu_data', $latest_data['waktu_data']);
+            $this->db->where('a.create_date', $latest_data['create_date']);
+            $this->db->order_by('a.id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataSaranaLainnya = $this->db->get()->result_array();
+
+            $result = array(
+                'kerusakan' => $dataKerusakan,
+                'terendam' => $dataTerendam,
+                'sarana_lainnya' => $dataSaranaLainnya
+            );
+        }
+        return $result;
+    }
+    private function _getDataTernak($token = "", $wil_village = "")
+    {
+        $result = [];
+        $this->db->where('a.wil_village', $wil_village);
+        $this->db->where('c.token_bencana', $token);
+        $this->db->select('a.wil_village,
+                            a.waktu_data,
+                            a.create_date,
+                            count(a.id) as jumlah_data,
+                            b.name as nm_village');
+        $this->db->from('ms_bencana_ternak a');
+        $this->db->join('wil_village b', 'b.id_village = a.wil_village', 'INNER');
+        $this->db->join('ms_bencana_detail c', 'c.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->group_by('a.wil_village, b.name, a.waktu_data, a.create_date');
+        $this->db->order_by('a.waktu_data DESC, a.create_date DESC');
+        $this->db->limit(1);
+        $latest_data = $this->db->get()->row_array();
+
+        if ($latest_data) {
+
+            $this->db->select('a.id_jenis_ternak as id_ternak, b.nm_jenis_ternak as ternak, a.jumlah_ternak as jml');
+            $this->db->from('ms_bencana_ternak a');
+            $this->db->join('cx_jenis_ternak b', 'b.id = a.id_jenis_ternak', 'INNER');
+            $this->db->where('a.wil_village', $latest_data['wil_village']);
+            $this->db->where('a.waktu_data', $latest_data['waktu_data']);
+            $this->db->where('a.create_date', $latest_data['create_date']);
+            $this->db->order_by('a.id ASC');
+            $this->db->limit($latest_data['jumlah_data']);
+            $dataTernak = $this->db->get()->result_array();
+
+            $result = array(
+                'ternak' => $dataTernak
+            );
+        }
+        return $result;
+    }
+
+    private function _sum_data_korban($nowData, $sumData)
+    {
+        if(count($sumData['data_korban_jiwa']) > 0 AND count($nowData['data_korban_jiwa']) > 0){
+            foreach($sumData['data_korban_jiwa'] as $key => $row){
+                $nowData['data_korban_jiwa'][$key]['jumlah_korban'] = 
+                    (string) ($nowData['data_korban_jiwa'][$key]['jumlah_korban'] + $row['jumlah_korban']);
+            }
+
+            foreach($sumData['total'] as $key => $row){
+                $nowData['total'][$key]['total'] = 
+                    (string) ($nowData['total'][$key]['total'] + $row['total']);
+            }
+        }
+
+        return $nowData;
+    }
+    private function _sum_data_kerusakan($nowData, $sumData)
+    {
+        if(isset($sumData['kerusakan']) AND count($nowData) > 0){
+            foreach($sumData['kerusakan'] as $key => $row){
+                $nowData['kerusakan'][$key]['rusak_ringan'] = 
+                    (string) ($nowData['kerusakan'][$key]['rusak_ringan'] + $row['rusak_ringan']);
+                $nowData['kerusakan'][$key]['rusak_sedang'] = 
+                    (string) ($nowData['kerusakan'][$key]['rusak_sedang'] + $row['rusak_sedang']);
+                $nowData['kerusakan'][$key]['rusak_berat'] = 
+                (string) ($nowData['kerusakan'][$key]['rusak_berat'] + $row['rusak_berat']);
+            }
+        }
+        if(isset($sumData['terendam']) AND count($nowData) > 0){
+            foreach($sumData['terendam'] as $key => $row){
+                $nowData['terendam'][$key]['jml'] = 
+                (string) ($nowData['terendam'][$key]['jml'] + $row['jml']);
+            }
+        }
+        if(isset($sumData['sarana_lainnya']) AND count($nowData) > 0){
+            foreach($sumData['sarana_lainnya'] as $key => $row){
+                $nowData['sarana_lainnya'][$key]['jml'] = 
+                    (string) ($nowData['sarana_lainnya'][$key]['jml'] + $row['jml']);
+            }
+        }
+        return $nowData;
+    }
+    private function _sum_data_ternak($nowData, $sumData)
+    {
+        if(isset($sumData['ternak']) AND count($nowData) > 0){
+            foreach($sumData['ternak'] as $key => $row){
+                $nowData['ternak'][$key]['jml'] = 
+                (string) ($nowData['ternak'][$key]['jml'] + $row['jml']);
+            }
+        }
+        return $nowData;
     }
 }
