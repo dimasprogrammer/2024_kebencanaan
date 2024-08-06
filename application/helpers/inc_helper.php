@@ -243,6 +243,42 @@ if (!function_exists('replace_backslases')) {
     }
 }
 
+if(!function_exists('get_time_difference_in_seconds')){
+    function get_time_difference_in_seconds($tgl_data, $batas_waktu){
+        $interval = $tgl_data->diff($batas_waktu);
+        $elapsed_time = [
+            'y' => $interval->y,
+            'm' => $interval->m,
+            'd' => $interval->d,
+            'h' => $interval->h,
+            'i' => $interval->i,
+            's' => $interval->s
+        ];
+        $total_seconds = 0;
+        foreach($elapsed_time as $key => $value){
+            if($key == 'y'){
+                $total_seconds += $value * 31536000;
+            }
+            else if($key == 'm'){
+                $total_seconds += $value * 2592000;
+            }
+            else if($key == 'd'){
+                $total_seconds += $value * 86400;
+            }   
+            else if($key == 'h'){
+                $total_seconds += $value * 3600;
+            }
+            else if($key == 'i'){
+                $total_seconds += $value * 60;
+            }
+            else if($key == 's'){
+                $total_seconds += $value;
+            }
+        }
+        return $total_seconds;
+    }
+}
+
 
 
 /* End of file inc.php */

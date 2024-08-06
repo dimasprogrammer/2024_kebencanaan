@@ -14,10 +14,10 @@ class M_dashboard extends CI_Model
         parent::__construct();
     }
 
-    public function get_data()
+    public function get_data($token = "")
     {
         $data = null;
-        $bencana_terbaru = $this->_get_data_bencana_terbaru();
+        $bencana_terbaru = $this->_get_data_bencana_terbaru($token);
         $tanggalKejadian = $bencana_terbaru['tanggal_bencana'] ? tgl_surat($bencana_terbaru['tanggal_bencana']) : null;
         $tanggalKejadian = $bencana_terbaru['jam_bencana'] ? $tanggalKejadian . ' - ' . $bencana_terbaru['jam_bencana'] . ' WIB' : $tanggalKejadian;
         $taksiranKerugian = $bencana_terbaru['taksiran_kerugian'] ? "Rp. " . number_format($bencana_terbaru['taksiran_kerugian'], 0, ',', '.') : null;
@@ -37,6 +37,9 @@ class M_dashboard extends CI_Model
         $total_wilayah_terdampak = $this->_get_data_total_wilayah_terdampak($bencana_terbaru['token_bencana']);
         $stats_bencana_tahun_ini = $this->_stats_bencana_tahun_ini();
         
+        // get list bencana lainnya
+        $list_bencana_lainnya = $this->_get_list_bencana_lainnya($bencana_terbaru['token_bencana']);
+
         $data = [
             'bencana' => [
                 'idBencana' => $bencana_terbaru['token_bencana'] ?? null,
@@ -82,13 +85,28 @@ class M_dashboard extends CI_Model
                 'banjirBandang' => $stats_bencana_tahun_ini['4'] ?? 0,
                 'abrasiPantai' => $stats_bencana_tahun_ini['8'] ?? 0,
             ],
-            "optionBencanaMasaTanggap" =>[]
+            "optionBencanaMasaTanggap" => $list_bencana_lainnya ?? []
         ];
         return $data;
     }
 
-    private function _get_data_bencana_terbaru()
+    private function _get_list_bencana_lainnya($token_bencana)
     {
+        $this->db->select('a.token_bencana as id, b.nm_bencana as nama');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
+        $this->db->where('a.kategori_tanggap', 1);
+        $this->db->where('a.token_bencana !=', $token_bencana);
+        $this->db->order_by('a.tanggal_bencana', 'desc');
+        $raw = $this->db->get()->result_array();
+        return $raw;
+    }
+
+    private function _get_data_bencana_terbaru($token = "")
+    {
+        if($token != ""){
+            $this->db->where('a.token_bencana', $token);
+        }
         $this->db->select('a.*, b.nm_bencana');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
@@ -194,16 +212,29 @@ class M_dashboard extends CI_Model
     private function _get_data_dampak_bencana($token)
     {
         $batas_waktu = 60 * 5; // 5 menit
-        $batas_waktu = gmdate('Y-m-d H:i:s', (time() + 60 * 60 * 7) + $batas_waktu);
 
-        $this->db->where('timestamps <', $batas_waktu);
         $this->db->order_by('timestamps', 'desc');
         $this->db->where('token_bencana', $token);
         $this->db->from('log_dampak_bencana');
         $this->db->limit(1);
         $raw = $this->db->get()->row_array();
         if(isset($raw['data'])){
-            $data = json_decode($raw['data'], true);
+            $tgl_data = new DateTime($raw['timestamps']);
+            $current_time = new DateTime();
+            $elapsed_time = get_time_difference_in_seconds($tgl_data, $current_time);
+            if($elapsed_time < $batas_waktu){
+                $data = json_decode($raw['data'], true);
+            }
+            else{
+                $data = $this->_create_stat_dampak_bencana($token);
+                $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+    
+                $create['token_bencana'] = $token;
+                $create['data'] = json_encode($data, JSON_PRETTY_PRINT);
+                $create['timestamps'] = $create_date;
+    
+                $this->db->insert('log_dampak_bencana', $create);
+            }
         }
         else{
             $data = $this->_create_stat_dampak_bencana($token);
