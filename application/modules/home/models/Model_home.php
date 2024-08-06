@@ -95,21 +95,64 @@ class Model_home extends CI_Model
         return $query->result_array();
     }
 
+    public function getDataDetailTokenBencana($token_bencana, $id_kondisi)
+    {
+        $this->db->select('a.id_bencana_detail,
+                           a.token_bencana,
+                           a.token_bencana_detail,
+                           a.id_regency_penerima,
+                           b.nama_bencana,
+                           b.penyebab_bencana,
+                           b.tanggal_bencana,
+                           c.nm_regency');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
+        $this->db->where('a.token_bencana', $token_bencana);
+        $query = $this->db->get();
+
+        $detail = array();
+        if ($query->num_rows() <= 0)
+            return array();
+        else {
+            foreach ($query->result_array() as $key => $val) {
+                $detail[] = $val['token_bencana_detail'];
+            }
+            $check = $this->checkKorbanBencana($detail, $id_kondisi);
+            return $check;
+        }
+    }
+
+    public function checkKorbanBencana($detail, $id_kondisi)
+    {
+        $this->db->select(' sum(a.jumlah_korban) as jumlah_korban');
+        $this->db->from('ms_bencana_korban a');
+        $this->db->where_in('a.token_bencana_detail', $detail);
+        $this->db->where('a.id_kondisi', $id_kondisi);
+        $query = $this->db->get();
+        if ($query->num_rows() <= 0)
+            return 0;
+        else {
+            $jumlah = $query->row_array()['jumlah_korban'];
+            return $jumlah;
+        }
+    }
     public function getDataKorbanBencana($token_bencana)
     {
         $this->db->select('	a.id as id_bencana_korban, 
 							a.token_bencana_detail, 
-							a.jumlah_korban, 
+						    a.jumlah_korban, 
 							b.token_bencana, 
-                            c.nm_kondisi,
-                            d.nm_jiwa');
+                            d.nm_kondisi,
+                            e.nm_jiwa');
         $this->db->from('ms_bencana_korban a');
         $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
-        $this->db->join('cx_korban_kondisi c', 'c.id = a.id_kondisi', 'INNER');
-        $this->db->join('cx_korban_jiwa d', 'd.id = a.id_jiwa', 'INNER');
+        $this->db->join('ms_bencana c', 'b.token_bencana = c.token_bencana', 'INNER');
+        $this->db->join('cx_korban_kondisi d', 'd.id = a.id_kondisi', 'INNER');
+        $this->db->join('cx_korban_jiwa e', 'e.id = a.id_jiwa', 'INNER');
         $this->db->where('b.token_bencana', $token_bencana);
-        $this->db->where('c.id_kondisi', 5);
-        $this->db->order_by('a.id DESC');
+        $this->db->where('d.id', 5);
+        // $this->db->order_by('a.id DESC');
         $query = $this->db->get();
         return $query->row_array();
     }
@@ -148,7 +191,8 @@ class Model_home extends CI_Model
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
         $this->db->join('cx_tanggap_bencana c', 'c.id_tanggap_bencana = a.kategori_tanggap', 'inner');
         $this->db->where('a.id_status', 1);
-        $this->db->limit(3);
+        $this->db->where('a.token_bencana', 'CD3CC066C1674365B1958E7286FBEFAD');
+        $this->db->limit(1);
         $this->db->order_by('a.tanggal_bencana DESC');
         $query = $this->db->get();
         return $query->result();
@@ -179,6 +223,86 @@ class Model_home extends CI_Model
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
         $this->db->where('b.id_jenis_bencana', 5);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaCuaca()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_cuaca
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 7);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaErupsi()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_erupsi
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 6);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaGempaBumi()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_gempa_bumi
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 2);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaBanjirBandang()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_banjir_bandang
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 4);
+        if ($this->app_loader->is_operator()) {
+            $this->db->where('a.id_regency_penerima', $id_regency);
+        }
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function getBencanaAbrasiPantai()
+    {
+        $id_regency = $this->app_loader->current_regencyID();
+        $this->db->select('
+                            count(b.id_jenis_bencana) as total_abrasi_pantai
+                            ');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->where('b.id_jenis_bencana', 9);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }

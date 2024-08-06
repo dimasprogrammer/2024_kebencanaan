@@ -139,7 +139,8 @@
 
             <div class="col-md-7 col-7 text-right pr-5">
 
-              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">12</h1>
+              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text"><?php $cuaca = $cuaca['total_cuaca'];
+                                                                    echo isset($cuaca) ? $cuaca : 0; ?></h1>
 
               <p class="font-small grey-text">Total Kejadian</p>
             </div>
@@ -180,7 +181,10 @@
 
             <div class="col-md-7 col-7 text-right pr-5">
 
-              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">12</h1>
+              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">
+                <?php $erupsi = $erupsi['total_erupsi'];
+                echo isset($erupsi) ? $erupsi : 0; ?>
+              </h1>
 
               <p class="font-small grey-text">Total Kejadian</p>
             </div>
@@ -214,7 +218,10 @@
 
             <div class="col-md-7 col-7 text-right pr-5">
 
-              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">12</h1>
+              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">
+                <?php $gempa_bumi = $gempa_bumi['total_gempa_bumi'];
+                echo isset($gempa_bumi) ? $gempa_bumi : 0; ?>
+              </h1>
 
               <p class="font-small grey-text">Total Kejadian</p>
             </div>
@@ -248,7 +255,10 @@
 
             <div class="col-md-7 col-7 text-right pr-5">
 
-              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">12</h1>
+              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">
+                <?php $banjir_bandang = $banjir_bandang['total_banjir_bandang'];
+                echo isset($banjir_bandang) ? $banjir_bandang : 0; ?>
+              </h1>
 
               <p class="font-small grey-text">Total Kejadian</p>
             </div>
@@ -282,7 +292,10 @@
 
             <div class="col-md-7 col-7 text-right pr-5">
 
-              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">12</h1>
+              <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">
+                <?php $abrasi_pantai = $abrasi_pantai['total_abrasi_pantai'];
+                echo isset($abrasi_pantai) ? $abrasi_pantai : 0; ?>
+              </h1>
 
               <p class="font-small grey-text">Total Kejadian</p>
             </div>
@@ -301,6 +314,7 @@
     </div>
     <!-- Grid row -->
 
+
     <!-- Grid row -->
     <div class="row">
 
@@ -314,7 +328,6 @@
             <h5 class="biru-text font-weight-bold">
               DATA TANGGAP DARURAT BENCANA PROVINSI SUMATERA BARAT</h5>
           </div>
-
           <div class="card white text-center z-depth-2">
             <div class="card-body">
               <?php $no_urut = 0;
@@ -334,7 +347,7 @@
                         <div class="col-md-6 col-12">
                           <div class="card-body">
                             <div>
-                              <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?> </h5>
+                              <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?> : <?php echo $list->token_bencana; ?></h5>
                               <table class="tablehome">
                                 <tbody>
                                   <tr>
@@ -409,22 +422,25 @@
                         <div class="card-body">
                           <div class="row">
                             <div class="col-md-6 col-12">
-                              <h6 class="biru-text font-weight-bold"> AKUMULASI DATA YANG TERDAMPAK </h6>
+                              <h6 class="black-text font-weight-bold"> AKUMULASI DATA YANG TERDAMPAK </h6>
                               <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; border-style: solid;">
                                 <tbody>
                                   <tr>
                                     <td>
                                       <font style="font-size: 16px;"> Jumlah Pengungsi </font>
                                     </td>
-                                    <td>
-                                      <font style="font-size: 16px;"> 10 </font>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;">
+                                        <?php
+                                        echo $pengungsi = $this->mHome->getDataDetailTokenBencana($list->token_bencana, 5);
+                                        ?> </font>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
                                       <font style="font-size: 16px;"> Jumlah Terdampak </font>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                       <font style="font-size: 16px;"> 10 </font>
                                     </td>
                                   </tr>
@@ -432,23 +448,122 @@
                                     <td>
                                       <font style="font-size: 16px;"> Korban Meninggal </font>
                                     </td>
-                                    <td>
-                                      <font style="font-size: 16px;"> 10 </font>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> <?php
+                                                                      echo $pengungsi = $this->mHome->getDataDetailTokenBencana($list->token_bencana, 1);
+                                                                      ?> </font>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
                                       <font style="font-size: 16px;"> Korban Luka Berat/Sedang/Ringan </font>
                                     </td>
-                                    <td>
-                                      <font style="font-size: 16px;"> 10 </font>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> <?php
+                                                                      echo $pengungsi = $this->mHome->getDataDetailTokenBencana($list->token_bencana, 3);
+                                                                      ?> </font>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
                                       <font style="font-size: 16px;"> Jumlah Penduduk Hilang </font>
                                     </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> <?php
+                                                                      echo $pengungsi = $this->mHome->getDataDetailTokenBencana($list->token_bencana, 2);
+                                                                      ?> </font>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="col-md-6 col-12">
+                              <h6 class="black-text font-weight-bold"> FASILITAS UMUM TERDAMPAK </h6>
+                              <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; width: 100%; overflow-x: auto; border-style: solid;">
+                                <tbody>
+                                  <tr>
                                     <td>
+                                      <font style="font-size: 16px;"> Pasar </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;">
+                                        0
+                                      </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Fasilitas Pendidikan </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Fasilitas Ibadah </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Fasilitas Kesehatan </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-md-6 col-12">
+                              <h6 class="black-text font-weight-bold"> PEMUKIMAN
+                              </h6>
+                              <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; border-style: solid;">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Rumah Terdampak </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;">
+                                        0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Gedung Terdampak </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 10 </font>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <br>
+                              <h6 class="black-text font-weight-bold"> PERTANIAN
+                              </h6>
+                              <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; border-style: solid;">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Rumah Terdampak </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;">
+                                        0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Gedung Terdampak </font>
+                                    </td>
+                                    <td class="text-center">
                                       <font style="font-size: 16px;"> 10 </font>
                                     </td>
                                   </tr>
@@ -456,7 +571,48 @@
                               </table>
                             </div>
                             <div class="col-md-6 col-12">
-                              <h6 class="biru-text font-weight-bold"> FASILITAS UMUM TERDAMPAK </h6>
+                              <h6 class="black-text font-weight-bold"> INFRASTRUKTUR </h6>
+                              <table class="table table-bordered mb-0 table-sm" style="border-width: 2px; border-style: solid;">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Jembatan </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;">
+                                        0
+                                      </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Jalan </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Irigasi </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <font style="font-size: 16px;"> Bangunan Sungai, Pantai dan Konservasi </font>
+                                    </td>
+                                    <td class="text-center">
+                                      <font style="font-size: 16px;"> 0 </font>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <br>
+                              <h6 class="red-text font-weight-bold">Update Data: Tanggal <?php echo hari($list->tanggal_bencana) . ', ' . tgl_indonesia($list->tanggal_bencana) . ', ' . $list->tanggal_bencana . ' WIB'; ?>
+                              </h6>
                             </div>
                           </div>
 

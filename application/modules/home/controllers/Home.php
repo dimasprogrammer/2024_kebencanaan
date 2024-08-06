@@ -23,12 +23,17 @@ class Home extends SLP_Controller
         $this->breadcrumb->add('Dashboard', site_url('home'));
         $this->breadcrumb->add('Nontpp', '#');
         $this->breadcrumb->add('Module', site_url($this->_uriName));
-        $this->session_info['page_name']     = "Home";
-        $this->session_info['page_css']      = '';
-        $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
-        $this->session_info['longsor']       = $this->mHome->getBencanaLongsor();
-        $this->session_info['banjir']        = $this->mHome->getBencanaBanjir();
-        $this->session_info['kebakaran']     = $this->mHome->getBencanaKebakaran();
+        $this->session_info['page_name']      = "Home";
+        $this->session_info['page_css']       = '';
+        $this->session_info['page_js']        = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
+        $this->session_info['longsor']        = $this->mHome->getBencanaLongsor();
+        $this->session_info['banjir']         = $this->mHome->getBencanaBanjir();
+        $this->session_info['kebakaran']      = $this->mHome->getBencanaKebakaran();
+        $this->session_info['cuaca']          = $this->mHome->getBencanaCuaca();
+        $this->session_info['erupsi']         = $this->mHome->getBencanaErupsi();
+        $this->session_info['gempa_bumi']     = $this->mHome->getBencanaGempaBumi();
+        $this->session_info['banjir_bandang'] = $this->mHome->getBencanaBanjirBandang();
+        $this->session_info['abrasi_pantai']  = $this->mHome->getBencanaAbrasiPantai();
         $this->session_info['bencana']       = $this->mHome->getBencanaAll();
         $this->template->build('vpage', $this->session_info);
     }
