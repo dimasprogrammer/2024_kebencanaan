@@ -77,6 +77,23 @@ class Dashboard extends SLP_Controller
 
     private function _detail_bencana_formatter($data)
     {
+        $dataDetailBencana = [];
+        $detailJumlahKorban = [];
+        $detailKerusakan = [];
+
+        foreach($data['wilayah_terdampak'] as $key => $value){
+            $detailJumlahKorban[] = [
+                "namaKabkota" => $value['kabkota'],
+                "data" => $this->_create_formatDetailJumlahKorban($value['data_korban']['data_korban_jiwa'])
+            ];
+            $detailKerusakan[] = [
+                "namaKabkota" => $value['kabkota'],
+                "data" => $this->_create_formatDetailKerusakan($value['data_kerusakan'])
+            ];
+        }
+
+        $totalWilayahTerdampakKeseluruhan = $this->_hitung_total_wilayah_terdampak($data['wilayah_terdampak']);
+
         $keseluruhan = [
             "kode" => "0",
             "ket" => "Data Keseluruhan",
@@ -84,14 +101,121 @@ class Dashboard extends SLP_Controller
                 "taksiranKerugian" => "0",
                 "totalKorbanTerisolir" => "0",
                 "totalWilayahTerdampak" => [
-                    "kabkota" => "0",
-                    "kecamatan" => "0",
-                    "kelnag" => "0"
+                    "kabkota" => $totalWilayahTerdampakKeseluruhan['kabkota'] ?? 0,
+                    "kecamatan" => $totalWilayahTerdampakKeseluruhan['kecamatan'] ?? 0,
+                    "kelnag" => $totalWilayahTerdampakKeseluruhan['kelnag'] ?? 0
                 ]
             ],
-            "dampakBencana" => $this->_create_formatDampakBencana($data['stat_total'])
+            "dampakBencana" => $this->_create_formatDampakBencana($data['stat_total']),
+            "detailJumlahKorban" => $detailJumlahKorban,
+            "detailKerusakan" => $detailKerusakan
         ];
-        return [$keseluruhan];
+
+        $dataDetailBencana[] = $keseluruhan;
+
+        foreach($data['wilayah_terdampak'] as $key => $value){
+            $detailJumlahKorban = [];
+            $detailKerusakan = [];
+
+            foreach($value['data_kecamatan'] as $index => $item){
+                $detailJumlahKorban[] = [
+                    "namaKecamatan" => $item['kecamatan'],
+                    "data" => $this->_create_formatDetailJumlahKorban($item['data_korban']['data_korban_jiwa'])
+                ];
+                $detailKerusakan[] = [
+                    "namaKecamatan" => $item['kecamatan'],
+                    "data" => $this->_create_formatDetailKerusakan($item['data_kerusakan'])
+                ];
+            }
+            $totalWilayahTerdampak = $this->_hitung_total_wilayah_terdampak($value['data_kecamatan']);
+            $dataDetailBencana[] = [
+                "kode" => $key,
+                "ket" => $value['kabkota'],
+                "data" => [
+                    "taksiranKerugian" => "0",
+                    "totalKorbanTerisolir" => "0",
+                    "totalWilayahTerdampak" => [
+                        "kecamatan" => $totalWilayahTerdampak['kecamatan'],
+                        "kelnag" => $totalWilayahTerdampak['kelnag']
+                    ]
+                ],
+                "dampakBencana" => $this->_create_formatDampakBencana($value),
+                "detailJumlahKorban" => $detailJumlahKorban,
+                "detailKerusakan" => $detailKerusakan
+            ];
+        }
+
+        return $dataDetailBencana;
+    }
+
+    private function _create_formatDetailKerusakan($data)
+    {
+        $detailKerusakan = [];
+        // kode fasilitas rusak
+        $fasilitasRusak = [
+            "1" => "rumahRusak",
+            "2" => "sekolah",
+            "3" => "rumahIbadah",
+            "4" => "posyandu",
+            "5" => "puskesmas",
+            "6" => "rumahSakit",
+            "7" => "kantor",
+            "8" => "rumah",
+            "9" => "kk",
+            "10" => "kios",
+            "11" => "pabrik",
+            "12" => "jembatan",
+            "13" => "jalan",
+            "14" => "sawah",
+            "15" => "kebunHutan",
+            "16" => "kolam",
+            "17" => "irigasi",
+            "18" => "bangunanLainnya"
+        ];
+        if(isset($data['kerusakan']) && isset($data['terendam']) && isset($data['sarana_lainnya'])){
+            foreach($data['kerusakan'] as $key => $value){
+                $detailKerusakan[$fasilitasRusak[$value['id_kerusakan']]] = [
+                    "rusakRingan" => $value['rusak_ringan'],
+                    "rusakSedang" => $value['rusak_sedang'],
+                    "rusakBerat" => $value['rusak_berat'],
+                    "totalRusak" => $value['rusak_ringan'] + $value['rusak_sedang'] + $value['rusak_berat']
+                ];
+            }
+            foreach($data['terendam'] as $key => $value){
+                $detailKerusakan['rumahTerendam'][$fasilitasRusak[$value['id_kerusakan']]] = $value['jml'];
+            }
+            foreach($data['sarana_lainnya'] as $key => $value){
+                $detailKerusakan['bangunanLainnya'][$fasilitasRusak[$value['id_kerusakan']]] = $value['jml'];
+            }
+        }
+        return $detailKerusakan;
+    }
+
+    private function _create_formatDetailJumlahKorban($data)
+    {
+        $detailJumlahKorban = [];
+        $jiwa = [
+            "1" => "anakL",
+            "2" => "anakP",
+            "3" => "ibuHamil",
+            "4" => "dewasaL",
+            "5" => "dewasaP",
+            "6" => "lansiaL",
+            "7" => "lansiaP"
+        ];
+        $kondisi = [
+            "1" => "meninggal",
+            "2" => "hilang",
+            "3" => "luka",
+            "4" => "menderita",
+            "5" => "mengungsi"
+        ];
+        if(isset($data)){
+            foreach($data as $key => $value){
+                $detailJumlahKorban[$kondisi[$value['id_kondisi']]][$jiwa[$value['id_jiwa']]] = $value['jumlah_korban'];
+            }
+        }
+        return $detailJumlahKorban;
     }
 
     private function _create_formatDampakBencana($data)
@@ -180,5 +304,43 @@ class Dashboard extends SLP_Controller
             'rumahRusak' => $rumahRusak,
             'fasilitasRusak' => $fasilitasRusak
         ];
+    }
+
+    private function _hitung_total_wilayah_terdampak($data)
+    {
+        $totalWilayahTerdampak = [
+            "kabkota" => 0,
+            "kecamatan" => 0,
+            "kelnag" => 0
+        ];
+        $totalWilayahTerdampak = $this->_hitungRecursive($data, $totalWilayahTerdampak);
+        return $totalWilayahTerdampak;
+    }
+
+    private function _hitungRecursive($data, $totalWilayahTerdampak)
+    {
+        $i = 0;
+        foreach($data as $key => $value){
+            $no = 0;
+            foreach($value as $index => $item){
+
+                if($no == 0){
+                    if($index == "kabkota"){
+                        $totalWilayahTerdampak = $this->_hitungRecursive($value['data_kecamatan'], $totalWilayahTerdampak);
+                        $totalWilayahTerdampak['kabkota'] = $totalWilayahTerdampak['kabkota'] + 1;
+                    }
+                    if($index == "kecamatan"){
+                        $totalWilayahTerdampak = $this->_hitungRecursive($value['data_kelnag'], $totalWilayahTerdampak);
+                        $totalWilayahTerdampak['kecamatan'] = $totalWilayahTerdampak['kecamatan'] + 1;
+                    }
+                    if($index == "kelnag"){
+                        $totalWilayahTerdampak['kelnag'] = $totalWilayahTerdampak['kelnag'] + 1;
+                    }
+                }
+                $no++;
+            }
+            $i++;
+        }
+        return $totalWilayahTerdampak;
     }
 }
