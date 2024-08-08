@@ -288,6 +288,10 @@ class M_dashboard extends CI_Model
                             $ternak_kec = $data_ternak;
                         }
                         else{
+                            if(count($data_korban) > 0){ $korban_kec = $data_korban; }
+                            if(count($data_kerusakan) > 0){ $kerusakan_kec = $data_kerusakan; }
+                            if(count($data_ternak) > 0){ $ternak_kec = $data_ternak; }
+
                             // hitung akumulasi stat dampak bencana tingkat kecamatan
                             $korban_kec = $this->_sum_data_korban($korban_kec, $data_korban);
                             $kerusakan_kec = $this->_sum_data_kerusakan($kerusakan_kec, $data_kerusakan);

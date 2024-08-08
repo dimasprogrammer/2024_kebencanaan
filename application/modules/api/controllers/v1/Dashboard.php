@@ -178,7 +178,7 @@ class Dashboard extends SLP_Controller
                     "rusakRingan" => $value['rusak_ringan'],
                     "rusakSedang" => $value['rusak_sedang'],
                     "rusakBerat" => $value['rusak_berat'],
-                    "totalRusak" => $value['rusak_ringan'] + $value['rusak_sedang'] + $value['rusak_berat']
+                    "totalRusak" => (string) ($value['rusak_ringan'] + $value['rusak_sedang'] + $value['rusak_berat'])
                 ];
             }
             foreach($data['terendam'] as $key => $value){
@@ -214,6 +214,13 @@ class Dashboard extends SLP_Controller
             foreach($data as $key => $value){
                 $detailJumlahKorban[$kondisi[$value['id_kondisi']]][$jiwa[$value['id_jiwa']]] = $value['jumlah_korban'];
             }
+        }
+        foreach($detailJumlahKorban as $key => $value){
+            $total = 0;
+            foreach($value as $index => $item){
+               $total = $total + $item;
+            }
+            $detailJumlahKorban[$key]['total'] = (string) $total;
         }
         return $detailJumlahKorban;
     }
@@ -314,6 +321,12 @@ class Dashboard extends SLP_Controller
             "kelnag" => 0
         ];
         $totalWilayahTerdampak = $this->_hitungRecursive($data, $totalWilayahTerdampak);
+        $totalWilayahTerdampak = [
+            "kabkota" => (string) $totalWilayahTerdampak['kabkota'],
+            "kecamatan" => (string) $totalWilayahTerdampak['kecamatan'],
+            "kelnag" => (string) $totalWilayahTerdampak['kelnag']
+        ];
+
         return $totalWilayahTerdampak;
     }
 
