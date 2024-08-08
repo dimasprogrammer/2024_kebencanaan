@@ -14,6 +14,11 @@ class Dashboard extends SLP_Controller
         $this->load->model(array('v1/m_dashboard' => 'm_dashboard'));
     }
 
+    public function apiDocs()
+    {
+        $this->load->view('v1/documentation');
+    }
+
     public function get_data()
     {
         $data = $this->m_dashboard->get_data();
@@ -58,10 +63,12 @@ class Dashboard extends SLP_Controller
             'idBencana' => $data_detail1['bencana']['idBencana'],
             'jenisKejadian' => $data_detail1['bencana']['jenisKejadian'],
             'tanggalKejadian' => $data_detail1['bencana']['tanggalKejadian'],
-            'updateData' => "",
+            'updateData' => $data_detail1['bencana']['updateData'],
             'infoGrafisUrl' => $data_detail1['bencana']['infoGrafisUrl'],
             'lokasiKejadian' => $data_detail1['bencana']['lokasiKejadian']
         ];
+
+        $detailBencana[0]['data']['taksiranKerugian'] = $data_detail1['bencana']['taksiranKerugian'];
 
         $result = [
             'success' => true,

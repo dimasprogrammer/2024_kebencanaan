@@ -22,6 +22,13 @@ class M_dashboard extends CI_Model
         $tanggalKejadian = $bencana_terbaru['jam_bencana'] ? $tanggalKejadian . ' - ' . $bencana_terbaru['jam_bencana'] . ' WIB' : $tanggalKejadian;
         $taksiranKerugian = $bencana_terbaru['taksiran_kerugian'] ? "Rp. " . number_format($bencana_terbaru['taksiran_kerugian'], 0, ',', '.') : null;
 
+        
+        $last_update_data = $this->_getLastUpdateData($bencana_terbaru['token_bencana']);
+        $jam_update = explode(' ', $last_update_data['waktu_data']);
+        $jam_update = $jam_update[1] ? $jam_update[1] : null;
+        $jam_update = substr($jam_update, 0, 5) . ' WIB';
+        $last_update_data = $last_update_data['waktu_data'] ? tgl_surat($last_update_data['waktu_data']) . ' - ' . $jam_update    : null;
+
         // get info grafis url
         $raw_created_date = explode(' ', $bencana_terbaru['create_date']);
         $splitted_created_date = explode('-', $raw_created_date[0]);
@@ -45,6 +52,7 @@ class M_dashboard extends CI_Model
                 'idBencana' => $bencana_terbaru['token_bencana'] ?? null,
                 'jenisKejadian' => $bencana_terbaru['nm_bencana'] ?? null,
                 'tanggalKejadian' => $tanggalKejadian ?? null,
+                'updateData' => $last_update_data ?? null,
                 'totalWilayahTerdampak' => [
                     "kabkota" => $kabkota_terdampak ? count($kabkota_terdampak) : 0,
                     "kecamatan" => $total_wilayah_terdampak['kecamatan'] ?? 0,
@@ -88,6 +96,18 @@ class M_dashboard extends CI_Model
             "optionBencanaMasaTanggap" => $list_bencana_lainnya ?? []
         ];
         return $data;
+    }
+
+    private function _getLastUpdateData($token)
+    {
+        $this->db->select('a.waktu_data');
+        $this->db->where('b.token_bencana', $token);
+        $this->db->from('ms_bencana_korban a');
+        $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->order_by('a.waktu_data', 'desc');
+        $this->db->limit(1);
+        $raw = $this->db->get()->row_array();
+        return $raw;
     }
 
     private function _get_list_bencana_lainnya($token_bencana)
@@ -309,6 +329,10 @@ class M_dashboard extends CI_Model
                     $ternak_kabkota = $ternak_kec;
                 }
                 else{
+                    if(count($korban_kec) > 0){ $korban_kabkota = $korban_kec; }
+                    if(count($kerusakan_kec) > 0){ $kerusakan_kabkota = $kerusakan_kec; }
+                    if(count($ternak_kec) > 0){ $ternak_kabkota = $ternak_kec; }
+
                     // hitung akumulasi stat dampak bencana tingkat kabkota
                     $korban_kabkota = $this->_sum_data_korban($korban_kabkota, $korban_kec);
                     $kerusakan_kabkota = $this->_sum_data_kerusakan($kerusakan_kabkota, $kerusakan_kec);
