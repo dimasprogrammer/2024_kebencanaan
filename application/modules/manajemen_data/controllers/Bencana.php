@@ -33,7 +33,7 @@ class bencana extends SLP_Controller
         $this->breadcrumb->add('Dashboard', site_url('home'));
         $this->breadcrumb->add('Manajemen', '#');
         $this->breadcrumb->add('bencana', site_url($this->_uriName));
-        $this->session_info['page_name']     = 'Manajemen Data bencana Instansi';
+        $this->session_info['page_name']     = 'Manajemen Data Master Bencana';
         $this->session_info['siteUri']       = $this->_uriName;
         $this->session_info['page_css']      = $this->load->view($this->_vwName . '/vcss', '', true);
         $this->session_info['page_js']       = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
@@ -75,7 +75,8 @@ class bencana extends SLP_Controller
                     $row[] = $no;
                     $row[] = $dl['jenis_bencana'];
                     $row[] = $dl['nama_bencana'];
-                    $row[] = $dl['tanggal_bencana'];
+                    $row[] = hari($dl['tanggal_bencana']) . ', ' . tgl_indonesia($dl['tanggal_bencana']) . ', ' . $dl['jam_bencana'] . ' WIB';
+                    $row[] = convert_to_rupiah($dl['taksiran_kerugian']);
                     $row[] = convert_status_bencana($dl['id_status']);
                     $row[] =  $status;
                     $data[] = $row;
@@ -135,8 +136,10 @@ class bencana extends SLP_Controller
                 $row['logo']               = !empty($gambar) ? $gambar : '';
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['jam_bencana']        = !empty($data) ? $data['jam_bencana'] : '';
                 $row['kategori_tanggap']   = !empty($data) ? $data['kategori_tanggap'] : '';
                 $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
+                $row['taksiran_kerugian']  = !empty($data) ? $data['taksiran_kerugian'] : '';
                 $row['id_jenis_bencana']   = !empty($data) ? $data['id_jenis_bencana'] : '';
                 $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';
                 $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
@@ -238,12 +241,14 @@ class bencana extends SLP_Controller
 
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
+                $row['jam_bencana']        = !empty($data) ? $data['jam_bencana'] : '';
                 $row['nm_tanggap']         = !empty($data) ? $data['nm_tanggap'] : '';
                 $row['jenis_bencana']      = !empty($data) ? $data['jenis_bencana'] : '';
                 $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';
                 $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
                 $row['penyebab_bencana']   = !empty($data) ? $data['penyebab_bencana'] : '';
                 $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
+                $row['taksiran_kerugian']  = !empty($data) ? $data['taksiran_kerugian'] : '';
                 $row['id_status']          = !empty($data) ? $data['id_status'] : '';
                 $row['nama_file']          = !empty($data) ? $data['nama_file'] : '';
                 $row['nama_file_infografis']          = !empty($data) ? $data['nama_file_infografis'] : '';

@@ -21,11 +21,12 @@
                             <thead>
                                 <tr>
                                     <th width="3%" class="font-weight-bold">#</th>
-                                    <th width="10%" class="font-weight-bold">Jenis Bencana</th>
-                                    <th width="30%" class="font-weight-bold">Nama Bencana</th>
-                                    <th width="30%" class="font-weight-bold">Tanggal Bencana</th>
-                                    <th width="10%" class="font-weight-bold">Status</th>
-                                    <th width="15%" class="font-weight-bold">Action</th>
+                                    <th width="15%" class="font-weight-bold">Jenis Bencana</th>
+                                    <th width="25%" class="font-weight-bold">Nama Bencana</th>
+                                    <th width="18%" class="font-weight-bold">Tanggal Bencana</th>
+                                    <th width="15%" class="font-weight-bold">Taksiran Kerugian</th>
+                                    <th width="5%" class="font-weight-bold">Status</th>
+                                    <th width="20%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -63,11 +64,16 @@
                 <div id="errEntry"></div>
                 <?php echo form_hidden('tokenId', ''); ?>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label for="tanggal_bencana" class="control-label font-weight-bold">Pilih Tanggal <span class="text-danger">*</span></label>
                         <input type="date" class="form-control datepickerindo" name="tanggal_bencana" id="tanggal_bencana" style="background-color: white;" required>
                     </div>
-                    <div class="col-12 col-md-6 required">
+                    <div class="col-12 col-md-4 required">
+                        <label for="jam_bencana" class="control-label font-weight-bold">Jam Bencana <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control timepicker" placeholder="Select time" name="jam_bencana" id="jam_bencana" required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-4 required">
                         <label for="kategori_tanggap" class="control-label font-weight-bold">TD/TND<span class="text-danger">*</span></label>
                         <?php echo form_dropdown('kategori_tanggap', isset($tanggap_bencana) ? $tanggap_bencana : array('' => 'Pilih Jenis Pedagang '), $this->input->post('kategori_tanggap', TRUE), 'class="form-control select-all" id="kategori_tanggap" style="width:100%" required=""'); ?>
                         <div class="invalid-feedback"></div>
@@ -120,7 +126,6 @@
                             <label class="custom-file-label" for="nama_file_infografis"> </i>Silahkan Pilih File</label>
                         </div>
                         <div class="invalid-feedback"></div>
-                        <div id="infografis"></div>
                     </div>
                     <div class="col-12 col-md-6 required">
                         <label for="nama_file" class="control-label font-weight-bold">Foto Bencana</label>
@@ -129,18 +134,37 @@
                             <label class="custom-file-label" for="nama_file"> </i>Silahkan Pilih File</label>
                         </div>
                         <div class="invalid-feedback"></div>
-                        <div id="gambar"></div>
                     </div>
                 </div>
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-6 required">
+                        <div class="card card-dark">
+                            <div class="view overlay infografis">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <div class="card card-dark">
+                            <div class="view overlay gambar">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-4 required">
                         <label for="video_bencana" class="control-label font-weight-bold"> Video Bencana</label>
                         <input type="text" class="form-control" name="video_bencana" id="video_bencana" placeholder="Video Bencana" required>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-12 col-md-6 required">
+                    <div class="col-12 col-md-4 required">
                         <label for="id_regency" class="control-label font-weight-bold">Pusdalop Bencana <span class="text-danger">*</span></label>
                         <?php echo form_multiselect('id_regency[]', isset($pusdalops) ? $pusdalops : array('' => 'Pusdalop Bencana'), $this->input->post('id_regency[]', TRUE), 'class="form-control select-all" data-placeholder="Pilih Data"  style="width:100%" required=""'); ?>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-4 required">
+                        <label for="taksiran_kerugian" class="control-label font-weight-bold"> Taksiran Kerugian</label>
+                        <input type="number" class="form-control" name="taksiran_kerugian" id="taksiran_kerugian" placeholder="Taksiran Kerugian" required>
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
@@ -233,19 +257,25 @@
                 <div id="errEntry"></div>
                 <?php echo form_hidden('tokenId', ''); ?>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-2">
+                    <div class="col-12 col-md-4">
                         <label for="tanggal_kirim" class="control-label font-weight-bold"> Tanggal </label>
                         <input type="text" class="form-control" id="tanggal_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-2">
-                        <label for="tanggap_kirim" class="control-label font-weight-bold"> Tanggap Bencana </label>
+                    <div class="col-12 col-md-4">
+                        <label for="jam_kirim" class="control-label font-weight-bold"> Jam Bencana </label>
+                        <input type="text" class="form-control" id="jam_kirim" disabled>
+                    </div>
+                    <div class="col-12 col-md-4 required">
+                        <label for="tanggap_kirim" class="control-label font-weight-bold">Tanggap Bencana</label>
                         <input type="text" class="form-control" id="tanggap_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-2 required">
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-4 required">
                         <label for="jenis_bencana_kirim" class="control-label font-weight-bold">Jenis Bencana</label>
                         <input type="text" class="form-control" id="jenis_bencana_kirim" disabled>
                     </div>
-                    <div class="col-12 col-md-6 required">
+                    <div class="col-12 col-md-8 required">
                         <label for="nama_bencana_kirim" class="control-label font-weight-bold"> Nama Bencana </label>
                         <input type="text" class="form-control" id="nama_bencana_kirim" disabled>
                     </div>
@@ -262,21 +292,41 @@
                 </div>
                 <!-- <div id="map-kirim" class="mb-3"></div> -->
                 <h6 class="control-label font-weight-bold">TITIK KOORDINAT LOKASI BENCANA</h6>
-                <div id="map2" class="mb-3"></div>
+                <div id="map2"></div>
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-6 required">
-                        <label for="infografis_kirim" class="control-label font-weight-bold"> Infografis </label>
-                        <div id="infografis_kirim"></div>
+                        <label for="latitude_kirim" class="control-label font-weight-bold"> Latitude </label>
+                        <input type="text" class="form-control" id="latitude_kirim" disabled>
                     </div>
                     <div class="col-12 col-md-6 required">
-                        <label for="infografis_kirim" class="control-label font-weight-bold"> Gambar Bencana </label>
-                        <div id="gambar_kirim"></div>
+                        <label for="longitude_kirim" class="control-label font-weight-bold"> Longitude </label>
+                        <input type="text" class="form-control" id="longitude_kirim" disabled>
                     </div>
                 </div>
                 <div class="form-row mb-3">
-                    <div class="col-12 col-md-12 required">
+                    <div class="col-12 col-md-6 required">
+                        <label for="infografis" class="control-label font-weight-bold"> Infografis </label>
+                        <div class="card card-dark">
+                            <div class="view overlay infografis">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <label for="gambar" class="control-label font-weight-bold"> Gambar Bencana </label>
+                        <div class="card card-dark">
+                            <div class="view overlay gambar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-6 required">
                         <label for="video_bencana_kirim" class="control-label font-weight-bold">Video Bencana</label>
                         <input type="text" class="form-control" id="video_bencana_kirim" disabled>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <label for="taksiran_kerugian_kirim" class="control-label font-weight-bold">Taksiran Kerugian</label>
+                        <input type="text" class="form-control" id="taksiran_kerugian_kirim" disabled>
                     </div>
                 </div>
                 <div class="form-row mb-3">

@@ -107,7 +107,6 @@ class Model_bencana_daerah extends CI_Model
         $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
         $this->db->join('cx_korban_kondisi c', 'c.id = a.id_kondisi', 'INNER');
         $this->db->join('cx_korban_jiwa d', 'd.id = a.id_jiwa', 'INNER');
-        // $this->db->where('a.token_bencana_detail', $token_bencana_detail);
         $this->db->order_by('a.id DESC');
         $query = $this->db->get();
         return $query->result();
@@ -516,38 +515,36 @@ class Model_bencana_daerah extends CI_Model
     public function createRelawan()
     {
         $create_by   = $this->app_loader->current_account();
-        $create_date = gmdate('Y-m-d H:i:s', time()+60*60*7);
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
         $create_ip   = $this->input->ip_address();
-        
+
         $waktu_data = $this->input->post('data_date');
         $wil_village = $this->input->post('wil_village');
         $token_bencana_detail = $this->input->post('token_bencana_detail');
 
         $nama_organisasi = $this->input->post('nama_organisasi');
         $jml_relawan = $this->input->post('jml_relawan');
-        if(!isset($nama_organisasi))
-        {
+        if (!isset($nama_organisasi)) {
             return array('status' => 'not_found', 'message' => 'Data tidak ditemukan');
         }
 
         $insertRow = [];
 
-        foreach($nama_organisasi as $key => $value)
-        {
-            
-                $insertRow[] = array(
-                    'token_bencana_detail' => $token_bencana_detail,
-                    'token_relawan' => $this->uuid->v4(true),
+        foreach ($nama_organisasi as $key => $value) {
 
-                    'nama_organisasi' => $value,
-                    'jml_relawan' => $jml_relawan[$key],
-                    'waktu_data' => $waktu_data,
-                    'wil_village' => $wil_village,
+            $insertRow[] = array(
+                'token_bencana_detail' => $token_bencana_detail,
+                'token_relawan' => $this->uuid->v4(true),
 
-                    'create_by' => $create_by,
-                    'create_date' => $create_date,
-                    'create_ip' => $create_ip
-                );
+                'nama_organisasi' => $value,
+                'jml_relawan' => $jml_relawan[$key],
+                'waktu_data' => $waktu_data,
+                'wil_village' => $wil_village,
+
+                'create_by' => $create_by,
+                'create_date' => $create_date,
+                'create_ip' => $create_ip
+            );
         }
 
         $this->db->insert_batch('ms_bencana_relawan', $insertRow);
@@ -896,11 +893,10 @@ class Model_bencana_daerah extends CI_Model
         $dataRelawan = [];
 
 
-        if($wil_village != "")
-        {
+        if ($wil_village != "") {
             $this->db->where('a.wil_village', $wil_village);
         }
-        
+
         $this->db->where('a.token_bencana_detail', $token);
         $this->db->select('a.wil_village,
         a.waktu_data,
@@ -913,9 +909,8 @@ class Model_bencana_daerah extends CI_Model
         $this->db->order_by('a.waktu_data DESC, a.create_date DESC');
         $this->db->limit(1);
         $latest_data = $this->db->get()->row_array();
-        
-        if($latest_data)
-        {
+
+        if ($latest_data) {
             $status = "RC200";
             $message = "Data ditemukan";
             $wil_village = $latest_data['wil_village'];
@@ -932,14 +927,15 @@ class Model_bencana_daerah extends CI_Model
             $this->db->limit($latest_data['jumlah_data']);
             $dataRelawan = $this->db->get()->result_array();
         }
-        return array(   'status' => $status, 
-                        'message' => $message, 
-                        'data' => $dataRelawan, 
-                        'waktu_data' => $waktu_data, 
-                        'create_date' => $create_date,
-                        'wil_village' => $wil_village,
-                        'nm_village' => $nm_village
-                    );
+        return array(
+            'status' => $status,
+            'message' => $message,
+            'data' => $dataRelawan,
+            'waktu_data' => $waktu_data,
+            'create_date' => $create_date,
+            'wil_village' => $wil_village,
+            'nm_village' => $nm_village
+        );
     }
 }
 
