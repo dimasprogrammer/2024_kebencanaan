@@ -1,0 +1,79 @@
+//untuk tampilan halaman utama data yang ditampilkan merupakan data bencana terbaru
+{
+    "success": true,
+    "kode":200,
+    "message": "success",
+    "data": {
+        "bencana": {
+            "idBencana":1,
+            "jenisKejadian": "Banjir Bandang",
+            "tanggalKejadian": "Selasa, 23 Juli 2024 - 22.00 Wib",
+            "totalWilayahTerdampak":[
+                {
+                    "kabkota":2,
+                    "kecamatan":5,
+                    "kelnag":18
+                }
+            ],
+            "taksiranKerugian":"Rp. 2.000.000.000",
+            "totalKorbanTerisolir":"200 Orang",
+            "infoGrafisUrl":"https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+            "lokasiKejadian":[
+                {
+                    "id":1,
+                    "nama":"kabupaten Agam"
+                },
+                {
+                    "id":2,
+                    "nama":"kabupaten Tanah Datar"
+                },
+                {
+                    "id":3,
+                    "nama":"kabupaten Agam"
+                }
+            ],
+            "dampakBencana":[
+                {
+                    "jumlahKorban":{
+                        "meninggal":23,
+                        "hilang":100,
+                        "luka":100,
+                        "mengungsi":300
+                    },
+                    "rumahRusak":{
+                        "rusakRingan":20,
+                        "rusakSedang":30,
+                        "rusakBerat":40,
+                        "totalRusak":100
+                    },
+                    "fasilitasRusak":{
+                        "sekolah":20,
+                        "rumahIbadah":30,
+                        "lainnya":50,
+                        "totalRusak":100
+                    }
+                }
+            ]
+        },
+        "totalBencanaTahunIni": {
+            "longsor": 2,
+            "banjir": 12,
+            "kebakaran": 1,
+            "cucacaEkstrem": 3,
+            "erupsi": 4,
+            "gempa": 1,
+            "banjirBandang": 3,
+            "abrasiPantai": 5
+        },
+        "optionBencanaMasaTanggap":[
+            {
+                "id":1,
+                "nama":"Bencana Banjir Bandang"
+            },            
+            {
+                "id":2,
+                "nama":"Bencana Banjir Gempa"
+            }            
+        ]
+    }
+}

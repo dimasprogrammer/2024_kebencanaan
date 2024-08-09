@@ -1,0 +1,933 @@
+//untuk tampilan detail bencana get by id bencana
+{
+    "success": true,
+    "kode": 200,
+    "message": "success",
+    "data": {
+        "bencana": {
+            "idBencana": 1,
+            "jenisKejadian": "Banjir Bandang",
+            "tanggalKejadian": "Selasa, 23 Juli 2024 - 22.00 Wib",
+            "updateData": "Selasa, 23 Juli 2024 - 22.00 Wib",
+            "infoGrafisUrl": "https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+            "lokasiKejadian": [
+                {
+                    "id": 1,
+                    "nama": "kabupaten Agam"
+                },
+                {
+                    "id": 2,
+                    "nama": "kabupaten Tanah Datar"
+                },
+                {
+                    "id": 3,
+                    "nama": "kabupaten Agam"
+                }
+            ]
+        },
+        "dataDetail": [
+            {
+                "kode":0,
+                "ket":"Data Keseluruhan",
+                "data": {
+                    "taksiranKerugian": "Rp. 2.000.000.000",
+                    "totalKorbanTerisolir": "200 Orang",
+                    "totalWilayahTerdampak": [
+                        {
+                            "kabkota": 2,
+                            "kecamatan": 5,
+                            "kelnag": 18
+                        }
+                    ],
+                    "dampakBencana": [
+                        {
+                            "jumlahKorban": {
+                                "meninggal": 23,
+                                "hilang": 100,
+                                "luka": 100,
+                                "mengungsi": 300
+                            },
+                            "rumahRusak": {
+                                "rusakRingan": 20,
+                                "rusakSedang": 30,
+                                "rusakBerat": 40,
+                                "totalRusak": 100
+                            },
+                            "fasilitasRusak": {
+                                "sekolah": 20,
+                                "rumahIbadah": 30,
+                                "lainnya": 50,
+                                "totalRusak": 100
+                            }
+                        }
+                    ],
+                    "detailJumlahKorban": [
+                        {
+                            "namaKabKota": "Kabupaten Agam",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        },
+                        {
+                            "namaKabKota": "Kabupaten Tanah Datar",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        }
+                    ],
+                    "detailKerusakan": [
+                        {
+                            "namaKabKota": "Kabupaten Agam",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        },
+                        {
+                            "namaKabKota": "Kabupaten Tanah Datar",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        }
+                    ],
+                    "detailTernak": [
+                        {
+                            "namaKabKota": "Kabupaten Agam",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        },
+                        {
+                            "namaKabKota": "Kabupaten Tanah Datar",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "kode":0, // kode kab/kota
+                "ket":"Kabupaten Agam", //nama kab/kota
+                "data": {
+                    "taksiranKerugian": "Rp. 2.000.000.000",
+                    "totalKorbanTerisolir": "200 Orang",
+                    "totalWilayahTerdampak": [
+                        {
+                            "kecamatan": 5, //jumlah kecamatan di kab/kota ini
+                            "kelnag": 18 //jumlah kelurahan atau nagari di kab/kota ini
+                        }
+                    ],
+                    "dampakBencana": [
+                        {
+                            "jumlahKorban": {
+                                "meninggal": 23,
+                                "hilang": 100,
+                                "luka": 100,
+                                "mengungsi": 300
+                            },
+                            "rumahRusak": {
+                                "rusakRingan": 20,
+                                "rusakSedang": 30,
+                                "rusakBerat": 40,
+                                "totalRusak": 100
+                            },
+                            "fasilitasRusak": {
+                                "sekolah": 20,
+                                "rumahIbadah": 30,
+                                "lainnya": 50,
+                                "totalRusak": 100
+                            }
+                        }
+                    ],
+                    "detailJumlahKorban": [
+                        {
+                            "namaKecamatan": "kecamatan satu",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        }
+                    ],
+                    "detailKerusakan": [
+                        {
+                            "namaKecamatan": "Kecamatan satu",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        }
+                    ],
+                    "detailTernak": [
+                        {
+                            "namaKecamatan": "Kecamatan satu",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "kode":0, // kode kab/kota
+                "ket":"Kabupaten Tanah Datar", //nama kab/kota
+                "data": {
+                    "taksiranKerugian": "Rp. 2.000.000.000",
+                    "totalKorbanTerisolir": "200 Orang",
+                    "totalWilayahTerdampak": [
+                        {
+                            "kecamatan": 5, //jumlah kecamatan di kab/kota ini
+                            "kelnag": 18 //jumlah kelurahan atau nagari di kab/kota ini
+                        }
+                    ],
+                    "dampakBencana": [
+                        {
+                            "jumlahKorban": {
+                                "meninggal": 23,
+                                "hilang": 100,
+                                "luka": 100,
+                                "mengungsi": 300
+                            },
+                            "rumahRusak": {
+                                "rusakRingan": 20,
+                                "rusakSedang": 30,
+                                "rusakBerat": 40,
+                                "totalRusak": 100
+                            },
+                            "fasilitasRusak": {
+                                "sekolah": 20,
+                                "rumahIbadah": 30,
+                                "lainnya": 50,
+                                "totalRusak": 100
+                            }
+                        }
+                    ],
+                    "detailJumlahKorban": [
+                        {
+                            "namaKecamatan": "kecamatan satu",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "meninggal": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "hilang": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "luka": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "menderita": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                },
+                                "mengungsi": {
+                                    "anakL": 2, //anak laki-laki
+                                    "anakP": 3, //anak perempuan
+                                    "ibuHamil": 4,
+                                    "lansiaL": 5,
+                                    "lansiaP": 6,
+                                    "dewasaL": 8,
+                                    "dewasaP": 9,
+                                    "total": 10
+                                }
+                            }
+                        }
+                    ],
+                    "detailKerusakan": [
+                        {
+                            "namaKecamatan": "Kecamatan satu",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "rumahRusak": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "tempatIbadah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "puskesmas": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "kantor": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "sekolah": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "posyandu": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahSakit": {
+                                    "rusakRingan": 4,
+                                    "rusakSedang": 8,
+                                    "rusakBerat": 10,
+                                    "total": 22
+                                },
+                                "rumahTerendam": {
+                                    "kk": 56,
+                                    "rumah": 33
+                                },
+                                "bangunanLainnya": {
+                                    "kios": 4,
+                                    "pabrik": 5,
+                                    "jembatan": 4,
+                                    "jalan": 3,
+                                    "sawah": 5,
+                                    "kebunHutan": 8,
+                                    "kolam": 9,
+                                    "irigasi": 3,
+                                    "bangunanLainnya": 5
+                                }
+                            }
+                        }
+                    ],
+                    "detailTernak": [
+                        {
+                            "namaKecamatan": "Kecamatan satu",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        },
+                        {
+                            "namaKecamatan": "Kecamatan dua",
+                            "data": {
+                                "ayam": 5,
+                                "kambing": 6,
+                                "sapi": 6,
+                                "kerbau": 2,
+                                "kuda": 5,
+                                "itik": 9,
+                                "lainnya": 20
+                            }
+                        }
+                    ]
+                }
+            }
+
+        ]
+    }
+}

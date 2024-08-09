@@ -1,0 +1,37 @@
+//untuk get foto dan video berdasarkan id bencana.
+{
+    "success": true,
+    "kode":200,
+    "message": "success",
+    "data": {
+        "updatedAt":"Selasa, 23 Juli 2024 - 10:20 Wib",
+        "foto":[
+            {
+                "url":"https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "keterangan":"foto mesjid al ikhlas",
+            }
+            {
+                "url":"https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "keterangan":"foto mesjid al ikhlas",
+            }
+            {
+                "url":"https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "keterangan":"foto mesjid al ikhlas",
+            }
+        ],
+        "video":[
+            {
+                "url":"https://www.youtube.com/embed/ny6zGbBp7SY?si=8B4sIMFBfVqQ6qq9",
+                "keterangan":"Detik detik kejadian",
+            }
+            {
+                "url":"https://www.youtube.com/embed/ny6zGbBp7SY?si=8B4sIMFBfVqQ6qq9",
+                "keterangan":"sejam kejadian",
+            }
+            {
+                "url":"https://www.youtube.com/embed/ny6zGbBp7SY?si=8B4sIMFBfVqQ6qq9",
+                "keterangan":"sehari setelah kejadian",
+            }
+        ]
+    }
+}

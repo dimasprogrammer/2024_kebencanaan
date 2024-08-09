@@ -27,7 +27,7 @@ class Security_check {
 
         $cekWhiteList = $this->ci->model_auth_signin->getDataWhiteList($module_access, $class_access, $method_access);
         
-        if($cekWhiteList == FALSE){
+        if($cekWhiteList == FALSE AND $module_access != 'api'){
             $statuslog	= $this->ci->model_auth_signin->cekSessionLog($this->username, $this->ip_address, $this->user_agent, $this->session_id);
             if(empty($this->username) OR $statuslog == FALSE){
                 $this->ci->session->sess_destroy();
