@@ -92,6 +92,11 @@
         $('#modalEntryFormFoto').modal('toggle');
     });
 
+    $(document).on('click', '.btnCloseVideo', function(e) {
+        // formReset();
+        $('#modalEntryFormVideo').modal('toggle');
+    });
+
     // ------------------------------------- JAVASCRIPT PROSES DATA BENCANA ------------------------------------//
     $(document).on('click', '.btnEdit', function(e) {
         formReset();
@@ -812,18 +817,33 @@
                     if (Object.keys(data.message.dataFoto).length > 0) {
                         let no = 1;
                         $.each(data.message.dataFoto, function(key, val) {
+                            // Extract year and month from create_date
+                            let year = val['create_date'].substr(0, 4);
+                            let month = val['create_date'].substr(5, 2);
 
-                            html += '<tbody>';
-                            html += '<tr>';
-                            html += '<td width="2%"> ' + no + '. </td><br>';
-                            html += '<td width="10%" class="text-center">' + val['judul_foto'] + '</td>';
-                            html += '<td width="10%" class="text-center">' + val['nama_file'] + '</td>';
-                            html += '<td width="15%" class="text-center">' + '<button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDeleteFotoBencana" data-id=' + val['token_bencana_foto'] + '><i class="fas fa-trash-alt"></i> Delete </button>' + '</td>';
-                            html += '</tr>';
-                            html += '</tbody>';
+                            // Construct the file URL
+                            let fileUrl = `dokumen/bencana/${year}/${month}/${val['nama_file']}`;
+
+                            // Build the HTML structure
+                            html += `
+                                <tbody>
+                                    <tr>
+                                        <td width="2%">${no}.</td>
+                                        <td width="10%" class="text-center">${val['judul_foto']}</td>
+                                        <td width="10%" class="text-center">
+                                            <a href="${fileUrl}" target="_blank">${val['nama_file']}</a>
+                                        </td>
+                                        <td width="15%" class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDeleteFotoBencana" data-id="${val['token_bencana_foto']}">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            `;
                             no++;
-
                         });
+
                     } else {
                         html = '<tr><td colspan="2"><i>Data Foto Bencana Belum Ada</i></td></tr>';
                     }
@@ -1024,6 +1044,247 @@
     // });
 
     // ------------------------------------- JAVASCRIPT PROSES MULTI UPLOAD GAMBAR ----------------------------//
+
+    // ------------------------------------- JAVASCRIPT PROSES MULTI UPLOAD VIDEO -----------------------------//
+    $(document).on('click', '.btnVideo', function(e) {
+        formReset();
+        $('#formEntryVideo').attr('action', site + '/createVideo');
+        var token_bencana = $(this).data('id');
+
+        id_video_bencana = token_bencana;
+        $('#modalEntryFormVideo').modal({
+            backdrop: 'static'
+        });
+        // token = 
+        getDataBencanaVideo(token_bencana);
+    });
+
+    function getDataBencanaVideo(token_bencana) {
+        run_waitMe($('#frmEntryVideo'));
+        $.ajax({
+            type: 'POST',
+            url: site + '/reviewVideo',
+            data: {
+                'token_bencana': token_bencana,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
+                    $('input[name="tokenId"]').val(token_bencana);
+
+                    //---------------- DIBAWAH INI ADALAH GET DATA FOTO BENCANA -----------------//
+                    var html = '';
+                    html += '<thead>';
+                    html += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Judul Video</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Link Youtube</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Action</left></th>';
+                    html += '</thead>';
+                    if (Object.keys(data.message.dataVideo).length > 0) {
+                        let no = 1;
+                        $.each(data.message.dataVideo, function(key, val) {
+                            html += `
+                                    <tbody>
+                                        <tr>
+                                            <td width="2%">${no}.</td>
+                                            <td width="10%" class="text-center">${val.judul_video}</td>
+                                            <td width="10%" class="text-center">
+                                                <a href="${val.link_video}" target="_blank" class="red-text"> ${val.link_video}</a>
+                                            </td>
+                                            <td width="15%" class="text-center">
+                                                <button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDeleteVideoBencana" data-id="${val.token_bencana_video}">
+                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                `;
+                            no++;
+                        });
+                    } else {
+                        html = '<tr><td colspan="2"><i>Data Video Bencana Belum Ada</i></td></tr>';
+                    }
+                    $('#tblVideoBencana').html(html);
+
+                }
+                $('#frmEntryVideo').waitMe('hide');
+                //---------------- DIBAWAH INI ADALAH GET DATA FOTO BENCANA -----------------//
+            }
+        });
+    }
+
+    $(document).on('submit', '#formEntryVideo', function(e) {
+        e.preventDefault();
+        // let postData = $(this).serialize();
+        // get form action url
+        var form = $('#formEntryVideo')[0];
+        let formActionURL = $(this).attr("action");
+        $("#saveVideo").html('<i class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></i> DIPROSES...');
+        $("#saveVideo").addClass('disabled');
+        // alert(formActionURL);
+        run_waitMe($('#frmEntryVideo'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menyimpan data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: formActionURL,
+                    mimeType: "multipart/form-data",
+                    type: "POST",
+                    data: new FormData(form),
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        $('#formEntryVideo').addClass('was-validated');
+                        $('.invalid-feedback').removeClass('valid-feedback').text('');
+                        swalAlert.fire({
+                            title: 'Gagal Simpan',
+                            text: 'Proses simpan data gagal, silahkan diperiksa kembali',
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errEntryVideo').html(msg.error('Silahkan dilengkapi data pada form inputan dibawah'));
+                                $.each(data.message, function(key, value) {
+                                    if (key != 'isi')
+                                        $('input[name="' + key + '"], textarea[name="' + key + '"], select[name="' + key + '"]').closest('div.required').find('div.invalid-feedback').addClass('valid-feedback').text(value);
+                                    else {
+                                        $('#pesanErrVideo').html(value);
+                                    }
+                                });
+                                $('#frmEntryVideo').waitMe('hide');
+                            }
+                        })
+                    } else {
+                        $('#frmEntryVideo').waitMe('hide');
+                        // $('#modalEntryFormVideo').modal('toggle');
+                        swalAlert.fire({
+                            title: 'Berhasil Simpan',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                newKode = data.kode;
+                                $('#errSuccessVideo').html(msg.success(data.message));
+                                getDataBencanaVideo(id_video_bencana);
+                            }
+                        })
+                    }
+                }).fail(function() {
+                    $('#errEntryVideo').html(msg.error('Harap periksa kembali data yang diinputkan'));
+                    $('#frmEntryVideo').waitMe('hide');
+                }).always(function() {
+                    $("#saveVideo").html('<i class="fas fa-check"></i> SUBMIT');
+                    $("#saveVideo").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Simpan',
+                    text: 'Proses simpan data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#frmEntryVideo').waitMe('hide');
+                        $("#saveVideo").html('<i class="fas fa-check"></i> SUBMIT');
+                        $("#saveVideo").removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    $(document).on('click', '.btnDeleteVideoBencana', function(e) {
+        e.preventDefault();
+        let postData = {
+            'tokenId': $(this).data('id'),
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i>');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menghapus data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/deleteVideo',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Hapus',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessVideo').html(msg.error(data.message));
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Hapus',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                newKode = data.kode;
+                                $('#errSuccessVideo').html(msg.success(data.message));
+                                getDataBencanaVideo(id_video_bencana);
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccessVideo').html(msg.error('Harap periksa kembali data yang akan dihapus'));
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $('.btnDeleteVideoBencana').html('<i class="fas fa-trash-alt"></i>');
+                    $('.btnDeleteVideoBencana').removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('.btnDeleteVideoBencana').html('<i class="fas fa-trash-alt"></i>');
+                        $('.btnDeleteVideoBencana').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    // ------------------------------------- JAVASCRIPT PROSES MULTI UPLOAD VIDEO ----------------------------//
 
     $('#jam_bencana').pickatime({
         twelvehour: false

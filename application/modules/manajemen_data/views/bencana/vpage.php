@@ -454,3 +454,63 @@
     </div>
 </div>
 <!------------------------------------ FORM ENTRI DATA MULTI UPLOAD FOTO BENCANA -------------------------------------------->
+
+<!------------------------------------ FORM ENTRI DATA MULTI UPLOAD VIDEO BENCANA -------------------------------------------->
+<div class="modal fade" id="modalEntryFormVideo" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xxl" id="frmEntryVideo">
+        <div class="modal-content">
+            <div class="modal-header blue-gradient-rgba">
+                <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
+                <button type="button" class="close btnCloseVideo" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="errEntryVideo"></div>
+                <div id="errSuccessVideo"></div>
+                <?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/createVideo' : ''), array('id' => 'formEntryVideo', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
+                <?php echo form_hidden('tokenId', ''); ?>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-6 required">
+                        <label for="judul_video" class="control-label font-weight-bold"> Judul Video </label>
+                        <input type="text" class="form-control" name="judul_video" id="judul_video" placeholder="Judul Video " required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <label for="link_video" class="control-label font-weight-bold"> Link YouTube </label>
+                        <input type="text" class="form-control" name="link_video" id="link_video" placeholder="Link YouTube " required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 text-center required">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light px-3 py-2 font-weight-bold" name="saveVideo" id="saveVideo"><i class="fas fa-check"></i> Simpan Data </button>
+                    </div>
+                </div>
+
+                <?php echo form_close(); ?>
+
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 required">
+                        <div class="card">
+                            <div class="card-header white-text primary-color-dark">
+                                Tabel Video Bencana
+                            </div>
+                            <div class="card-body text-center px-4 mb-3">
+                                <table class="table table-striped table-border table-hover table-sm" width="100%" id="tblVideoBencana">
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnCloseVideo"><i class="fas fa-times"></i> Close Data </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------ FORM ENTRI DATA MULTI UPLOAD VIDEO BENCANA -------------------------------------------->
