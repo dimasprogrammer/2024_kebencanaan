@@ -87,6 +87,11 @@
         $('#modalEntryFormKirim').modal('toggle');
     });
 
+    $(document).on('click', '.btnCloseFoto', function(e) {
+        // formReset();
+        $('#modalEntryFormFoto').modal('toggle');
+    });
+
     // ------------------------------------- JAVASCRIPT PROSES DATA BENCANA ------------------------------------//
     $(document).on('click', '.btnEdit', function(e) {
         formReset();
@@ -766,6 +771,259 @@
         })
     });
     // ------------------------------------- JAVASCRIPT PROSES MEMILIH PUSDALOPS KE DAERAH ---------------------//
+
+    // ------------------------------------- JAVASCRIPT PROSES MULTI UPLOAD GAMBAR -----------------------------//
+    $(document).on('click', '.btnFoto', function(e) {
+        formReset();
+        $('#formEntryFoto').attr('action', site + '/createFoto');
+        var token_bencana = $(this).data('id');
+
+        id_foto_bencana = token_bencana;
+        $('#modalEntryFormFoto').modal({
+            backdrop: 'static'
+        });
+        // token = 
+        getDataBencanaFoto(token_bencana);
+    });
+
+    function getDataBencanaFoto(token_bencana) {
+        run_waitMe($('#frmEntryFoto'));
+        $.ajax({
+            type: 'POST',
+            url: site + '/reviewFoto',
+            data: {
+                'token_bencana': token_bencana,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
+                    $('input[name="tokenId"]').val(token_bencana);
+
+                    //---------------- DIBAWAH INI ADALAH GET DATA FOTO BENCANA -----------------//
+                    var html = '';
+                    html += '<thead>';
+                    html += '<th width="5%" class="font-weight-bold"><left>#</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Judul Foto</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Nama File</left></th>';
+                    html += '<th width="20%" class="font-weight-bold"><left>Action</left></th>';
+                    html += '</thead>';
+                    if (Object.keys(data.message.dataFoto).length > 0) {
+                        let no = 1;
+                        $.each(data.message.dataFoto, function(key, val) {
+
+                            html += '<tbody>';
+                            html += '<tr>';
+                            html += '<td width="2%"> ' + no + '. </td><br>';
+                            html += '<td width="10%" class="text-center">' + val['judul_foto'] + '</td>';
+                            html += '<td width="10%" class="text-center">' + val['nama_file'] + '</td>';
+                            html += '<td width="15%" class="text-center">' + '<button type="button" class="btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light btnDeleteFotoBencana" data-id=' + val['token_bencana_foto'] + '><i class="fas fa-trash-alt"></i> Delete </button>' + '</td>';
+                            html += '</tr>';
+                            html += '</tbody>';
+                            no++;
+
+                        });
+                    } else {
+                        html = '<tr><td colspan="2"><i>Data Foto Bencana Belum Ada</i></td></tr>';
+                    }
+                    $('#tblFotoBencana').html(html);
+
+                }
+                $('#frmEntryFoto').waitMe('hide');
+                //---------------- DIBAWAH INI ADALAH GET DATA FOTO BENCANA -----------------//
+            }
+        });
+    }
+
+    $(document).on('submit', '#formEntryFoto', function(e) {
+        e.preventDefault();
+        // let postData = $(this).serialize();
+        // get form action url
+        var form = $('#formEntryFoto')[0];
+        let formActionURL = $(this).attr("action");
+        $("#saveFoto").html('<i class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></i> DIPROSES...');
+        $("#saveFoto").addClass('disabled');
+        // alert(formActionURL);
+        run_waitMe($('#frmEntryFoto'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menyimpan data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: formActionURL,
+                    mimeType: "multipart/form-data",
+                    type: "POST",
+                    data: new FormData(form),
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        $('#formEntryFoto').addClass('was-validated');
+                        $('.invalid-feedback').removeClass('valid-feedback').text('');
+                        swalAlert.fire({
+                            title: 'Gagal Simpan',
+                            text: 'Proses simpan data gagal, silahkan diperiksa kembali',
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errEntryFoto').html(msg.error('Silahkan dilengkapi data pada form inputan dibawah'));
+                                $.each(data.message, function(key, value) {
+                                    if (key != 'isi')
+                                        $('input[name="' + key + '"], textarea[name="' + key + '"], select[name="' + key + '"]').closest('div.required').find('div.invalid-feedback').addClass('valid-feedback').text(value);
+                                    else {
+                                        $('#pesanErrFoto').html(value);
+                                    }
+                                });
+                                $('#frmEntryFoto').waitMe('hide');
+                            }
+                        })
+                    } else {
+                        $('#frmEntryFoto').waitMe('hide');
+                        // $('#modalEntryFormFoto').modal('toggle');
+                        swalAlert.fire({
+                            title: 'Berhasil Simpan',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                newKode = data.kode;
+                                $('#errSuccessFoto').html(msg.success(data.message));
+                                getDataBencanaFoto(id_foto_bencana);
+                            }
+                        })
+                    }
+                }).fail(function() {
+                    $('#errEntryFoto').html(msg.error('Harap periksa kembali data yang diinputkan'));
+                    $('#frmEntryFoto').waitMe('hide');
+                }).always(function() {
+                    $("#saveFoto").html('<i class="fas fa-check"></i> SUBMIT');
+                    $("#saveFoto").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Simpan',
+                    text: 'Proses simpan data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#frmEntryFoto').waitMe('hide');
+                        $("#saveFoto").html('<i class="fas fa-check"></i> SUBMIT');
+                        $("#saveFoto").removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    $(document).on('click', '.btnDeleteFotoBencana', function(e) {
+        e.preventDefault();
+        let postData = {
+            'tokenId': $(this).data('id'),
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i>');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menghapus data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/deleteFoto',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Hapus',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessFoto').html(msg.error(data.message));
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Hapus',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                newKode = data.kode;
+                                $('#errSuccessFoto').html(msg.success(data.message));
+                                getDataBencanaFoto(id_foto_bencana);
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccessFoto').html(msg.error('Harap periksa kembali data yang akan dihapus'));
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $('.btnDeleteFotoBencana').html('<i class="fas fa-trash-alt"></i>');
+                    $('.btnDeleteFotoBencana').removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('.btnDeleteFotoBencana').html('<i class="fas fa-trash-alt"></i>');
+                        $('.btnDeleteFotoBencana').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    //Javascript Untuk Tabel Bencana
+    // var bencana = 1;
+    // $(document).on('click', '.addItemBencana', function(e) {
+    //     e.preventDefault();
+    //     var name = $(this).data('id');
+    //     var tbody = $(this).closest('#tbl' + name).find('tbody');
+
+    //     tbody.append('<tr><td><div class="row"><div class="col-xs-12 col-md-12"><label for="namaFile" class="control-label font-weight-bold">Foto Bencana</label><div class="custom-file"><input type="file" class="customFile toUpperCase" name="namaFile[]" id="namaFile' + bencana + '"></div><div class="invalid-feedback"></div></div></div> </td> <td align="center" width="5%" style="padding-top:45px;"><button type="button" class="deleteItemBencana btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light"><i class="fas fa-trash-alt"></i></button></td></tr>');
+    //     bencana = bencana + 1;
+    // });
+
+    // $(document).on('click', '.deleteItemBencana', function(e) {
+    //     var tbody = $(this).closest('table').find('tbody tr:last');
+    //     var total = $(this).closest('table').find('tbody > tr').length;
+    //     if (total > 1)
+    //         tbody.remove();
+    // });
+
+    // ------------------------------------- JAVASCRIPT PROSES MULTI UPLOAD GAMBAR ----------------------------//
 
     $('#jam_bencana').pickatime({
         twelvehour: false

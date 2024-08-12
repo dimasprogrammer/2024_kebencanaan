@@ -22,11 +22,11 @@
                                 <tr>
                                     <th width="3%" class="font-weight-bold">#</th>
                                     <th width="15%" class="font-weight-bold">Jenis Bencana</th>
-                                    <th width="25%" class="font-weight-bold">Nama Bencana</th>
-                                    <th width="18%" class="font-weight-bold">Tanggal Bencana</th>
+                                    <th width="15%" class="font-weight-bold">Nama Bencana</th>
+                                    <th width="15%" class="font-weight-bold">Tanggal Bencana</th>
                                     <th width="15%" class="font-weight-bold">Taksiran Kerugian</th>
                                     <th width="5%" class="font-weight-bold">Status</th>
-                                    <th width="20%" class="font-weight-bold">Action</th>
+                                    <th width="25%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -357,3 +357,100 @@
     </div>
 </div>
 <!------------------------------------ FORM ENTRI DATA BENCANA KIRIM -------------------------------------------->
+
+<!------------------------------------ FORM ENTRI DATA MULTI UPLOAD FOTO BENCANA -------------------------------------------->
+<div class="modal fade" id="modalEntryFormFoto" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xxl" id="frmEntryFoto">
+        <div class="modal-content">
+            <div class="modal-header blue-gradient-rgba">
+                <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
+                <button type="button" class="close btnCloseFoto" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="errEntryFoto"></div>
+                <div id="errSuccessFoto"></div>
+                <?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/createFoto' : ''), array('id' => 'formEntryFoto', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
+                <?php echo form_hidden('tokenId', ''); ?>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-6 required">
+                        <label for="judul_foto" class="control-label font-weight-bold"> Judul Foto </label>
+                        <input type="text" class="form-control" name="judul_foto" id="judul_foto" placeholder="Judul Foto " required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-12 col-md-6 required">
+                        <label for="nama_foto_bencana" class="control-label font-weight-bold">Foto Bencana</label>
+                        <div class="custom-file">
+                            <input type="file" class="customFile" name="nama_foto_bencana" id="nama_foto_bencana">
+                            <label class="custom-file-label" for="nama_foto_bencana"> </i>Silahkan Pilih File</label>
+                        </div>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 text-center required">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light px-3 py-2 font-weight-bold" name="saveFoto" id="saveFoto"><i class="fas fa-check"></i> Simpan Data </button>
+                    </div>
+                </div>
+
+                <?php echo form_close(); ?>
+
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 required">
+                        <div class="card">
+                            <div class="card-header white-text primary-color-dark">
+                                Tabel Foto Bencana
+                            </div>
+                            <div class="card-body text-center px-4 mb-3">
+                                <table class="table table-striped table-border table-hover table-sm" width="100%" id="tblFotoBencana">
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 required">
+                        <div class="card">
+                            <div class="card-body text-center px-4 mb-3">
+                                <table class="table table-striped table-borderless table-hover table-sm" width="100%" id="tblbencana">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-md-12">
+                                                        <label for="namaFile" class="control-label font-weight-bold">Foto Bencana</label>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="customFile toUpperCase" name="namaFile[]" id="namaFile" value="<?php echo $this->input->post('bencana[0][namaFile]', TRUE); ?>">
+                                                        </div>
+                                                        <div class="invalid-feedback"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td align="center" width="5%" style="padding-top:45px;">
+                                                <button type="button" class="deleteItemBencana btn btn-danger btn-sm px-2 py-1 my-0 mx-0 waves-effect waves-light"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <td colspan="0">
+                                            <button type="button" class="addItemBencana btn btn-primary btn-sm waves-effect waves-light px-3 py-2 font-weight-bold" data-id="bencana"><span class="fa fa-plus"></span> Tambah Lainnya</button>
+                                        </td>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnCloseFoto"><i class="fas fa-times"></i> Close Data </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------ FORM ENTRI DATA MULTI UPLOAD FOTO BENCANA -------------------------------------------->
