@@ -82,6 +82,16 @@ class Dashboard extends SLP_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
 
+    public function get_fotovideo($token)
+    {
+        $data = $this->m_dashboard->get_fotovideo($token);
+        $result['success'] = true;
+        $result['kode'] = 200;
+        $result['message'] = 'Data Foto Video';
+        $result['data'] = $data;
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+    }
+
     private function _detail_bencana_formatter($data)
     {
         $dataDetailBencana = [];
