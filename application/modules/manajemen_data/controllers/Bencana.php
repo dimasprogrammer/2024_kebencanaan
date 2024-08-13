@@ -62,10 +62,17 @@ class bencana extends SLP_Controller
                     $row = array();
 
                     if ($dl['id_status'] == 0) {
-                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnEdit" title="Draft Data">
-                        <i class="fas fa-business-time"></i> Draft Data
-                        </a> <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-success btn-sm px-2 waves-effect waves-light btnKirim" title="Kirim Data">
-                        <i class="fas fa-paper-plane"></i> Kirim Data
+                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnEdit" title="Draft">
+                        <i class="fas fa-business-time"></i> Draft
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnFoto" title="Add Foto">
+                        <i class="fas fa-camera-retro"></i> Add Foto
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnVideo" title="Add Foto">
+                        <i class="fas fa-file-video"></i> Add Video
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-success btn-sm px-2 waves-effect waves-light btnKirim" title="Kirim">
+                        <i class="fas fa-paper-plane"></i> Kirim
                         </a>';
                     } else {
                         $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnKirim" title="Lihat Data">
@@ -367,6 +374,158 @@ class bencana extends SLP_Controller
         }
     }
     //-------------------------------------- FUNGSI UNTUK PROSES SHARE PUSDALOPS DAERAH --------------------//
+
+    //------------------------------- FUNGSI UNTUK PROSES MULTI UPLOAD DOCUMENT BENCANA --------------------//
+    public function reviewFoto()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $token_bencana   = $this->input->post('token_bencana', TRUE);
+            // var_dump($token);
+            // die;
+            if (!empty($token_bencana) and !empty($session)) {
+                $data       = $this->mbencana->getDataDetailBencana($token_bencana);
+                $dataFoto = $this->mbencana->getDataBencanaFoto($data['token_bencana']);
+                $row = array();
+
+                $row['token'] = !empty($data) ? $data['token_bencana'] : '';
+
+                $result = array(
+                    'status' => 'RC200', 'message' => array(
+                        'data'     => $data,
+                        'dataFoto' => $dataFoto
+                    ),
+                    'csrfHash' => $csrfHash
+                );
+            } else {
+                $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function createFoto()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            if (!empty($session)) {
+                $data = $this->mbencana->insertDataFotoBencana();
+                if ($data['response'] == 'ERROR') {
+                    $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses insert foto gagal, karena ditemukan nama yang sama'), 'csrfHash' => $csrfHash);
+                } else if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses insert foto sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses insert foto gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function deleteFoto()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session   = $this->app_loader->current_account();
+            $csrfHash  = $this->security->get_csrf_hash();
+            $id   = escape($this->input->post('tokenId', TRUE));
+            if (!empty($session) and !empty($id)) {
+                $data = $this->mbencana->deleteDataFotoBencana();
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses delete Foto dengan sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 0, 'message' => 'Proses delete Foto gagal, coba kembali', 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    //------------------------------- FUNGSI UNTUK PROSES MULTI UPLOAD DOCUMENT BENCANA --------------------//
+
+    //------------------------------- FUNGSI UNTUK PROSES MULTI VIDEO DOCUMENT BENCANA --------------------//
+    public function reviewVideo()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $token_bencana   = $this->input->post('token_bencana', TRUE);
+            // var_dump($token);
+            // die;
+            if (!empty($token_bencana) and !empty($session)) {
+                $data       = $this->mbencana->getDataDetailBencana($token_bencana);
+                $dataVideo = $this->mbencana->getDataBencanaVideo($data['token_bencana']);
+                // print_r($dataVideo);
+                // die;
+                $row = array();
+
+                $row['token'] = !empty($data) ? $data['token_bencana'] : '';
+
+                $result = array(
+                    'status' => 'RC200', 'message' => array(
+                        'data'     => $data,
+                        'dataVideo' => $dataVideo
+                    ),
+                    'csrfHash' => $csrfHash
+                );
+            } else {
+                $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function createVideo()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            if (!empty($session)) {
+                $data = $this->mbencana->insertDataVideoBencana();
+                if ($data['response'] == 'ERROR') {
+                    $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses insert video gagal, karena ditemukan nama yang sama'), 'csrfHash' => $csrfHash);
+                } else if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses insert video sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses insert video gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function deleteVideo()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session   = $this->app_loader->current_account();
+            $csrfHash  = $this->security->get_csrf_hash();
+            $id   = escape($this->input->post('tokenId', TRUE));
+            if (!empty($session) and !empty($id)) {
+                $data = $this->mbencana->deleteDataVideoBencana();
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses delete Foto dengan sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 0, 'message' => 'Proses delete Foto gagal, coba kembali', 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    //------------------------------- FUNGSI UNTUK PROSES MULTI VIDEO DOCUMENT BENCANA --------------------//
 }
 
 // This is the end of fungsi class

@@ -528,6 +528,173 @@ class Model_bencana extends CI_Model
 
     //---------------------------- END FUNGSI MODEL UNTUK SHARE PUSDALOPS ------------------------//
 
+    //---------------------------- FUNGSI MODEL GET UNTUK UPLOAD MULTI FOTO BENCANA ----------------------------//
+    public function getDataBencanaFoto($token_bencana)
+    {
+        $this->db->select('	a.id_bencana_foto, 
+							a.token_bencana, 
+							a.judul_foto, 
+							a.nama_file, 
+							a.create_date, 
+							a.token_bencana_foto');
+        $this->db->from('ms_bencana_foto a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->where('a.token_bencana', $token_bencana);
+        $this->db->order_by('a.id_bencana_foto DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    /* Fungsi untuk insert data */
+    public function insertDataFotoBencana()
+    {
+        //get data
+        $token_bencana_foto =  $this->uuid->v4(true);
+        $create_by          = $this->app_loader->current_account();
+        $create_date        = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip          = $this->input->ip_address();
+        $token_bencana      = escape($this->input->post('tokenId', TRUE));
+        $judul_foto         = escape($this->input->post('judul_foto', TRUE));
+        $nama_foto_bencana  = escape($this->input->post('nama_foto_bencana', TRUE));
+
+        $year    = date('Y');
+        $month   = date('m');
+        $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/';
+        if (!is_dir($dirname)) {
+            mkdir('./' . $dirname, 0777, TRUE);
+        }
+
+        $_FILES['file']['name']     = $_FILES['nama_foto_bencana']['name'];
+        $_FILES['file']['type']     = $_FILES['nama_foto_bencana']['type'];
+        $_FILES['file']['tmp_name'] = $_FILES['nama_foto_bencana']['tmp_name'];
+        $_FILES['file']['error']    = $_FILES['nama_foto_bencana']['error'];
+        $_FILES['file']['size']     = $_FILES['nama_foto_bencana']['size'];
+        $config = array(
+            'upload_path'      => './' . $dirname . '/',
+            'allowed_types'    => 'png|jpg|jpeg|pdf',
+            'file_name'        => 'file_bencana_' . date('YmdHis', strtotime($create_date)),
+            'file_ext_tolower' => TRUE,
+            'max_size'         => 5024,
+            'max_filename'     => 0,
+            'remove_spaces'    => TRUE,
+        );
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload('file')) {
+            $nama_foto_bencana = '';
+        } else {
+            $upload_data = $this->upload->data();
+            $nama_foto_bencana   = $upload_data['file_name'];
+        }
+        $data = array(
+            'token_bencana_foto' => $token_bencana_foto,
+            'token_bencana'      => $token_bencana,
+            'judul_foto'         => $judul_foto,
+            'nama_file'          => $nama_foto_bencana,
+            'id_status'          => 1,
+            'create_by'          => $create_by,
+            'create_date'        => $create_date,
+            'create_ip'          => $create_ip,
+            'mod_by'             => $create_by,
+            'mod_date'           => $create_date,
+            'mod_ip'             => $create_ip
+        );
+        /*query insert*/
+        $this->db->insert('ms_bencana_foto', $data);
+        return array('response' => 'SUCCESS', 'name' =>  $judul_foto);
+    }
+
+    public function getDataMultiUploadFoto($token_bencana_foto)
+    {
+        $this->db->select(' a.token_bencana_foto, 
+                            a.create_date,
+                            a.judul_foto,
+                            a.nama_file');
+        $this->db->from('ms_bencana_foto a');
+        $this->db->where('a.token_bencana_foto', $token_bencana_foto);
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function deleteDataFotoBencana()
+    {
+        $token_bencana_foto = escape($this->input->post('tokenId', TRUE));
+
+        $checkFile = $this->getDataMultiUploadFoto($token_bencana_foto);
+        // var_dump($checkFile['create_date']);
+        // die;
+        $file      = $checkFile['nama_file'];
+        $year        = substr($checkFile['create_date'], 0, 4);
+        $month       = substr($checkFile['create_date'], 5, 2);
+        if (($file != "") && file_exists('dokumen/bencana/' . $year . '/' . $month . '/' . $file)) {
+            $path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
+            $direktori    = $path . 'dokumen/bencana/' . $year . '/' . $month . '/';
+            if (file_exists($direktori . '/' . $file))
+                unlink($direktori . '/' . $file);
+        }
+        $this->db->where('token_bencana_foto', $token_bencana_foto);
+        $this->db->delete('ms_bencana_foto');
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    //---------------------------- FUNGSI MODEL GET UNTUK UPLOAD MULTI FOTO BENCANA ----------------------------//
+
+    //---------------------------- FUNGSI MODEL GET UNTUK UPLOAD MULTI VIDEO BENCANA ----------------------------//
+    public function getDataBencanavideo($token_bencana)
+    {
+        $this->db->select('	a.id_bencana_video, 
+							a.token_bencana, 
+							a.judul_video, 
+							a.link_video, 
+							a.token_bencana_video');
+        $this->db->from('ms_bencana_video a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
+        $this->db->where('a.token_bencana', $token_bencana);
+        $this->db->order_by('a.id_bencana_video DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    /* Fungsi untuk insert data */
+    public function insertDataVideoBencana()
+    {
+        //get data
+        $token_bencana_video =  $this->uuid->v4(true);
+        $create_by          = $this->app_loader->current_account();
+        $create_date        = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip          = $this->input->ip_address();
+        $token_bencana      = escape($this->input->post('tokenId', TRUE));
+        $judul_video        = escape($this->input->post('judul_video', TRUE));
+        $link_video         = escape($this->input->post('link_video', TRUE));
+        $data = array(
+            'token_bencana_video' => $token_bencana_video,
+            'token_bencana'       => $token_bencana,
+            'judul_video'         => $judul_video,
+            'link_video'          => $link_video,
+            'id_status'           => 1,
+            'create_by'           => $create_by,
+            'create_date'         => $create_date,
+            'create_ip'           => $create_ip,
+            'mod_by'              => $create_by,
+            'mod_date'            => $create_date,
+            'mod_ip'              => $create_ip
+        );
+        /*query insert*/
+        $this->db->insert('ms_bencana_video', $data);
+        return array('response' => 'SUCCESS', 'name' =>  $judul_video);
+    }
+
+    public function deleteDataVideoBencana()
+    {
+        $token_bencana_video = escape($this->input->post('tokenId', TRUE));
+        $this->db->where('token_bencana_video', $token_bencana_video);
+        $this->db->delete('ms_bencana_video');
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    //---------------------------- FUNGSI MODEL GET UNTUK UPLOAD MULTI VIDEO BENCANA ----------------------------//
+
 }
 
 // This is the end of auth signin model

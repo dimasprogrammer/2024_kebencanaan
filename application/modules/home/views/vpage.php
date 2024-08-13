@@ -347,7 +347,7 @@
                         <div class="col-md-6 col-12">
                           <div class="card-body">
                             <div>
-                              <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?> : <?php echo $list->token_bencana; ?></h5>
+                              <h5 class="biru-text font-weight-bold"> Bencana <?php echo $list->jenis_bencana; ?></h5>
                               <table class="tablehome">
                                 <tbody>
                                   <tr>
