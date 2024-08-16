@@ -45,7 +45,7 @@ class M_dashboard extends CI_Model
         $stats_bencana_tahun_ini = $this->_stats_bencana_tahun_ini();
         
         // get list bencana lainnya
-        $list_bencana_lainnya = $this->_get_list_bencana_lainnya($bencana_terbaru['token_bencana']);
+        $list_bencana_lainnya = $this->_get_list_bencana_lainnya();
 
         $data = [
             'bencana' => [
@@ -164,13 +164,13 @@ class M_dashboard extends CI_Model
         return $raw;
     }
 
-    private function _get_list_bencana_lainnya($token_bencana)
+    private function _get_list_bencana_lainnya()
     {
         $this->db->select('a.token_bencana as id, b.nm_bencana as nama');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
         $this->db->where('a.kategori_tanggap', 1);
-        $this->db->where('a.token_bencana !=', $token_bencana);
+        // $this->db->where('a.token_bencana !=', $token_bencana);
         $this->db->order_by('a.tanggal_bencana', 'desc');
         $raw = $this->db->get()->result_array();
         return $raw;
