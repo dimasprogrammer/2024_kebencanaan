@@ -51,6 +51,7 @@ class M_dashboard extends CI_Model
             'bencana' => [
                 'idBencana' => $bencana_terbaru['token_bencana'] ?? null,
                 'jenisKejadian' => $bencana_terbaru['nm_bencana'] ?? null,
+                'namaBencana' => $bencana_terbaru['nama_bencana'] ?? null,
                 'tanggalKejadian' => $tanggalKejadian ?? null,
                 'updateData' => $last_update_data ?? null,
                 'totalWilayahTerdampak' => [
@@ -166,7 +167,7 @@ class M_dashboard extends CI_Model
 
     private function _get_list_bencana_lainnya()
     {
-        $this->db->select('a.token_bencana as id, b.nm_bencana as nama');
+        $this->db->select('a.token_bencana as id, a.nama_bencana as nama');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
         $this->db->where('a.kategori_tanggap', 1);
