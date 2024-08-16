@@ -28,7 +28,7 @@
             </pre>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <!-- <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 class="text-2xl font-semibold mb-4">Get Raw Disaster Impact Data</h2>
             <p class="mb-2"><span class="font-semibold">Endpoint:</span> /api/v1/dashboard/getRawData/{token}</p>
             <p class="mb-2"><span class="font-semibold">Method:</span> GET</p>
@@ -46,7 +46,7 @@
     }
 }
             </pre>
-        </div>
+        </div> -->
 
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 class="text-2xl font-semibold mb-4">Get Disaster Impact Data</h2>
@@ -87,6 +87,39 @@
         },
         "dataDetail": [
             // Detailed disaster data
+        ]
+    }
+}
+            </pre>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Get Disaster Photos and Videos</h2>
+            <p class="mb-2"><span class="font-semibold">Endpoint:</span> /api/v1/dashboard/get_fotovideo/{token}</p>
+            <p class="mb-2"><span class="font-semibold">Method:</span> GET</p>
+            <p class="mb-4"><span class="font-semibold">Description:</span> Retrieves photos and videos related to a specific disaster.</p>
+            <h3 class="text-xl font-semibold mb-2">Parameters</h3>
+            <p class="mb-2"><span class="font-semibold">token:</span> Unique identifier for the disaster</p>
+            <h3 class="text-xl font-semibold mb-2">Response</h3>
+            <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto">
+{
+    "success": true,
+    "kode": 200,
+    "message": "Data Foto Video",
+    "data": {
+        "updatedAt": "Selasa, 23 Juli 2024 - 10:20 Wib",
+        "foto": [
+            {
+                "url": "https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "keterangan": "foto mesjid al ikhlas"
+            },
+            // More photo objects...
+        ],
+        "video": [
+            {
+                "url": "https://www.youtube.com/embed/ny6zGbBp7SY?si=8B4sIMFBfVqQ6qq9",
+                "keterangan": "Detik detik kejadian"
+            },
+            // More video objects...
         ]
     }
 }

@@ -45,7 +45,7 @@ class M_dashboard extends CI_Model
         $stats_bencana_tahun_ini = $this->_stats_bencana_tahun_ini();
         
         // get list bencana lainnya
-        $list_bencana_lainnya = $this->_get_list_bencana_lainnya($bencana_terbaru['token_bencana']);
+        $list_bencana_lainnya = $this->_get_list_bencana_lainnya();
 
         $data = [
             'bencana' => [
@@ -98,6 +98,60 @@ class M_dashboard extends CI_Model
         return $data;
     }
 
+    public function get_fotovideo($token)
+    {
+        //load data foto
+        $last_update_foto = "";
+        $this->db->where('token_bencana', $token);
+        $this->db->from('ms_bencana_foto');
+        $this->db->order_by('create_date', 'desc');
+        $this->db->select('nama_file,judul_foto,create_date');
+        $fotoRaw = $this->db->get()->result_array();
+        $foto = [];
+        if(count($fotoRaw) > 0){
+            $last_update_foto = $fotoRaw[0]['create_date'];
+            foreach($fotoRaw as $row){
+
+                $raw_created_date = explode(' ', $row['create_date']);
+                $splitted_created_date = explode('-', $raw_created_date[0]);
+                $year = $splitted_created_date[0];
+                $month = $splitted_created_date[1];
+
+                $foto[] = [
+                    "url" => base_url('dokumen/foto/' . $year . '/' . $month . '/' . $row['nama_file']),
+                    "keterangan" => $row['judul_foto']
+                ];
+            }
+        }
+
+        //load data video
+        $last_update_video = "";
+        $this->db->where('token_bencana', $token);
+        $this->db->from('ms_bencana_video');
+        $this->db->order_by('create_date', 'desc');
+        $this->db->select('link_video,judul_video,create_date');
+        $videoRaw = $this->db->get()->result_array();
+        $video = [];
+        if(count($videoRaw) > 0){
+            $last_update_video = $videoRaw[0]['create_date'];
+            foreach($videoRaw as $row){
+                $video[] = [
+                    "url" => $row['link_video'],
+                    "keterangan" => $row['judul_video']
+                ];
+            }
+        }
+
+
+
+
+        return [
+            "updatedAt" => $last_update_foto < $last_update_video ? $last_update_foto : $last_update_video,
+            "foto" => $foto,
+            "video" => $video
+        ];
+    }
+
     private function _getLastUpdateData($token)
     {
         $this->db->select('a.waktu_data');
@@ -110,13 +164,13 @@ class M_dashboard extends CI_Model
         return $raw;
     }
 
-    private function _get_list_bencana_lainnya($token_bencana)
+    private function _get_list_bencana_lainnya()
     {
         $this->db->select('a.token_bencana as id, b.nm_bencana as nama');
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
         $this->db->where('a.kategori_tanggap', 1);
-        $this->db->where('a.token_bencana !=', $token_bencana);
+        // $this->db->where('a.token_bencana !=', $token_bencana);
         $this->db->order_by('a.tanggal_bencana', 'desc');
         $raw = $this->db->get()->result_array();
         return $raw;
