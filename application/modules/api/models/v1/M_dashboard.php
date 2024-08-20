@@ -62,27 +62,7 @@ class M_dashboard extends CI_Model
                 'taksiranKerugian' => $taksiranKerugian ?? null,
                 'totalKorbanTerisolir' => 0,
                 'infoGrafisUrl' => $infoGrafisUrl ?? null,
-                'lokasiKejadian' => $kabkota_terdampak ?? [],
-                'dampakBencana' => [
-                    "jumlahKorban" => [
-                        "meninggal" => 0,
-                        "hilang" => 0,
-                        "terluka" => 0,
-                        "mengungsi" => 0
-                    ],
-                    "rumahRusak" => [
-                        "rusakRingan" => 0,
-                        "rusakSedang" => 0,
-                        "rusakBerat" => 0,
-                        "totalRusak" => 0
-                    ],
-                    "fasilitasRusak" => [
-                        "sekolah" => 0,
-                        "rumahIbadah" => 0,
-                        "lainnya" => 0,
-                        "totalRusak" => 0
-                    ]
-                ]
+                'lokasiKejadian' => $kabkota_terdampak ?? []
             ],
             'totalBencanaTahunIni' => [
                 'longsor' => $stats_bencana_tahun_ini['1'] ?? 0,
