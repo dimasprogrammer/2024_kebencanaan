@@ -122,7 +122,7 @@
                     <div class="col-12 col-md-6 required">
                         <label for="nama_file_infografis" class="control-label font-weight-bold">Infografis</label>
                         <div class="custom-file">
-                            <input type="file" class="customFile" name="nama_file_infografis" id="nama_file_infografis" lang="in" value="<?= $this->input->post('nama_file_infografis', TRUE); ?>">
+                            <input type="file" class="customFile" name="nama_file_infografis" id="nama_file_infografis" lang="in">
                             <label class="custom-file-label" for="nama_file_infografis"> </i>Silahkan Pilih File</label>
                         </div>
                         <div class="invalid-feedback"></div>
