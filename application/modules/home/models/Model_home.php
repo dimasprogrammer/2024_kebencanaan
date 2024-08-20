@@ -166,9 +166,9 @@ class Model_home extends CI_Model
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
         $this->db->where('b.id_jenis_bencana', 1);
-        if ($this->app_loader->is_operator()) {
-            $this->db->where('a.id_regency_penerima', $id_regency);
-        }
+        // if ($this->app_loader->is_operator()) {
+        //     $this->db->where('a.id_regency_penerima', $id_regency);
+        // }
         $query = $this->db->get();
         return $query->row_array();
     }
@@ -204,8 +204,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_banjir
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 3);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -220,8 +220,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_kebakaran
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 5);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -236,8 +236,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_cuaca
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 7);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -252,8 +252,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_erupsi
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 6);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -268,8 +268,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_gempa_bumi
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 2);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -284,8 +284,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_banjir_bandang
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 4);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -300,8 +300,8 @@ class Model_home extends CI_Model
         $this->db->select('
                             count(b.id_jenis_bencana) as total_abrasi_pantai
                             ');
-        $this->db->from('ms_bencana a');
-        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana', 'inner');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->where('b.id_jenis_bencana', 9);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);

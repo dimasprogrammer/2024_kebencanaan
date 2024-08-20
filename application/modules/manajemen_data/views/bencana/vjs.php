@@ -8,6 +8,7 @@
 
 <script type="text/javascript">
     var base_url = 'http://localhost/2024/2024_kebencanaan/';
+    var base_url_2 = 'http://localhost/2024/2024_kebencanaan/';
     $(document).ready(function(e) {
         getDataListbencana();
     });
@@ -414,14 +415,14 @@
 
                     let gambarHtml = '';
                     if (data.message.dataBencanaKirim.nama_file) {
-                        let gambarUrl = base_url + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file;
+                        let gambarUrl = base_url_2 + 'dokumen/bencana/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file;
                         gambarHtml = '<img style="width: 100%; height: 400px;" src="' + gambarUrl + '" alt="Gambar Bencana" class="img-fluid card-img-top">';
                     }
                     $('.gambar').html(gambarHtml);
 
                     let infografisHtml = '';
                     if (data.message.dataBencanaKirim.nama_file_infografis) {
-                        let infografisUrl = base_url + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file_infografis;
+                        let infografisUrl = base_url_2 + 'dokumen/infografis/' + year + '/' + month + '/' + data.message.dataBencanaKirim.nama_file_infografis;
                         infografisHtml = '<img style="width: 100%; height: 400px;" src="' + infografisUrl + '" alt="Gambar Infografis" class="img-fluid card-img-top">';
                     }
                     $('.infografis').html(infografisHtml);
