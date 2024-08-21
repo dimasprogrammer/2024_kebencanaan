@@ -1,6 +1,6 @@
 
 tinymce.init({
-    selector: "textarea#rancang_bangun",
+    selector: "textarea#kebutuhan_bencana",
     height: 500,
     plugins: [
         'advlist anchor autolink charmap code codesample directionality emoticons fullscreen',

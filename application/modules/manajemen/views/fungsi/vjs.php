@@ -1,5 +1,4 @@
 <script type="text/javascript">
-
     console.log(site);
 
     getDataListFungsi();
@@ -8,39 +7,38 @@
         $('#tblList').dataTable({
             "pagingType": "full_numbers",
             "destroy": true,
-            "processing":true,
+            "processing": true,
             "language": {
                 "loadingRecords": '&nbsp;',
                 "processing": 'Loading data...'
             },
-            "stateSave" : true,
+            "stateSave": true,
             "serverSide": true,
             "ordering": false,
             "ajax": {
                 "url": site + '/listview',
                 "type": "POST",
                 "data": {
-                    "<?php echo $this->security->get_csrf_token_name(); ?>" : $('input[name="'+csrfName+'"]').val()
+                    "<?php echo $this->security->get_csrf_token_name(); ?>": $('input[name="' + csrfName + '"]').val()
                 },
             },
-            "columnDefs": [
-                {
-                    "targets": [ 0 ], //first column
+            "columnDefs": [{
+                    "targets": [0], //first column
                     "orderable": false, //set not orderable
                     "className": 'text-center'
                 },
                 {
-                    "targets": [ -1, -2 ], //last column
+                    "targets": [-1, -2], //last column
                     "orderable": false, //set not orderable
                     "className": 'text-center'
                 },
             ],
         });
-        $('#tblList_filter input').addClass('form-control').attr('placeholder','Search Data');
+        $('#tblList_filter input').addClass('form-control').attr('placeholder', 'Search Data');
         $('#tblList_length select').addClass('form-control');
     }
     //panggil form Entri
-    $(document).on('click', '#btnAdd', function(e){
+    $(document).on('click', '#btnAdd', function(e) {
         formReset();
         $('#modalEntryForm').modal({
             backdrop: 'static'
@@ -76,8 +74,8 @@
                     data: postData,
                     dataType: "json",
                 }).done(function(data) {
-                    $('input[name="'+csrfName+'"]').val(data.csrfHash);
-                    if(data.status == 'RC404') {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
                         $('#formEntry').addClass('was-validated');
                         swalAlert.fire({
                             title: 'Gagal Simpan',
@@ -87,9 +85,9 @@
                         }).then((result) => {
                             if (result.value) {
                                 $('#errEntry').html(msg.error('Silahkan dilengkapi data pada form inputan dibawah'));
-                                $.each(data.message, function(key,value){
-                                    if(key != 'isi')
-                                        $('input[name="'+key+'"], select[name="'+key+'"]').closest('div.required').find('div.invalid-feedback').text(value);
+                                $.each(data.message, function(key, value) {
+                                    if (key != 'isi')
+                                        $('input[name="' + key + '"], select[name="' + key + '"]').closest('div.required').find('div.invalid-feedback').text(value);
                                     else {
                                         $('#pesanErr').html(value);
                                     }
@@ -118,7 +116,7 @@
                     $("#save").html('<i class="fas fa-check"></i> SUBMIT');
                     $("#save").removeClass('disabled');
                 });
-            } else if (result.dismiss === Swal.DismissReason.cancel ) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalAlert.fire({
                     title: 'Batal Simpan',
                     text: 'Proses simpan data telah dibatalkan',
@@ -134,8 +132,8 @@
             }
         })
     });
-    
-    $(document).on('click', '.btnEdit', function(e){
+
+    $(document).on('click', '.btnEdit', function(e) {
         formReset();
         $('#formEntry').attr('action', site + '/update');
         var token = $(this).data('id');
@@ -144,16 +142,20 @@
         });
         getDataFungsi(token);
     });
+
     function getDataFungsi(token) {
         run_waitMe($('#frmEntry'));
         $.ajax({
             type: 'POST',
             url: site + '/details',
-            data: {'token' : token, '<?php echo $this->security->get_csrf_token_name(); ?>' : $('input[name="'+csrfName+'"]').val()},
+            data: {
+                'token': token,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
             dataType: 'json',
             success: function(data) {
-                $('input[name="'+csrfName+'"]').val(data.csrfHash);
-                if(data.status == 'RC200') {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
                     $('input[name="tokenId"]').val(token);
                     $('#jenis_fungsi').select2().val(data.message.jenis).trigger("change");
                     $('#label_fungsi').val(data.message.label);
@@ -166,11 +168,11 @@
             }
         });
     }
-    $(document).on('click', '.btnDelete', function(e){
+    $(document).on('click', '.btnDelete', function(e) {
         e.preventDefault();
         let postData = {
             'tokenId': $(this).data('id'),
-            '<?php echo $this->security->get_csrf_token_name(); ?>' : $('input[name="'+csrfName+'"]').val()
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
         };
         $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i>');
         $(this).addClass('disabled');
@@ -191,8 +193,8 @@
                     data: postData,
                     dataType: "json",
                 }).done(function(data) {
-                    $('input[name="'+csrfName+'"]').val(data.csrfHash);
-                    if(data.status == 'RC404') {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
                         swalAlert.fire({
                             title: 'Gagal Hapus',
                             text: data.message,
@@ -222,7 +224,7 @@
                     $('.btnDelete').html('<i class="fas fa-trash-alt"></i>');
                     $('.btnDelete').removeClass('disabled');
                 });
-            } else if (result.dismiss === Swal.DismissReason.cancel ) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalAlert.fire({
                     title: 'Batal Hapus',
                     text: 'Proses hapus data telah dibatalkan',

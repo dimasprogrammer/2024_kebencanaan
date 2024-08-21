@@ -16,6 +16,7 @@ class Model_master extends CI_Model
     public function getDataJenisBencana()
     {
         $this->db->order_by('id_jenis_bencana  ASC');
+        $this->db->where('id_status', 1);
         $query = $this->db->get('cx_jenis_bencana');
         $jenis[''] = 'Pilih Jenis Bencana';
         if ($query->num_rows() > 0) {

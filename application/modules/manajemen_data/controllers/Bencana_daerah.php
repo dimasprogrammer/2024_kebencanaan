@@ -62,7 +62,10 @@ class Bencana_daerah extends SLP_Controller
                     $row[] = $dl['tanggal_bencana'];
                     $row[] = $dl['penyebab_bencana'];
                     $row[] = $dl['nm_regency'];
-                    $row[] = '<a href="' . site_url('manajemen_data/bencana_daerah/detail_bencana/' . $dl['token_bencana_detail']) . '" type="button" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnIndikator" title="Indikator Satuan">
+                    $row[] = '<a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnKebutuhan" title="Lihat Data">
+                        <i class="fas fa-box-open"></i> Kebutuhan Bencana
+                        </a>
+                        <a href="' . site_url('manajemen_data/bencana_daerah/detail_bencana/' . $dl['token_bencana_detail']) . '" type="button" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnIndikator" title="Indikator Satuan">
                         <i class="far fa-folder-open"></i> Detail Bencana
                         </a>';
                     $data[] = $row;
@@ -79,6 +82,47 @@ class Bencana_daerah extends SLP_Controller
         }
     }
 
+    public function details()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            $token_bencana_detail   = $this->input->post('token_bencana_detail', TRUE);
+            // var_dump($token_bencana_detail);
+            // die;
+            if (!empty($token_bencana_detail) and !empty($session)) {
+                $data = $this->mbencana_daerah->getDataDetailBencana($token_bencana_detail);
+                $row = array();
+                $row['token_bencana_detail'] = !empty($data) ? $data['token_bencana_detail'] : '';
+                $row['kebutuhan_bencana']    = !empty($data) ? $data['kebutuhan_bencana'] : '';
+                $result = array('status' => 'RC200', 'message' => $row, 'csrfHash' => $csrfHash);
+            } else {
+                $result = array('status' => 'RC404', 'message' => array(), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    public function createKebutuhan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            if (!empty($session)) {
+                $data = $this->mbencana_daerah->insertDataKebutuhan();
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses insert data kebutuhan sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses insert data kebutuhan gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
 
     public function detail_bencana($token_bencana_detail)
     {
@@ -133,14 +177,12 @@ class Bencana_daerah extends SLP_Controller
     {
         $result = array();
         $csrfHash = $this->security->get_csrf_hash();
-        if($type == 'korbanjiwa')
-        {
+        if ($type == 'korbanjiwa') {
             $response = $this->mbencana_daerah->createKorbanJiwa();
             if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
-            }
-            else{
+            } else {
                 $result = $response;
                 $result['status'] = "RC422";
             }
@@ -149,8 +191,7 @@ class Bencana_daerah extends SLP_Controller
             if ($response['status'] == 'success') {
                 $result = $response;
                 $result['status'] = "RC200";
-            }
-            else{
+            } else {
                 $result = $response;
                 $result['status'] = "RC422";
             }
@@ -164,40 +205,36 @@ class Bencana_daerah extends SLP_Controller
                 $result['status'] = "RC422";
             }
         } else if ($type == 'tersalurkan') {
-              $response = $this->mbencana_daerah->createTersalurkan();
-              if ($response['status'] == 'success') {
-                  $result = $response;
-                  $result['status'] = "RC200";
-              } else {
-                  $result = $response;
-                  $result['status'] = "RC422";
-              }
-          } else if ($type == 'diterima') {
-              $response = $this->mbencana_daerah->createDiterima();
-              if ($response['status'] == 'success') {
-                  $result = $response;
-                  $result['status'] = "RC200";
-              } else {
-                  $result = $response;
-                  $result['status'] = "RC422";
-              }
-          } else if($type == 'relawan')
-            {
-                $response = $this->mbencana_daerah->createRelawan();
-                if($response['status'] == 'success')
-                {
-                    $result = $response;
-                    $result['status'] = "RC200";
-                }
-                else{
-                    $result = $response;
-                    $result['status'] = "RC422";
-                }
+            $response = $this->mbencana_daerah->createTersalurkan();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
             }
-        else
+        } else if ($type == 'diterima') {
+            $response = $this->mbencana_daerah->createDiterima();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
+            }
+        } else if ($type == 'relawan') {
+            $response = $this->mbencana_daerah->createRelawan();
+            if ($response['status'] == 'success') {
+                $result = $response;
+                $result['status'] = "RC200";
+            } else {
+                $result = $response;
+                $result['status'] = "RC422";
+            }
+        } else
             $result = array('status' => 'error', 'message' => 'Type not found', 'csrfHash' => $csrfHash);
 
-        
+
         $result['csrfHash'] = $csrfHash;
         $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
@@ -229,13 +266,12 @@ class Bencana_daerah extends SLP_Controller
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataDiterima($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        } else if($type == 'getDataRelawan') {
+        } else if ($type == 'getDataRelawan') {
             $wil_village = $this->input->get('wil_village');
             $token_bencana_detail = $this->input->get('token_bencana_detail');
             $data = $this->mbencana_daerah->getDataRelawan($token_bencana_detail, $wil_village);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        }
-          else
+        } else
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found')));
     }
 }

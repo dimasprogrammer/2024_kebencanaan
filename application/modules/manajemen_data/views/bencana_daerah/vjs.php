@@ -1,3 +1,5 @@
+<?= $this->asset->js('plugins/tinymce/tinymce.min.js'); ?>
+<?= $this->asset->js('addons/setting.tinymce.js'); ?>
 <script type="text/javascript">
     let activeTabs = 1;
     let lastValue = 0;
@@ -8,6 +10,10 @@
         activedTabUrl();
     });
 
+    $(document).on('click', '.btnCloseKebutuhan', function(e) {
+        // formReset();
+        $('#modalEntryFormKebutuhan').modal('toggle');
+    });
 
     function getDataListbencana() {
         $('#tblList').dataTable({
@@ -37,6 +43,133 @@
         $('#tblList_filter input').addClass('form-control').attr('placeholder', 'Search Data');
         $('#tblList_length select').addClass('form-control');
     }
+
+    // ------------------------------------- JAVASCRIPT PROSES KEBUTUHAN BENCANA DAERAH -------------------------//
+
+    $(document).on('click', '.btnKebutuhan', function(e) {
+        formReset();
+        $('#formEntryKebutuhan').attr('action', site + '/createKebutuhan');
+        var token_bencana_detail = $(this).data('id');
+        $('#modalEntryFormKebutuhan').modal({
+            backdrop: 'static'
+        });
+        getDataBencanaKebutuhan(token_bencana_detail);
+    });
+
+    function getDataBencanaKebutuhan(token_bencana_detail) {
+        run_waitMe($('#frmEntryKebutuhan'));
+        $.ajax({
+            type: 'POST',
+            url: site + '/details',
+            data: {
+                'token_bencana_detail': token_bencana_detail,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
+                    $('input[name="tokenId"]').val(token_bencana_detail);
+                    tinymce.get('kebutuhan_bencana').setContent(data.message.kebutuhan_bencana);
+                }
+                $('#frmEntryKebutuhan').waitMe('hide');
+            }
+        });
+    }
+
+    $(document).on('submit', '#formEntryKebutuhan', function(e) {
+        e.preventDefault();
+        // let postData = $(this).serialize();
+        // get form action url
+        var form = $('#formEntryKebutuhan')[0];
+        let formActionURL = $(this).attr("action");
+        $("#saveKebutuhan").html('<i class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></i> DIPROSES...');
+        $("#saveKebutuhan").addClass('disabled');
+        // alert(formActionURL);
+        run_waitMe($('#frmEntryKebutuhan'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin mengirimkan informasi ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: formActionURL,
+                    mimeType: "multipart/form-data",
+                    type: "POST",
+                    data: new FormData(form),
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        $('#formEntryKebutuhan').addClass('was-validated');
+                        $('.invalid-feedback').removeClass('valid-feedback').text('');
+                        swalAlert.fire({
+                            title: 'Gagal Simpan',
+                            text: 'Proses simpan data gagal, silahkan diperiksa kembali',
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errEntryKebutuhan').html(msg.error('Silahkan dilengkapi data pada form inputan dibawah'));
+                                $.each(data.message, function(key, value) {
+                                    if (key != 'isi')
+                                        $('input[name="' + key + '"], textarea[name="' + key + '"], select[name="' + key + '"]').closest('div.required').find('div.invalid-feedback').addClass('valid-feedback').text(value);
+                                    else {
+                                        $('#pesanErrKebutuhan').html(value);
+                                    }
+                                });
+                                $('#frmEntryKebutuhan').waitMe('hide');
+                            }
+                        })
+                    } else {
+                        $('#frmEntryKebutuhan').waitMe('hide');
+                        $('#modalEntryFormKebutuhan').modal('toggle');
+                        swalAlert.fire({
+                            title: 'Berhasil Simpan',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                newKode = data.kode;
+                                $('#errSuccessKebutuhan').html(msg.success(data.message));
+                                getDataListbencana();
+                            }
+                        })
+                    }
+                }).fail(function() {
+                    $('#errEntryKebutuhan').html(msg.error('Harap periksa kembali data'));
+                    $('#frmEntryKebutuhan').waitMe('hide');
+                }).always(function() {
+                    $("#saveKebutuhan").html('<i class="fas fa-check"></i> SUBMIT');
+                    $("#saveKebutuhan").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Simpan',
+                    text: 'Proses simpan data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#frmEntryKebutuhan').waitMe('hide');
+                        $("#saveKebutuhan").html('<i class="fas fa-check"></i> SUBMIT');
+                        $("#saveKebutuhan").removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+    // ------------------------------------- JAVASCRIPT PROSES KEBUTUHAN BENCANA DAERAH -------------------------//
 
     // trigger ketika focus ke form input value akan di kosongkan
     function resetValueOnClick(element) {
@@ -74,8 +207,7 @@
             getDataTersalurkan();
         } else if (activeTabs == 5) {
             getDataDiterima();
-        }
-        else if(activeTabs == 6) {
+        } else if (activeTabs == 6) {
             getDataRelawan();
         }
     }
@@ -132,6 +264,6 @@
     if (isset($vternakjs)) echo $vternakjs;
     if (isset($vbantuantersalurkanjs)) echo $vbantuantersalurkanjs;
     if (isset($vbantuanditerimajs)) echo $vbantuanditerimajs;
-    if (isset($vbantuanrelawanjs)) echo $vbantuanrelawanjs; 
+    if (isset($vbantuanrelawanjs)) echo $vbantuanrelawanjs;
     ?>
 </script>

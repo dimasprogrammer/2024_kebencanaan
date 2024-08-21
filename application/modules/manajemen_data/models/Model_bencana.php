@@ -232,6 +232,7 @@ class Model_bencana extends CI_Model
                     'token_bencana'         => $token_bencana,
                     'token_bencana_detail'  => $token_bencana_detail,
                     'id_regency_penerima'   => $id,
+                    'kebutuhan_bencana'     => '-',
                     'id_status'             => 0
                 );
                 $this->db->insert('ms_bencana_detail', $data);
@@ -410,6 +411,7 @@ class Model_bencana extends CI_Model
                         'token_bencana'         => $token_bencana,
                         'token_bencana_detail'  => $token_bencana_detail,
                         'id_regency_penerima'   => $id,
+                        'kebutuhan_bencana'     => '-',
                         'id_status'             => 0
                     );
                     $this->db->insert('ms_bencana_detail', $data);

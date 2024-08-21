@@ -82,6 +82,37 @@ class Model_bencana_daerah extends CI_Model
     }
 
     /*Fungsi get data edit by id*/
+    public function getDataDetailBencana($token_bencana_detail)
+    {
+        $this->db->select(' a.token_bencana_detail,
+                            a.kebutuhan_bencana');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    /* Fungsi untuk update data */
+    public function insertDataKebutuhan()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip   = $this->input->ip_address();
+        $token_bencana_detail = escape($this->input->post('tokenId', TRUE));
+        $kebutuhan_bencana    = escape($this->input->post('kebutuhan_bencana', TRUE));
+        $data = array(
+            'kebutuhan_bencana' => $kebutuhan_bencana,
+            'mod_by'            => $create_by,
+            'mod_date'          => $create_date,
+            'mod_ip'            => $create_ip
+        );
+        /*query update*/
+        $this->db->where('token_bencana_detail', $token_bencana_detail);
+        $this->db->update('ms_bencana_detail', $data);
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    /*Fungsi get data edit by id*/
     public function addDataDetailBencanaDetail($token_bencana_detail)
     {
         $this->db->select('	a.id_bencana_detail, 
