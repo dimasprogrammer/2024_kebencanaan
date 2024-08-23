@@ -50,7 +50,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryForm" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntry">
+    <div class="modal-dialog modal-xl" id="frmEntry">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Entri Data bencana</h4>
@@ -194,9 +194,6 @@
                 </div> -->
                 <div class="alert alert-danger">
                     Ukuran dokumen yang diupload maksimal 2 Mb. Format dokumen yang diupload harus pdf/ppt</div>
-                <div class="blockquote-footer">
-                    <span><b>NB:</b> Untuk kolom anggaran dan profil hanya optional</span>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnClose"><i class="fas fa-times"></i> Close</button>
@@ -243,7 +240,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA KIRIM -------------------------------------------->
 <div class="modal fade" id="modalEntryFormKirim" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryKirim">
+    <div class="modal-dialog modal-xl" id="frmEntryKirim">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
