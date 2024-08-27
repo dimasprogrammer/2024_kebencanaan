@@ -144,6 +144,20 @@ if (!function_exists('convert_status_bencana')) {
 }
 
 /**
+ * Fungsi convert status
+ */
+if (!function_exists('convert_status_validasi')) {
+    function convert_status_validasi($id_status)
+    {
+        $status = array(
+            0 => '<span class="badge badge-pill badge-gray">BELUM VALIDASI</span>',
+            1 => '<span class="badge badge-pill badge-primary">SUDAH DIVALIDASI</span>',
+        );
+        return $status[intval($id_status)];
+    }
+}
+
+/**
  * Fungsi blokir
  */
 if (!function_exists('blokir')) {
@@ -243,8 +257,9 @@ if (!function_exists('replace_backslases')) {
     }
 }
 
-if(!function_exists('get_time_difference_in_seconds')){
-    function get_time_difference_in_seconds($tgl_data, $batas_waktu){
+if (!function_exists('get_time_difference_in_seconds')) {
+    function get_time_difference_in_seconds($tgl_data, $batas_waktu)
+    {
         $interval = $tgl_data->diff($batas_waktu);
         $elapsed_time = [
             'y' => $interval->y,
@@ -255,23 +270,18 @@ if(!function_exists('get_time_difference_in_seconds')){
             's' => $interval->s
         ];
         $total_seconds = 0;
-        foreach($elapsed_time as $key => $value){
-            if($key == 'y'){
+        foreach ($elapsed_time as $key => $value) {
+            if ($key == 'y') {
                 $total_seconds += $value * 31536000;
-            }
-            else if($key == 'm'){
+            } else if ($key == 'm') {
                 $total_seconds += $value * 2592000;
-            }
-            else if($key == 'd'){
+            } else if ($key == 'd') {
                 $total_seconds += $value * 86400;
-            }   
-            else if($key == 'h'){
+            } else if ($key == 'h') {
                 $total_seconds += $value * 3600;
-            }
-            else if($key == 'i'){
+            } else if ($key == 'i') {
                 $total_seconds += $value * 60;
-            }
-            else if($key == 's'){
+            } else if ($key == 's') {
                 $total_seconds += $value;
             }
         }

@@ -4,12 +4,12 @@
         <div id="errEntry-korbanjiwa"></div>
         <form action="<?= site_url(isset($siteUri) ? $siteUri . '/create/kerusakan' : '') ?>" id="formEntry-kerusakan">
             <div class="row">
-                <div class="col-lg-6 col-md-12 mb-3">
+                <div class="col-lg-5 col-md-12 mb-3">
                     <div class="table-responsive-md">
                         <table cellspacing="0" class="table table-striped table-bordered table-sm mb-0" width="100%">
                             <thead>
                                 <tr>
-                                    <th width="40%" class="font-weight-bold text-center">Kerusakan Sarana</th>
+                                    <th width="25%" class="font-weight-bold text-center">Kerusakan Sarana</th>
                                     <th width="20%" class="font-weight-bold text-center">Rusak Berat</th>
                                     <th width="20%" class="font-weight-bold text-center">Rusak Sedang</th>
                                     <th width="20%" class="font-weight-bold text-center">Rusak Ringan</th>
@@ -38,7 +38,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-7 col-md-12">
                     <div class="table-responsive-md" style="width: 50%;">
                         <table cellspacing="0" class="table table-striped table-bordered table-sm mb-3" style="width: 100%;">
                             <thead>
@@ -84,7 +84,7 @@
                                     foreach ($sarana_lainnya as $key => $list) :
                                     ?>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm text-right" onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" name="jml_sarana_lainnya[<?= $list->id_jenis_sarana ?>]" id="jml_sarana_lainnya-<?= $list->id_jenis_sarana ?>" required>
+                                            <input type="number" class="form-control form-control-sm text-right" onfocus="resetValueOnClick(this)" onfocusout="restoreValueOnClick(this)" value="0" min="0" step="0.01" name="jml_sarana_lainnya[<?= $list->id_jenis_sarana ?>]" id="jml_sarana_lainnya-<?= $list->id_jenis_sarana ?>" required>
                                         </td>
                                     <?php
                                     endforeach; ?>

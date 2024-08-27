@@ -75,8 +75,12 @@ class bencana extends SLP_Controller
                         <i class="fas fa-paper-plane"></i> Kirim
                         </a>';
                     } else {
-                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnKirim" title="Lihat Data">
-                        <i class="fas fa-box-open"></i> Lihat Data';
+                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnEdit" title="Draft">
+                        <i class="fas fa-business-time"></i> Ubah Data
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnKirim" title="Lihat Data">
+                        <i class="fas fa-box-open"></i> Lihat Data
+                        </a>';
                     }
 
                     $row[] = $no;

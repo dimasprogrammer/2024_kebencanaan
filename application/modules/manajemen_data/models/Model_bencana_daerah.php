@@ -81,6 +81,129 @@ class Model_bencana_daerah extends CI_Model
         $this->db->order_by('a.id_bencana_detail DESC');
     }
 
+    //-------------------- DIBAWAH INI FUNGSI UNTUK LISTVIEW VALIDASI KORBAN ------------------//
+    /*Fungsi Get Data List*/
+    public function get_datatables_korban($param, $token_bencana_detail)
+    {
+        $this->_get_datatables_query_korban($param, $token_bencana_detail);
+        if ($_POST['length'] != -1)
+            $this->db->limit($_POST['length'], $_POST['start']);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function count_filtered_korban($param, $token_bencana_detail)
+    {
+        $this->_get_datatables_query_korban($param, $token_bencana_detail);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function count_all_korban()
+    {
+        return $this->db->count_all_results('ms_bencana_detail');
+    }
+
+    private function _get_datatables_query_korban($param, $token_bencana_detail)
+    {
+        $post = array();
+        if (is_array($param)) {
+            foreach ($param as $v) {
+                $post[$v['name']] = $v['value'];
+            }
+        }
+
+        $this->db->select('	a.id as id_bencana_korban, 
+							a.token_bencana_detail, 
+							a.token_korban_jiwa, 
+							a.jumlah_korban,
+                            a.status_validasi,
+                            a.waktu_data,
+                            a.wil_village,
+                            b.token_bencana, 
+                            c.nm_kondisi,
+                            d.nm_jiwa,
+                            e.name as nm_village');
+        $this->db->from('ms_bencana_korban a');
+        $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->join('cx_korban_kondisi c', 'c.id = a.id_kondisi', 'INNER');
+        $this->db->join('cx_korban_jiwa d', 'd.id = a.id_jiwa', 'INNER');
+        $this->db->join('wil_village e', 'e.id_village = a.wil_village', 'INNER');
+        $this->db->where('a.status_validasi', 0);
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
+        $i = 0;
+        foreach ($this->search as $item) { // loop column
+            if ($_POST['search']['value']) { // if datatable send POST for search
+                if ($i === 0) { // first loop
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                } else {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+                if (count($this->search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+        $this->db->order_by('a.id DESC');
+    }
+
+    /* Fungsi untuk update data */
+    public function updateValidasiKorban()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip   = $this->input->ip_address();
+        $token_bencana = escape($this->input->post('tokenId', TRUE));
+        $status_validasi = escape($this->input->post('status_validasi', TRUE));
+        foreach ($token_bencana as $idt) {
+
+            $id = array(
+                'status_validasi' => 1,
+                'mod_by'            => $create_by,
+                'mod_date'          => $create_date,
+                'mod_ip'            => $create_ip
+            );
+            /*query update*/
+            $this->db->where('token_korban_jiwa', $idt);
+            $this->db->update('ms_bencana_korban', $id);
+        }
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    //-------------------- DIBAWAH INI FUNGSI UNTUK LISTVIEW VALIDASI KORBAN ------------------//
+
+    /*Fungsi get data edit by id*/
+    public function getDataDetailBencana($token_bencana_detail)
+    {
+        $this->db->select(' a.token_bencana_detail,
+                            a.kebutuhan_bencana');
+        $this->db->from('ms_bencana_detail a');
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    /* Fungsi untuk update data */
+    public function insertDataKebutuhan()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip   = $this->input->ip_address();
+        $token_bencana_detail = escape($this->input->post('tokenId', TRUE));
+        $kebutuhan_bencana    = escape($this->input->post('kebutuhan_bencana', TRUE));
+        $data = array(
+            'kebutuhan_bencana' => $kebutuhan_bencana,
+            'mod_by'            => $create_by,
+            'mod_date'          => $create_date,
+            'mod_ip'            => $create_ip
+        );
+        /*query update*/
+        $this->db->where('token_bencana_detail', $token_bencana_detail);
+        $this->db->update('ms_bencana_detail', $data);
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
     /*Fungsi get data edit by id*/
     public function addDataDetailBencanaDetail($token_bencana_detail)
     {
@@ -111,6 +234,26 @@ class Model_bencana_daerah extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    //--------------------- FUNGSI UNTUK GET DETAIL VALIDASI BENCANA --------------------------------//
+    public function getDataDetailKorban($token_bencana_detail)
+    {
+        $this->db->select('	a.id as id_bencana_korban, 
+							a.token_bencana_detail, 
+							a.jumlah_korban, 
+							b.token_bencana, 
+                            c.nm_kondisi,
+                            d.nm_jiwa');
+        $this->db->from('ms_bencana_korban a');
+        $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->join('cx_korban_kondisi c', 'c.id = a.id_kondisi', 'INNER');
+        $this->db->join('cx_korban_jiwa d', 'd.id = a.id_jiwa', 'INNER');
+        $this->db->where('b.token_bencana_detail', $token_bencana_detail);
+        $this->db->order_by('a.id DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    //--------------------- FUNGSI UNTUK GET DETAIL VALIDASI BENCANA --------------------------------//
 
     public function getDataKorbanKondisi()
     {

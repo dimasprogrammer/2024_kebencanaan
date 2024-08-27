@@ -232,6 +232,7 @@ class Model_bencana extends CI_Model
                     'token_bencana'         => $token_bencana,
                     'token_bencana_detail'  => $token_bencana_detail,
                     'id_regency_penerima'   => $id,
+                    'kebutuhan_bencana'     => '-',
                     'id_status'             => 0
                 );
                 $this->db->insert('ms_bencana_detail', $data);
@@ -250,29 +251,70 @@ class Model_bencana extends CI_Model
         }
     }
 
+    public function uploadFileBencana($nama_file, $dirname, $token_bencana, $nama_kolom, $nama_folder)
+    {
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+
+        $_FILES['file']['name']     = $nama_file['name'];
+        $_FILES['file']['type']     = $nama_file['type'];
+        $_FILES['file']['tmp_name'] = $nama_file['tmp_name'];
+        $_FILES['file']['error']    = $nama_file['error'];
+        $_FILES['file']['size']     = $nama_file['size'];
+        $config = array(
+            'upload_path'      => './' . $dirname . '/',
+            'allowed_types'    => 'png|jpg|jpeg|pdf',
+            'file_name'        => 'file_' . $nama_folder . '_' . date('YmdHis', strtotime($create_date)),
+            'file_ext_tolower' => TRUE,
+            'max_size'         => 1024,
+            'max_filename'     => 0,
+            'remove_spaces'    => TRUE,
+        );
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('file')) {
+            $nama_file = '';
+        } else {
+            $upload_data = $this->upload->data();
+            $nama_file   = $upload_data['file_name'];
+            $checkFile   = $this->getDataUpload($token_bencana);
+            $file        = $checkFile[$nama_kolom];
+
+            $dirnameUpdateGambar = $dirname . $file;
+            if (file_exists($dirnameUpdateGambar)) {
+                unlink($dirnameUpdateGambar);
+            }
+
+            $dataGambar = array(
+                $nama_kolom => $nama_file,
+            );
+            /*query update*/
+            $this->db->where('token_bencana ', $token_bencana);
+            $this->db->update('ms_bencana', $dataGambar);
+        }
+        return $dirnameUpdateGambar;
+    }
+
     /* Fungsi untuk update data */
     public function updateDataBencana()
     {
         //get data
-        $create_by        = $this->app_loader->current_user();
-        $create_date   = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
-        $create_ip     = $this->input->ip_address();
-        // $token_bencana     = escape($this->input->post('token_bencana', TRUE));
-        $token_bencana = escape($this->input->post('tokenId', TRUE));
-        $tanggal_bencana        = escape($this->input->post('tanggal_bencana', TRUE));
-        $jam_bencana            = escape($this->input->post('jam_bencana', TRUE));
-        $kategori_tanggap       = escape($this->input->post('kategori_tanggap', TRUE));
-        $id_jenis_bencana       = escape($this->input->post('id_jenis_bencana', TRUE));
-        $nama_bencana           = escape($this->input->post('nama_bencana', TRUE));
-        $keterangan_bencana     = escape($this->input->post('keterangan_bencana', TRUE));
-        $penyebab_bencana       = escape($this->input->post('penyebab_bencana', TRUE));
-        $latitude               = escape($this->input->post('latitude', TRUE));
-        $longitude              = escape($this->input->post('longitude', TRUE));
-        $nama_file              = escape($this->input->post('nama_file', TRUE));
-        $nama_file_infografis   = escape($this->input->post('nama_file_infografis', TRUE));
-        $id_regency             = escape($this->input->post('id_regency', TRUE));
-        $video_bencana          = escape($this->input->post('video_bencana', TRUE));
-        $taksiran_kerugian      = escape($this->input->post('taksiran_kerugian', TRUE));
+        $create_by          = $this->app_loader->current_user();
+        $create_date        = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip          = $this->input->ip_address();
+        $token_bencana      = escape($this->input->post('tokenId', TRUE));
+        $tanggal_bencana    = escape($this->input->post('tanggal_bencana', TRUE));
+        $jam_bencana        = escape($this->input->post('jam_bencana', TRUE));
+        $kategori_tanggap   = escape($this->input->post('kategori_tanggap', TRUE));
+        $id_jenis_bencana   = escape($this->input->post('id_jenis_bencana', TRUE));
+        $nama_bencana       = escape($this->input->post('nama_bencana', TRUE));
+        $keterangan_bencana = escape($this->input->post('keterangan_bencana', TRUE));
+        $penyebab_bencana   = escape($this->input->post('penyebab_bencana', TRUE));
+        $latitude           = escape($this->input->post('latitude', TRUE));
+        $longitude          = escape($this->input->post('longitude', TRUE));
+        $id_regency         = escape($this->input->post('id_regency', TRUE));
+        $video_bencana      = escape($this->input->post('video_bencana', TRUE));
+        $taksiran_kerugian  = escape($this->input->post('taksiran_kerugian', TRUE));
         // var_dump($_FILES);
         // die;
         //cek data by id
@@ -280,105 +322,27 @@ class Model_bencana extends CI_Model
         $year    = date('Y');
         $month   = date('m');
 
-        //--------------------------- foto bencana -------------------------------//
         $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/';
         if (!is_dir($dirname)) {
             mkdir('./' . $dirname, 0777, TRUE);
         }
 
-        $_FILES['file']['name']     = $_FILES['nama_file']['name'];
-        $filename = $_FILES['file']['name'];
-
         $dirname_infografis = 'dokumen/infografis/' . $year . '/' . $month . '/';
         if (!is_dir($dirname_infografis)) {
             mkdir('./' . $dirname_infografis, 0777, TRUE);
         }
-
-        $_FILES['file']['name']     = $_FILES['nama_file_infografis']['name'];
-        $filename_infografis = $_FILES['file']['name'];
-        // var_dump($filename_infografis);
+        $Bencana           = $_FILES['nama_file'];
+        $Infografis        = $_FILES['nama_file_infografis'];
+        $fotoBencana       = $this->uploadFileBencana($Bencana, $dirname, $token_bencana, 'nama_file', 'bencana');
+        $infografisBencana = $this->uploadFileBencana($Infografis, $dirname_infografis, $token_bencana, 'nama_file_infografis', 'infografis');
+        // var_dump($fotoBencana);
+        // var_dump($infografisBencana);
         // die;
+        //--------------------------- foto bencana -------------------------------//
 
-        if ($filename != '') {
-            $_FILES['file']['name']     = $_FILES['nama_file']['name'];
-            $_FILES['file']['type']     = $_FILES['nama_file']['type'];
-            $_FILES['file']['tmp_name'] = $_FILES['nama_file']['tmp_name'];
-            $_FILES['file']['error']    = $_FILES['nama_file']['error'];
-            $_FILES['file']['size']     = $_FILES['nama_file']['size'];
-            $config = array(
-                'upload_path'         => './' . $dirname . '/',
-                'allowed_types'     => 'png|jpg|jpeg|pdf',
-                'file_name'            => 'file_bencana_' . date('YmdHis', strtotime($create_date)),
-                'file_ext_tolower'    => TRUE,
-                'max_size'             => 1024,
-                'max_filename'         => 0,
-                'remove_spaces'     => TRUE,
-            );
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config);
 
-            if (!$this->upload->do_upload('file')) {
-                $nama_file = '';
-            } else {
-                $upload_data = $this->upload->data();
-                $nama_file   = $upload_data['file_name'];
-                $checkFile   = $this->getDataUpload($token_bencana);
-                $file        = $checkFile['nama_file'];
-                $year        = substr($checkFile['create_date'], 0, 4);
-                $month       = substr($checkFile['create_date'], 5, 2);
-
-                $dirname = 'dokumen/bencana/' . $year . '/' . $month . '/' . $file;
-                if (file_exists($dirname)) {
-                    unlink($dirname);
-                }
-                $dataGambar = array(
-                    'nama_file'      => $nama_file
-                );
-                /*query update*/
-                $this->db->where('token_bencana ', $token_bencana);
-                $this->db->update('ms_bencana', $dataGambar);
-            }
-        } else if ($filename_infografis != '') {
-            $_FILES['file']['name']     = $_FILES['nama_file_infografis']['name'];
-            $_FILES['file']['type']     = $_FILES['nama_file_infografis']['type'];
-            $_FILES['file']['tmp_name'] = $_FILES['nama_file_infografis']['tmp_name'];
-            $_FILES['file']['error']    = $_FILES['nama_file_infografis']['error'];
-            $_FILES['file']['size']     = $_FILES['nama_file_infografis']['size'];
-            $config = array(
-                'upload_path'         => './' . $dirname_infografis . '/',
-                'allowed_types'     => 'png|jpg|jpeg|pdf',
-                'file_name'            => 'file_infografis_' . date('YmdHis', strtotime($create_date)),
-                'file_ext_tolower'    => TRUE,
-                'max_size'             => 1024,
-                'max_filename'         => 0,
-                'remove_spaces'     => TRUE,
-            );
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config);
-
-            if (!$this->upload->do_upload('file')) {
-                $nama_file_infografis = '';
-            } else {
-                $upload_data = $this->upload->data();
-                $nama_file_infografis   = $upload_data['file_name'];
-                $checkFile   = $this->getDataUpload($token_bencana);
-                $file        = $checkFile['nama_file_infografis'];
-                $year        = substr($checkFile['create_date'], 0, 4);
-                $month       = substr($checkFile['create_date'], 5, 2);
-
-                $dirname_infografis = 'dokumen/infografis/' . $year . '/' . $month . '/' . $file;
-                if (file_exists($dirname_infografis)) {
-                    unlink($dirname_infografis);
-                }
-                // var_dump($nama_file_infografis);
-                // die;
-                $dataGambar = array(
-                    'nama_file_infografis'      => $nama_file_infografis
-                );
-                /*query update*/
-                $this->db->where('token_bencana ', $token_bencana);
-                $this->db->update('ms_bencana', $dataGambar);
-            }
+        if ($fotoBencana == '' or $infografisBencana == '') {
+            return array('response' => 'ERROR', 'nama' => $nama_bencana);
         } else {
             $dataBencana = array(
                 'token_bencana'      => $token_bencana,
@@ -407,15 +371,17 @@ class Model_bencana extends CI_Model
                 $cek = $this->db->get_where('ms_bencana_detail', array('token_bencana' => $token_bencana, 'id_regency_penerima' => $id));
                 if ($cek->num_rows() == 0) {
                     $data = array(
-                        'token_bencana'         => $token_bencana,
-                        'token_bencana_detail'  => $token_bencana_detail,
-                        'id_regency_penerima'   => $id,
-                        'id_status'             => 0
+                        'token_bencana'        => $token_bencana,
+                        'token_bencana_detail' => $token_bencana_detail,
+                        'id_regency_penerima'  => $id,
+                        'kebutuhan_bencana'    => '-',
+                        'id_status'            => 0
                     );
                     $this->db->insert('ms_bencana_detail', $data);
                 }
             }
         }
+
         return array('response' => 'SUCCESS', 'nama' => $nama_bencana);
     }
 

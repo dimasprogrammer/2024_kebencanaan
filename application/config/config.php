@@ -460,6 +460,8 @@ $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = [
     '[a-z]+/[a-z]+/listview', '[a-z]+/[a-z]+/index/[a-z]', '[a-z]+/[a-z]+/details', '[a-z]+/[a-z]+/cetak', '[a-z]+/[a-z]+/getdataselect',
     'manajemen_data/bencana/listview',
+    'manajemen_data/bencana_daerah/listview',
+    'manajemen_data/bencana_daerah/listviewKorban',
 ];
 /*
 |--------------------------------------------------------------------------

@@ -50,7 +50,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryForm" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntry">
+    <div class="modal-dialog modal-xl" id="frmEntry">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Entri Data bencana</h4>
@@ -194,9 +194,6 @@
                 </div> -->
                 <div class="alert alert-danger">
                     Ukuran dokumen yang diupload maksimal 2 Mb. Format dokumen yang diupload harus pdf/ppt</div>
-                <div class="blockquote-footer">
-                    <span><b>NB:</b> Untuk kolom anggaran dan profil hanya optional</span>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnClose"><i class="fas fa-times"></i> Close</button>
@@ -210,7 +207,7 @@
 
 <!------------------------------------ FORM EDIT DATA BENCANA SHARE-------------------------------------------->
 <div class="modal fade" id="modalEntryFormShare" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryShare">
+    <div class="modal-dialog modal-xl" id="frmEntryShare">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Update Data </h4>
@@ -243,7 +240,7 @@
 
 <!------------------------------------ FORM ENTRI DATA BENCANA KIRIM -------------------------------------------->
 <div class="modal fade" id="modalEntryFormKirim" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryKirim">
+    <div class="modal-dialog modal-xl" id="frmEntryKirim">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
@@ -360,7 +357,7 @@
 
 <!------------------------------------ FORM ENTRI DATA MULTI UPLOAD FOTO BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryFormFoto" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryFoto">
+    <div class="modal-dialog modal-xl" id="frmEntryFoto">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
@@ -457,7 +454,7 @@
 
 <!------------------------------------ FORM ENTRI DATA MULTI UPLOAD VIDEO BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryFormVideo" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryVideo">
+    <div class="modal-dialog modal-xl" id="frmEntryVideo">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form View Data Bencana</h4>
@@ -494,10 +491,10 @@
                     <div class="col-12 col-md-12 required">
                         <div class="card">
                             <div class="card-header white-text primary-color-dark">
-                                Tabel Video Bencana
+                                Tabel Korban Bencana
                             </div>
                             <div class="card-body text-center px-4 mb-3">
-                                <table class="table table-striped table-border table-hover table-sm" width="100%" id="tblVideoBencana">
+                                <table class="table table-striped table-border table-hover table-sm" width="100%" id="tblKorbanBencana">
 
                                 </table>
                             </div>
