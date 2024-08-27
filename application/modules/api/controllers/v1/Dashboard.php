@@ -62,6 +62,7 @@ class Dashboard extends SLP_Controller
         $bencana = [
             'idBencana' => $data_detail1['bencana']['idBencana'],
             'jenisKejadian' => $data_detail1['bencana']['jenisKejadian'],
+            'namaBencana' => $data_detail1['bencana']['namaBencana'],
             'tanggalKejadian' => $data_detail1['bencana']['tanggalKejadian'],
             'updateData' => $data_detail1['bencana']['updateData'],
             'infoGrafisUrl' => $data_detail1['bencana']['infoGrafisUrl'],
@@ -92,11 +93,23 @@ class Dashboard extends SLP_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
 
+
+    /**
+     * ======================================================================================================================================================================================================
+     * 
+     * PRIVATE FUNCTION
+     * 
+     * ======================================================================================================================================================================================================
+     */
+
+
+
     private function _detail_bencana_formatter($data)
     {
         $dataDetailBencana = [];
         $detailJumlahKorban = [];
         $detailKerusakan = [];
+        $detailTernak = [];
 
         foreach($data['wilayah_terdampak'] as $key => $value){
             $detailJumlahKorban[] = [
@@ -106,6 +119,10 @@ class Dashboard extends SLP_Controller
             $detailKerusakan[] = [
                 "namaKabkota" => $value['kabkota'],
                 "data" => $this->_create_formatDetailKerusakan($value['data_kerusakan'])
+            ];
+            $detailTernak[] = [
+                "namaKabkota" => $value['kabkota'],
+                "data" => $this->_create_formatDetailTernak($value['data_ternak'])
             ];
         }
 
@@ -125,7 +142,8 @@ class Dashboard extends SLP_Controller
             ],
             "dampakBencana" => $this->_create_formatDampakBencana($data['stat_total']),
             "detailJumlahKorban" => $detailJumlahKorban,
-            "detailKerusakan" => $detailKerusakan
+            "detailKerusakan" => $detailKerusakan,
+            "detailTernak" => $detailTernak
         ];
 
         $dataDetailBencana[] = $keseluruhan;
@@ -133,6 +151,7 @@ class Dashboard extends SLP_Controller
         foreach($data['wilayah_terdampak'] as $key => $value){
             $detailJumlahKorban = [];
             $detailKerusakan = [];
+            $detailTernak = [];
 
             foreach($value['data_kecamatan'] as $index => $item){
                 $detailJumlahKorban[] = [
@@ -142,6 +161,10 @@ class Dashboard extends SLP_Controller
                 $detailKerusakan[] = [
                     "namaKecamatan" => $item['kecamatan'],
                     "data" => $this->_create_formatDetailKerusakan($item['data_kerusakan'])
+                ];
+                $detailTernak[] = [
+                    "namaKecamatan" => $item['kecamatan'],
+                    "data" => $this->_create_formatDetailTernak($value['data_ternak'])
                 ];
             }
             $totalWilayahTerdampak = $this->_hitung_total_wilayah_terdampak($value['data_kecamatan']);
@@ -158,7 +181,8 @@ class Dashboard extends SLP_Controller
                 ],
                 "dampakBencana" => $this->_create_formatDampakBencana($value),
                 "detailJumlahKorban" => $detailJumlahKorban,
-                "detailKerusakan" => $detailKerusakan
+                "detailKerusakan" => $detailKerusakan,
+                "detailTernak" => $detailTernak
             ];
         }
 
@@ -328,6 +352,19 @@ class Dashboard extends SLP_Controller
             'rumahRusak' => $rumahRusak,
             'fasilitasRusak' => $fasilitasRusak
         ];
+    }
+
+    private function _create_formatDetailTernak($data)
+    {
+        $result = [];
+        if(isset($data['ternak'])){
+            $ternak = $data['ternak'];
+            foreach($ternak as $key => $value){
+                $keyObj = str_replace(" ","", strtolower($value['ternak']));
+                $result[$keyObj] = $value['jml'];
+            }
+        }
+        return $result;
     }
 
     private function _hitung_total_wilayah_terdampak($data)
