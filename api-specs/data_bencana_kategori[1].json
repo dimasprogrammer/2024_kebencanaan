@@ -1,0 +1,149 @@
+//untuk tampilan data bencana berdasarkan kategori
+{
+    "success": true,
+    "kode": 200,
+    "message": "success",
+    "data": {
+        "id_kategori": "Longsor",
+        "kategori": "Longsor",
+        "dataBencana": [
+            {
+                "idBencana": 1,
+                "jenisKejadian": "Banjir Bandang",
+                "namaBencana": "Banjir Bandang",
+                "tanggalKejadian": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "updateData": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "infoGrafisUrl": "https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "lokasiKejadian": [
+                    {
+                        "id": 1,
+                        "nama": "kabupaten Agam"
+                    },
+                    {
+                        "id": 2,
+                        "nama": "kabupaten Tanah Datar"
+                    },
+                    {
+                        "id": 3,
+                        "nama": "kabupaten Agam"
+                    }
+                ],
+                "taksiranKerugian": "Rp. 2.000.000.000",
+                "totalKorbanTerisolir": "200 Orang",
+                "dampakBencana": [
+                    {
+                        "jumlahKorban": {
+                            "meninggal": 23,
+                            "hilang": 100,
+                            "luka": 100,
+                            "mengungsi": 300
+                        },
+                        "rumahRusak": {
+                            "rusakRingan": 20,
+                            "rusakSedang": 30,
+                            "rusakBerat": 40,
+                            "totalRusak": 100
+                        },
+                        "fasilitasRusak": {
+                            "sekolah": 20,
+                            "rumahIbadah": 30,
+                            "lainnya": 50,
+                            "totalRusak": 100
+                        }
+                    }
+                ]
+            },
+            {
+                "idBencana": 2,
+                "jenisKejadian": "Banjir Bandang",
+                "tanggalKejadian": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "updateData": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "infoGrafisUrl": "https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "lokasiKejadian": [
+                    {
+                        "id": 1,
+                        "nama": "kabupaten Agam"
+                    },
+                    {
+                        "id": 2,
+                        "nama": "kabupaten Tanah Datar"
+                    },
+                    {
+                        "id": 3,
+                        "nama": "kabupaten Agam"
+                    }
+                ],
+                "taksiranKerugian": "Rp. 2.000.000.000",
+                "totalKorbanTerisolir": "200 Orang",
+                "dampakBencana": [
+                    {
+                        "jumlahKorban": {
+                            "meninggal": 23,
+                            "hilang": 100,
+                            "luka": 100,
+                            "mengungsi": 300
+                        },
+                        "rumahRusak": {
+                            "rusakRingan": 20,
+                            "rusakSedang": 30,
+                            "rusakBerat": 40,
+                            "totalRusak": 100
+                        },
+                        "fasilitasRusak": {
+                            "sekolah": 20,
+                            "rumahIbadah": 30,
+                            "lainnya": 50,
+                            "totalRusak": 100
+                        }
+                    }
+                ]
+            },
+            {
+                "idBencana": 3,
+                "jenisKejadian": "Banjir Bandang",
+                "tanggalKejadian": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "updateData": "Selasa, 23 Juli 2024 - 22.00 Wib",
+                "infoGrafisUrl": "https://www.becana.sumbarprov.go.id/image/infografis/1.png",
+                "lokasiKejadian": [
+                    {
+                        "id": 1,
+                        "nama": "kabupaten Agam"
+                    },
+                    {
+                        "id": 2,
+                        "nama": "kabupaten Tanah Datar"
+                    },
+                    {
+                        "id": 3,
+                        "nama": "kabupaten Agam"
+                    }
+                ],
+                "taksiranKerugian": "Rp. 2.000.000.000",
+                "totalKorbanTerisolir": "200 Orang",
+                "dampakBencana": [
+                    {
+                        "jumlahKorban": {
+                            "meninggal": 23,
+                            "hilang": 100,
+                            "luka": 100,
+                            "mengungsi": 300
+                        },
+                        "rumahRusak": {
+                            "rusakRingan": 20,
+                            "rusakSedang": 30,
+                            "rusakBerat": 40,
+                            "totalRusak": 100
+                        },
+                        "fasilitasRusak": {
+                            "sekolah": 20,
+                            "rumahIbadah": 30,
+                            "lainnya": 50,
+                            "totalRusak": 100
+                        }
+                    }
+                ]
+            }
+        ],
+        "pagination":[]
+    }
+}

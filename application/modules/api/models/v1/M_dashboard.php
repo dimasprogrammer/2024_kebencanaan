@@ -66,12 +66,12 @@ class M_dashboard extends CI_Model
             ],
             'totalBencanaTahunIni' => [
                 'longsor' => $stats_bencana_tahun_ini['1'] ?? 0,
-                'banjir' => $stats_bencana_tahun_ini['3'] ?? 0,
-                'kabakaran' => $stats_bencana_tahun_ini['5'] ?? 0,
-                'cuacaEkstrem' => $stats_bencana_tahun_ini['6'] ?? 0,
-                'erupsi' => $stats_bencana_tahun_ini['7'] ?? 0,
-                'gempa' => $stats_bencana_tahun_ini['2'] ?? 0,
-                'banjirBandang' => $stats_bencana_tahun_ini['4'] ?? 0,
+                'terban' => $stats_bencana_tahun_ini['2'] ?? 0,
+                'gempaBumi' => $stats_bencana_tahun_ini['3'] ?? 0,
+                'banjir' => $stats_bencana_tahun_ini['4'] ?? 0,
+                'banjirBandang' => $stats_bencana_tahun_ini['5'] ?? 0,
+                'erupsiGunungBerapi' => $stats_bencana_tahun_ini['6'] ?? 0,
+                'cuacaEkstrim' => $stats_bencana_tahun_ini['7'] ?? 0,
                 'abrasiPantai' => $stats_bencana_tahun_ini['8'] ?? 0,
             ],
             "optionBencanaMasaTanggap" => $list_bencana_lainnya ?? []
