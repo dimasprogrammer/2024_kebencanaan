@@ -1,6 +1,8 @@
 <?= $this->asset->js('plugins/tinymce/tinymce.min.js'); ?>
 <?= $this->asset->js('addons/setting.tinymce.js'); ?>
 <script type="text/javascript">
+    var idx = '';
+
     let activeTabs = 1;
     let lastValue = 0;
     const siteUri = '<?php echo site_url() . $siteUri; ?>';
@@ -11,8 +13,13 @@
     });
 
     $(document).on('click', '.btnCloseKebutuhan', function(e) {
-        // formReset();
+        formReset();
         $('#modalEntryFormKebutuhan').modal('toggle');
+    });
+
+    $(document).on('click', '.btnCloseValidasi', function(e) {
+        formReset();
+        $('#modalEntryFormValidasi').modal('toggle');
     });
 
     function getDataListbencana() {
@@ -36,6 +43,10 @@
             },
             "columnDefs": [{
                 "targets": [0], //first column
+                "orderable": false, //set not orderable
+                "className": 'text-center'
+            }, {
+                "targets": [-1, -2], //last column
                 "orderable": false, //set not orderable
                 "className": 'text-center'
             }, ],
@@ -171,6 +182,185 @@
     });
     // ------------------------------------- JAVASCRIPT PROSES KEBUTUHAN BENCANA DAERAH -------------------------//
 
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI BENCANA DAERAH -------------------------//
+
+    $(document).on('click', '.btnValidasi', function(e) {
+        formReset();
+        $('#formEntryValidasi').attr('action', site + '/createValidasi');
+        var token_bencana_detail = $(this).data('id');
+        $('#modalEntryFormValidasi').modal({
+            backdrop: 'static'
+        });
+        getDataBencanaValidasi(token_bencana_detail);
+    });
+
+    function getDataBencanaValidasi(token_bencana_detail) {
+        run_waitMe($('#frmEntryValidasi'));
+        $.ajax({
+            type: 'POST',
+            url: site + '/reviewValidasi',
+            data: {
+                'token_bencana_detail': token_bencana_detail,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
+                    $('input[name="tokenValidasiId"]').val(token_bencana_detail);
+                }
+                $('#frmEntryValidasi').waitMe('hide');
+                getDataListValidasiKorban(token_bencana_detail);
+                idx = token_bencana_detail;
+            }
+        });
+    }
+
+    function getDataListValidasiKorban(token_bencana_detail) {
+        $('#tblListKorban').dataTable({
+            "pagingType": "full_numbers",
+            "destroy": true,
+            "processing": true,
+            "language": {
+                "loadingRecords": '&nbsp;',
+                "processing": 'Loading data...'
+            },
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": site + '/listviewKorban',
+                "type": "POST",
+                "data": {
+                    "token_bencana_detail": token_bencana_detail,
+                    "param": $('#formFilter').serializeArray(),
+                    "<?php echo $this->security->get_csrf_token_name(); ?>": $('input[name="' + csrfName + '"]').val()
+                },
+            },
+            "columnDefs": [{
+                    "targets": [0], //first column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+                {
+                    "targets": [-1, -2, -3], //last column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+            ],
+        });
+        $('#tblListKorban_filter input').addClass('form-control').attr('placeholder', 'Search Data');
+        $('#tblListKorban_length select').addClass('form-control');
+    }
+
+    // Handle click on "check all" control
+    $(document).on('click', '#checkAllKorban', function() {
+        $('#tblListKorban > tbody input[type=checkbox]').prop('checked', this.checked).trigger('change');
+    });
+
+    // Handle click on "checked" control
+    $(document).on('change', '#tblListKorban > tbody input[type=checkbox]', function(e) {
+        const rowCount = $('#tblListKorban > tbody input[type=checkbox]').length;
+        const n = $('#tblListKorban > tbody input[type=checkbox]').filter(':checked').length;
+        if (n > 0)
+            $('#btnValidasiKorban').show();
+        else
+            $('#btnValidasiKorban').hide();
+
+        if (rowCount == n)
+            $('#checkAllKorban').prop('checked', 'checked');
+        else
+            $('#checkAllKorban').prop('checked', '');
+    });
+
+    $(document).on('click', '#tblListKorban > tbody > tr', function() {
+        let n = $(this).find('input[type=checkbox]');
+        n.prop('checked', (n.is(':checked')) ? false : true).trigger('change');
+    });
+
+    $(document).on('click', '#btnValidasiKorban', function(e) {
+        e.preventDefault();
+        let token = [];
+        $.each($('#tblListKorban > tbody input[type=checkbox]:checked'), function() {
+            token.push($(this).val());
+        });
+        const postData = {
+            'tokenId': token,
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i> DIPROSES...');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin menghapus data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/createValidasiKorban',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Hapus',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccess').html(msg.error(data.message)).delay(1600).fadeOut('slow');
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Hapus',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccess').html(msg.success(data.message)).delay(1600).fadeOut('slow');
+                                getDataListbencana();
+                                $('#btnValidasi').hide();
+                                getDataListValidasiKorban(idx);
+                                $("#btnValidasiKorban").html('<i class="fa fa-check"></i> Validasi');
+                                $("#btnValidasiKorban").removeClass('disabled');
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccess').html(msg.error('Harap periksa kembali data yang akan dihapus')).delay(1600).fadeOut('slow');
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $("#btnValidasiKorban").html('<i class="fa fa-check"></i> Validasi');
+                    $("#btnValidasiKorban").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('#btnValidasi').html('<i class="fas fa-trash-alt"></i> Delete User');
+                        $('#btnValidasi').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI BENCANA DAERAH -------------------------//
     // trigger ketika focus ke form input value akan di kosongkan
     function resetValueOnClick(element) {
         lastValue = element.value;

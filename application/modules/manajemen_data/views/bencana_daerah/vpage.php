@@ -32,7 +32,8 @@
                                     <th width="10%" class="font-weight-bold">Tanggal Bencana</th>
                                     <th width="10%" class="font-weight-bold">Penyebab Bencana</th>
                                     <th width="30%" class="font-weight-bold">Kabupaten/Kota</th>
-                                    <th width="20%" class="font-weight-bold">Action</th>
+                                    <th width="10%" class="font-weight-bold">Validasi</th>
+                                    <th width="15%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -45,7 +46,7 @@
 
 <!------------------------------------ FORM ENTRI DATA KEBUTUHAN BENCANA -------------------------------------------->
 <div class="modal fade" id="modalEntryFormKebutuhan" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xxl" id="frmEntryKebutuhan">
+    <div class="modal-dialog modal-xl" id="frmEntryKebutuhan">
         <div class="modal-content">
             <div class="modal-header blue-gradient-rgba">
                 <h4 class="modal-title heading lead white-text font-weight-bold"><i class="fas fa-edit"></i> Form Kebutuhan Bencana</h4>
@@ -78,3 +79,69 @@
     </div>
 </div>
 <!------------------------------------ FORM ENTRI DATA KEBUTUHAN BENCANA -------------------------------------------->
+
+<!------------------------------------ FORM ENTRI VALIDASI DATA BENCANA -------------------------------------------->
+<div class="modal fade" id="modalEntryFormValidasi" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" id="frmEntryValidasi">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title heading lead black-text font-weight-bold"><i class="fas fa-check"></i> Validasi Bencana</h4>
+                <button type="button" class="close btnCloseValidasi" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <?php echo form_open_multipart(site_url(isset($siteUri) ? $siteUri . '/create' : ''), array('id' => 'formEntryValidasi', 'class=' => 'needs-validated', 'novalidate' => '')); ?>
+            <div id="errSuccessValidasi"></div>
+            <div class="modal-body">
+                <div id="errEntry"></div>
+                <?php echo form_hidden('tokenValidasiId', ''); ?>
+                <div class="form-row mb-3">
+                    <div class="col-12 col-md-12 required">
+                        <div class="card card-cascade narrower z-depth-0">
+                            <div class="view view-cascade gradient-card-header blue-gradient narrower py-1 mx-1 mb-1 d-flex justify-content-between align-items-center">
+
+                                <a href="" class="white-text mx-3">Tabel Korban</a>
+
+                                <div>
+                                    <a type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="btnValidasiKorban" style="display:none;"> <i class="fa fa-check"></i> Validasi </a>
+                                    <a type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" onclick="window.location.reload(true);"> <i class="fab fa-foursquare"></i> Refresh </a>
+                                </div>
+
+                            </div>
+                            <div class="px-2">
+                                <div class="table-responsive-md">
+                                    <table cellspacing="0" class="table table-striped table-borderless table-hover table-sm" id="tblListKorban" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="3%">
+                                                    <div class="custom-control custom-checkbox mt-0 pt-0">
+                                                        <input type="checkbox" class="custom-control-input" id="checkAllKorban">
+                                                        <label class="custom-control-label font-weight-bolder" for="checkAllKorban"></label>
+                                                    </div>
+                                                </th>
+                                                <th width="3%" class="font-weight-bold">#</th>
+                                                <!-- <th width="20%" class="font-weight-bold">Token Detail</th> -->
+                                                <th width="20%" class="font-weight-bold">Kelurahan/Desa/Nagari</th>
+                                                <th width="20%" class="font-weight-bold">Waktu Data</th>
+                                                <th width="20%" class="font-weight-bold">Kondisi Korban</th>
+                                                <th width="20%" class="font-weight-bold">Jenis Kelamin</th>
+                                                <th width="20%" class="font-weight-bold">Jumlah Korban</th>
+                                                <th width="20%" class="font-weight-bold">Status</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnCloseValidasi"><i class="fas fa-times"></i> Close Data </button>
+            </div>
+            <?php echo form_close(); ?>
+        </div>
+    </div>
+</div>
+<!------------------------------------ FORM ENTRI VALIDASI DATA BENCANA -------------------------------------------->

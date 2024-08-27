@@ -195,6 +195,7 @@
 
                     $('#tblPenanggungJawab').html(htmlBencana);
                     //--------------------- DATA OPD DAERAH PENANGGULANGAN BENCANA DAERAH -------------------//
+
                 }
                 $('#frmEntry').waitMe('hide');
             }
