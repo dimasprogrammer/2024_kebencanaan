@@ -58,13 +58,19 @@ class Bencana_daerah extends SLP_Controller
                     $row = array();
 
                     $row[] = $no;
-                    $row[] = $dl['nama_bencana'];
+                    $row[] = $dl['jenis_bencana'];
                     $row[] = $dl['tanggal_bencana'];
-                    $row[] = $dl['penyebab_bencana'];
                     $row[] = $dl['nm_regency'];
                     $row[] = '
-                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasi" title="Validasi Data">
-                        <i class="fas fa-box-open"></i> Korban
+                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKorban" title="Validasi Data Korban">
+                       <i class="fas fa-hand-holding-medical"></i>
+                                        Korban
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKerusakan" title="Validasi Data Kerusakan">
+                        <i class="fas fa-biohazard"></i> Kerusakan
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiTernak" title="Validasi Data Ternak">
+                        <i class="fas fa-fish"></i> Ternak
                         </a>';
                     $row[] = '
                         <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnKebutuhan" title="Lihat Data">
@@ -281,8 +287,6 @@ class Bencana_daerah extends SLP_Controller
             $this->output->set_content_type('application/json')->set_output(json_encode(array('status' => 'error', 'message' => 'Type not found')));
     }
 
-
-    //----------- DIBAWAH INI ADALAH FUNGSI UNTUK VALIDASI DATA KORBAN ------------------//
     public function reviewValidasi()
     {
         if (!$this->input->is_ajax_request()) {
@@ -313,6 +317,7 @@ class Bencana_daerah extends SLP_Controller
         }
     }
 
+    //----------- DIBAWAH INI ADALAH FUNGSI UNTUK VALIDASI DATA KORBAN ------------------//
     public function listviewKorban()
     {
         if (!$this->input->is_ajax_request()) {
@@ -374,6 +379,70 @@ class Bencana_daerah extends SLP_Controller
     }
 
     //----------- DIBAWAH INI ADALAH FUNGSI UNTUK VALIDASI DATA KORBAN ------------------//
+
+    //----------- DIBAWAH INI ADALAH FUNGSI UNTUK VALIDASI DATA KERUSAKAN ------------------//
+    public function listviewKerusakan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $data = array();
+            $session = $this->app_loader->current_account();
+            if (isset($session)) {
+                $param    = $this->input->post('param', TRUE);
+                $token_bencana_detail = $this->input->post('token_bencana_detail');
+                $dataListKerusakan = $this->mbencana_daerah->get_datatables_Kerusakan($param, $token_bencana_detail);
+                $no = $this->input->post('start');
+                foreach ($dataListKerusakan as $key => $dl) {
+                    $no++;
+                    $row = array();
+                    $row[] = '<div class="custom-control custom-checkbox mt-0 pt-0">
+                                    <input type="checkbox" class="custom-control-input" name="checkid[]" id="u_' . $dl['token_kerusakan'] . '" value="' . $dl['token_kerusakan'] . '">
+                                    <label class="custom-control-label font-weight-bolder" for="u_' . $dl['token_kerusakan'] . '"></label>
+                                </div>';
+                    $row[] = $no;
+                    // $row[] = $dl['token_bencana_detail'];
+                    $row[] = $dl['nm_village'];
+                    $row[] = $dl['waktu_data'];
+                    $row[] = $dl['nm_jenis_sarana'];
+                    $row[] = $dl['rusak_berat'];
+                    $row[] = $dl['rusak_sedang'];
+                    $row[] = $dl['rusak_ringan'];
+                    $row[] = convert_status_validasi($dl['status_validasi']);
+                    $data[] = $row;
+                }
+                $output = array(
+                    "draw" => $this->input->post('draw'),
+                    "recordsTotal" => $this->mbencana_daerah->count_all_kerusakan(),
+                    "recordsFiltered" => $this->mbencana_daerah->count_filtered_kerusakan($param, $token_bencana_detail),
+                    "data" => $data,
+                );
+            }
+            //output to json format
+            $this->output->set_content_type('application/json')->set_output(json_encode($output));
+        }
+    }
+
+    public function createValidasiKerusakan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            $session  = $this->app_loader->current_account();
+            $csrfHash = $this->security->get_csrf_hash();
+            if (!empty($session)) {
+                $data = $this->mbencana_daerah->updateValidasiKerusakan();
+                if ($data['response'] == 'SUCCESS') {
+                    $result = array('status' => 'RC200', 'message' => 'Proses update data validasi kerusakan sukses', 'csrfHash' => $csrfHash);
+                }
+            } else {
+                $result = array('status' => 'RC404', 'message' => array('isi' => 'Proses update data validasi kerusakan gagal, mohon coba kembali'), 'csrfHash' => $csrfHash);
+            }
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        }
+    }
+
+    //----------- DIBAWAH INI ADALAH FUNGSI UNTUK VALIDASI DATA KERUSAKAN ------------------//
 
 }
 

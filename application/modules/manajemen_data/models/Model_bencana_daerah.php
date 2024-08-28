@@ -56,10 +56,12 @@ class Model_bencana_daerah extends CI_Model
                            b.nama_bencana,
                            b.penyebab_bencana,
                            b.tanggal_bencana,
-                           c.nm_regency');
+                           c.nm_regency,
+                           d.nm_bencana as jenis_bencana');
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
         $this->db->join('wil_regency c', 'c.id_regency = a.id_regency_penerima', 'INNER');
+        $this->db->join('cx_jenis_bencana d', 'd.id_jenis_bencana = b.id_jenis_bencana', 'inner');
         $this->db->where('b.id_status', 1);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
@@ -172,6 +174,98 @@ class Model_bencana_daerah extends CI_Model
     }
 
     //-------------------- DIBAWAH INI FUNGSI UNTUK LISTVIEW VALIDASI KORBAN ------------------//
+
+    //-------------------- DIBAWAH INI FUNGSI UNTUK LISTVIEW VALIDASI KERUSAKAN ------------------//
+    /*Fungsi Get Data List*/
+    public function get_datatables_kerusakan($param, $token_bencana_detail)
+    {
+        $this->_get_datatables_query_kerusakan($param, $token_bencana_detail);
+        if ($_POST['length'] != -1)
+            $this->db->limit($_POST['length'], $_POST['start']);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function count_filtered_kerusakan($param, $token_bencana_detail)
+    {
+        $this->_get_datatables_query_kerusakan($param, $token_bencana_detail);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function count_all_kerusakan()
+    {
+        return $this->db->count_all_results('ms_bencana_detail');
+    }
+
+    private function _get_datatables_query_kerusakan($param, $token_bencana_detail)
+    {
+        $post = array();
+        if (is_array($param)) {
+            foreach ($param as $v) {
+                $post[$v['name']] = $v['value'];
+            }
+        }
+
+        $this->db->select('	a.id as id_bencana_kerusakan, 
+							a.token_bencana_detail, 
+							a.token_kerusakan, 
+							a.id_kerusakan,
+							a.rusak_berat,
+							a.rusak_sedang,
+							a.rusak_ringan,
+                            a.status_validasi,
+                            a.waktu_data,
+                            a.wil_village,
+                            b.token_bencana, 
+                            c.nm_jenis_sarana,
+                            d.name as nm_village');
+        $this->db->from('ms_bencana_kerusakan a');
+        $this->db->join('ms_bencana_detail b', 'b.token_bencana_detail = a.token_bencana_detail', 'INNER');
+        $this->db->join('cx_jenis_sarana c', 'c.id = a.id_kerusakan', 'INNER');
+        $this->db->join('wil_village d', 'd.id_village = a.wil_village', 'INNER');
+        $this->db->where('a.status_validasi', 0);
+        $this->db->where('a.token_bencana_detail', $token_bencana_detail);
+        $i = 0;
+        foreach ($this->search as $item) { // loop column
+            if ($_POST['search']['value']) { // if datatable send POST for search
+                if ($i === 0) { // first loop
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                } else {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+                if (count($this->search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+        $this->db->order_by('a.id DESC');
+    }
+
+    /* Fungsi untuk update data */
+    public function updateValidasiKerusakan()
+    {
+        $create_by   = $this->app_loader->current_account();
+        $create_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+        $create_ip   = $this->input->ip_address();
+        $token_bencana = escape($this->input->post('tokenId', TRUE));
+        foreach ($token_bencana as $idt) {
+
+            $id = array(
+                'status_validasi' => 1,
+                'mod_by'            => $create_by,
+                'mod_date'          => $create_date,
+                'mod_ip'            => $create_ip
+            );
+            /*query update*/
+            $this->db->where('token_kerusakan', $idt);
+            $this->db->update('ms_bencana_kerusakan', $id);
+        }
+        return array('response' => 'SUCCESS', 'nama' => '');
+    }
+
+    //-------------------- DIBAWAH INI FUNGSI UNTUK LISTVIEW VALIDASI KERUSAKAN ------------------//
 
     /*Fungsi get data edit by id*/
     public function getDataDetailBencana($token_bencana_detail)
@@ -397,6 +491,7 @@ class Model_bencana_daerah extends CI_Model
                     'waktu_data' => $waktu_data,
                     'wil_village' => $wil_village,
 
+                    'status_validasi' => 0,
                     'create_by' => $create_by,
                     'create_date' => $create_date,
                     'create_ip' => $create_ip,
@@ -430,13 +525,14 @@ class Model_bencana_daerah extends CI_Model
         foreach ($rusak_ringan as $key => $value) {
             $dataKerusakan[] = array(
                 'token_bencana_detail' => $token_bencana_detail,
-                'token_kerusakan' => $this->uuid->v4(true),
+                'token_kerusakan'      => $this->uuid->v4(true),
 
                 'id_kerusakan' => $key,
                 'rusak_ringan' => $value,
                 'rusak_sedang' => $rusak_sedang[$key],
                 'rusak_berat' => $rusak_berat[$key],
 
+                'status_validasi' => 0,
                 'create_by' => $create_by,
                 'create_date' => $create_date,
                 'create_ip' => $create_ip,
@@ -462,6 +558,7 @@ class Model_bencana_daerah extends CI_Model
                 'id_kerusakan' => $key,
                 'jml_terendam' => $value,
 
+                'status_validasi' => 0,
                 'create_by' => $create_by,
                 'create_date' => $create_date,
                 'create_ip' => $create_ip,
@@ -482,6 +579,7 @@ class Model_bencana_daerah extends CI_Model
                 'id_kerusakan' => $key,
                 'jumlah_sarana' => $value,
 
+                'status_validasi' => 0,
                 'create_by' => $create_by,
                 'create_date' => $create_date,
                 'create_ip' => $create_ip,
@@ -522,6 +620,7 @@ class Model_bencana_daerah extends CI_Model
                 'token_ternak'         => $this->uuid->v4(true),
                 'id_jenis_ternak'      => $key,
                 'jumlah_ternak'        => $value,
+                'status_validasi'      => 0,
                 'create_by'            => $create_by,
                 'create_date'          => $create_date,
                 'create_ip'            => $create_ip,
@@ -559,9 +658,10 @@ class Model_bencana_daerah extends CI_Model
         foreach ($jumlah_bantuan as $key => $value) {
             $dataTersalurkan[] = array(
                 'token_bencana_detail' => $token_bencana_detail,
-                'token_disalurkan'      => $this->uuid->v4(true),
+                'token_disalurkan'     => $this->uuid->v4(true),
                 'id_jenis_bantuan'     => $key,
                 'jumlah_bantuan'       => $value,
+                'status_validasi'      => 0,
                 'create_by'            => $create_by,
                 'create_date'          => $create_date,
                 'create_ip'            => $create_ip,
@@ -583,6 +683,7 @@ class Model_bencana_daerah extends CI_Model
                 'token_sumber'          => $this->uuid->v4(true),
                 'id_jenis_bantuan'      => $key,
                 'jumlah_sumber'         => $value,
+                'status_validasi'       => 0,
                 'create_by'             => $create_by,
                 'create_date'           => $create_date,
                 'create_ip'             => $create_ip,
@@ -617,6 +718,7 @@ class Model_bencana_daerah extends CI_Model
                 'token_diterima'       => $this->uuid->v4(true),
                 'id_jenis_bantuan'     => $key,
                 'jumlah_bantuan'       => $value,
+                'status_validasi'      => 0,
                 'create_by'            => $create_by,
                 'create_date'          => $create_date,
                 'create_ip'            => $create_ip,
@@ -638,6 +740,7 @@ class Model_bencana_daerah extends CI_Model
                 'token_sumber'          => $this->uuid->v4(true),
                 'id_jenis_bantuan'      => $key,
                 'jumlah_sumber'         => $value,
+                'status_validasi'       => 0,
                 'create_by'             => $create_by,
                 'create_date'           => $create_date,
                 'create_ip'             => $create_ip,
@@ -677,13 +780,14 @@ class Model_bencana_daerah extends CI_Model
 
             $insertRow[] = array(
                 'token_bencana_detail' => $token_bencana_detail,
-                'token_relawan' => $this->uuid->v4(true),
+                'token_relawan'        => $this->uuid->v4(true),
 
-                'nama_organisasi' => $value,
-                'jml_relawan' => $jml_relawan[$key],
-                'waktu_data' => $waktu_data,
-                'wil_village' => $wil_village,
+                'nama_organisasi'   => $value,
+                'jml_relawan'       => $jml_relawan[$key],
+                'waktu_data'        => $waktu_data,
+                'wil_village'       => $wil_village,
 
+                'status_validasi' => 0,
                 'create_by' => $create_by,
                 'create_date' => $create_date,
                 'create_ip' => $create_ip
