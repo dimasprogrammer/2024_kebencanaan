@@ -19,9 +19,9 @@ class Dashboard extends SLP_Controller
         $this->load->view('v1/documentation');
     }
 
-    public function get_data()
+    public function get_data($id = "")
     {
-        $data = $this->m_dashboard->get_data();
+        $data = $this->m_dashboard->get_data($id);
         $result['success'] = true;
         $result['kode'] = 200;
         $result['message'] = 'Data Utama Dashboard Bencana';
@@ -93,6 +93,48 @@ class Dashboard extends SLP_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
 
+    public function get_list_bencana($type = "", $params = "")
+    {
+        $message = "data tidak ditemukan";
+        $kode = 404;
+        $data = [];
+        if($type == "all"){ 
+            $kode = 200;
+            $message = "List data semua bencana";
+            $data = $this->m_dashboard->getDataBencanaAll();
+        }
+        if($type == "jenis"){
+            $kode = 200;
+            $raw = $this->m_dashboard->getDataBencanaJenis($params);
+            $message = "list data bencana " . strtoupper($raw['jenis_bencana']) . " yang pernah terjadi";
+            $data = $raw['data'];
+            $result['jenis_bencana'] = [
+                "id" => $raw['id'],
+                "jenisBencana" => $raw['jenis_bencana']
+            ];
+        }
+        if($type == "tanggap_darurat")
+        {
+            $kode = 200;
+            $message = "List data bencana dalam masa tanggap darurat";
+            $data = $this->m_dashboard->getDataBencanaTanggapDarurat();
+        }
+        $result['success'] = TRUE;
+        $result['kode'] = $kode;
+        $result['message'] = $message;
+        $result['data'] = $data;
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+    }
+
+    public function get_jenis_bencana()
+    {
+        $data = $this->m_dashboard->_get_dataJenisBencana();
+        $result['success'] = TRUE;
+        $result['kode'] = 200;
+        $result['message'] = "List data jenis bencana";
+        $result['data'] = $data;
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+    }
 
     /**
      * ======================================================================================================================================================================================================
