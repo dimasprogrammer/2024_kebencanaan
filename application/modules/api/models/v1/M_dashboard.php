@@ -728,4 +728,105 @@ class M_dashboard extends CI_Model
         }
         return $nowData;
     }
+
+    public function getDataBencanaAll()
+    {
+        $this->db->select('a.*, b.nm_bencana');
+        $this->db->from('ms_bencana a');
+        $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
+        $this->db->where('a.id_status', 1);
+        $this->db->order_by('a.tanggal_bencana', 'desc');
+        $raw = $this->db->get()->result_array();
+        $data = $this->_formatter_listBencana($raw);
+        return $data;
+    }
+
+    public function getDataBencanaJenis($id)
+    {
+        $result = [];
+        $data = [];
+        $this->db->where('a.id_jenis_bencana', $id);
+        $data = $this->getDataBencanaAll();
+        $jenis_bencana = $this->_get_dataJenisBencana($id);
+        $result['id'] = $jenis_bencana['id'];
+        $result['jenis_bencana'] = $jenis_bencana['jenis_bencana'];
+        $result['data'] = $data;
+        return $result;
+    }
+
+    public function getDataBencanaTanggapDarurat()
+    {
+        $this->db->where('a.kategori_tanggap', 1);
+        $data = $this->getDataBencanaAll();
+        return $data;
+    }
+
+    public function _get_dataJenisBencana($id = "")
+    {
+        $result = [];
+        $this->db->from("cx_jenis_bencana");
+        $this->db->select("id_jenis_bencana as id,nm_bencana as jenis_bencana");
+        $this->db->where("id_status", 1);
+        if($id != "")
+        {
+            $this->db->where("id_jenis_bencana", $id);
+            $result = $this->db->get()->row_array();
+        }
+        else{
+            $result = $this->db->get()->result_array();
+        }
+
+        return $result;
+    }
+
+    private function _formatter_listBencana($data)
+    {
+        $result = [];
+        if(count($data) > 0)
+        {
+            foreach($data as $item){
+                $tanggalKejadian = $item['tanggal_bencana'] ? tgl_surat($item['tanggal_bencana']) : null;
+                $tanggalKejadian = $item['jam_bencana'] ? $tanggalKejadian . ' - ' . $item['jam_bencana'] . ' WIB' : $tanggalKejadian;
+                $last_update_data = $this->_formatter_updateData($item['token_bencana']);
+                $infoGrafisUrl = $this->_formatter_infografis($item);
+                $kabkota_terdampak = $this->_get_data_kabkota_terdampak($item['token_bencana']);
+                $result[] = [
+                    "idBencana" => $item['token_bencana'] ?  $item['token_bencana'] : "",
+                    "jenisKejadian" => $item['nm_bencana'] ? $item['nm_bencana'] : "",
+                    "namaBencana" => $item['nama_bencana'] ? $item['nama_bencana'] : "",
+                    "tanggalKejadian" => $tanggalKejadian,
+                    "updateData" => $last_update_data,
+                    "infoGrafisUrl" => $infoGrafisUrl,
+                    "lokasiKejadian" => $kabkota_terdampak,
+                    "taksiranKerugian" => $item['taksiran_kerugian'] ? "Rp. " . number_format($item['taksiran_kerugian'], 0, ',', '.') : null,
+                    "totalKorbanTerisolir" => "0"
+
+                ];
+            }
+        }
+        return $result;
+    }
+
+    private function _formatter_updateData($token)
+    {
+        $last_update_data = $this->_getLastUpdateData($token);
+        $jam_update = explode(' ', $last_update_data['waktu_data']);
+        $jam_update = $jam_update[1] ? $jam_update[1] : null;
+        $jam_update = substr($jam_update, 0, 5) . ' WIB';
+        $last_update_data = $last_update_data['waktu_data'] ? tgl_surat($last_update_data['waktu_data']) . ' - ' . $jam_update    : null;
+        return $last_update_data;
+    }
+
+    private function _formatter_infografis($data)
+    {
+        $raw_created_date = explode(' ', $data['create_date']);
+        $splitted_created_date = explode('-', $raw_created_date[0]);
+        $year = $splitted_created_date[0];
+        $month = $splitted_created_date[1];
+        $infoGrafisUrl = $data['nama_file_infografis'] ? 
+                            base_url('dokumen/infografis/' . $year . '/' . $month . '/' . $data['nama_file_infografis']) 
+                            : null;
+        return $infoGrafisUrl;
+    }
+
 }
