@@ -17,10 +17,16 @@
         $('#modalEntryFormKebutuhan').modal('toggle');
     });
 
-    $(document).on('click', '.btnCloseValidasi', function(e) {
+    $(document).on('click', '.btnCloseValidasiKorban', function(e) {
         formReset();
-        $('#modalEntryFormValidasi').modal('toggle');
+        $('#modalEntryFormValidasiKorban').modal('toggle');
     });
+
+    $(document).on('click', '.btnCloseValidasiKerusakan', function(e) {
+        formReset();
+        $('#modalEntryFormValidasiKerusakan').modal('toggle');
+    });
+
 
     function getDataListbencana() {
         $('#tblList').dataTable({
@@ -182,20 +188,20 @@
     });
     // ------------------------------------- JAVASCRIPT PROSES KEBUTUHAN BENCANA DAERAH -------------------------//
 
-    // ------------------------------------- JAVASCRIPT PROSES VALIDASI BENCANA DAERAH -------------------------//
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI KORBAN BENCANA DAERAH -------------------------//
 
-    $(document).on('click', '.btnValidasi', function(e) {
+    $(document).on('click', '.btnValidasiKorban', function(e) {
         formReset();
-        $('#formEntryValidasi').attr('action', site + '/createValidasi');
+        $('#formEntryValidasiKorban').attr('action', site + '/createValidasi');
         var token_bencana_detail = $(this).data('id');
-        $('#modalEntryFormValidasi').modal({
+        $('#modalEntryFormValidasiKorban').modal({
             backdrop: 'static'
         });
-        getDataBencanaValidasi(token_bencana_detail);
+        getDataBencanaValidasiKorban(token_bencana_detail);
     });
 
-    function getDataBencanaValidasi(token_bencana_detail) {
-        run_waitMe($('#frmEntryValidasi'));
+    function getDataBencanaValidasiKorban(token_bencana_detail) {
+        run_waitMe($('#frmEntryValidasiKorban'));
         $.ajax({
             type: 'POST',
             url: site + '/reviewValidasi',
@@ -209,7 +215,7 @@
                 if (data.status == 'RC200') {
                     $('input[name="tokenValidasiId"]').val(token_bencana_detail);
                 }
-                $('#frmEntryValidasi').waitMe('hide');
+                $('#frmEntryValidasiKorban').waitMe('hide');
                 getDataListValidasiKorban(token_bencana_detail);
                 idx = token_bencana_detail;
             }
@@ -292,7 +298,7 @@
         run_waitMe($('#formParent'));
         swalAlert.fire({
             title: 'Konfirmasi',
-            text: 'Apakah anda ingin menghapus data ini ?',
+            text: 'Apakah anda ingin mengupdate data ini ?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
@@ -309,26 +315,26 @@
                     $('input[name="' + csrfName + '"]').val(data.csrfHash);
                     if (data.status == 'RC404') {
                         swalAlert.fire({
-                            title: 'Gagal Hapus',
+                            title: 'Gagal Update',
                             text: data.message,
                             icon: 'error',
                             confirmButtonText: '<i class="fas fa-check"></i> Oke',
                         }).then((result) => {
                             if (result.value) {
-                                $('#errSuccess').html(msg.error(data.message)).delay(1600).fadeOut('slow');
+                                $('#errSuccessValidasiKorban').html(msg.error(data.message)).delay(1600).fadeOut('slow');
                             }
                         })
                     } else {
                         swalAlert.fire({
-                            title: 'Berhasil Hapus',
+                            title: 'Berhasil Update',
                             text: data.message,
                             icon: 'success',
                             confirmButtonText: '<i class="fas fa-check"></i> Oke',
                         }).then((result) => {
                             if (result.value) {
-                                $('#errSuccess').html(msg.success(data.message)).delay(1600).fadeOut('slow');
+                                $('#errSuccessValidasiKorban').html(msg.success(data.message)).delay(1600).fadeOut('slow');
                                 getDataListbencana();
-                                $('#btnValidasi').hide();
+                                $('#btnValidasiKorban').hide();
                                 getDataListValidasiKorban(idx);
                                 $("#btnValidasiKorban").html('<i class="fa fa-check"></i> Validasi');
                                 $("#btnValidasiKorban").removeClass('disabled');
@@ -337,7 +343,7 @@
                     }
                     $('#formParent').waitMe('hide');
                 }).fail(function() {
-                    $('#errSuccess').html(msg.error('Harap periksa kembali data yang akan dihapus')).delay(1600).fadeOut('slow');
+                    $('#errSuccessValidasiKorban').html(msg.error('Harap periksa kembali data yang akan diupdate')).delay(1600).fadeOut('slow');
                     $('#formParent').waitMe('hide');
                 }).always(function() {
                     $("#btnValidasiKorban").html('<i class="fa fa-check"></i> Validasi');
@@ -352,15 +358,490 @@
                 }).then((result) => {
                     if (result.value) {
                         $('#formParent').waitMe('hide');
-                        $('#btnValidasi').html('<i class="fas fa-trash-alt"></i> Delete User');
-                        $('#btnValidasi').removeClass('disabled');
+                        $('#btnValidasiKorban').html('<i class="fas fa-trash-alt"></i> Update Data');
+                        $('#btnValidasiKorban').removeClass('disabled');
                     }
                 })
             }
         })
     });
 
-    // ------------------------------------- JAVASCRIPT PROSES VALIDASI BENCANA DAERAH -------------------------//
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI KORBAN BENCANA DAERAH -------------------------//
+
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI KERUSAKAN BENCANA DAERAH -------------------------//
+    $(document).on('click', '.btnValidasiKerusakan', function(e) {
+        formReset();
+        // $('#formEntryValidasiKerusakan').attr('action', site + '/createValidasi');
+        var token_bencana_detail = $(this).data('id');
+        $('#modalEntryFormValidasiKerusakan').modal({
+            backdrop: 'static'
+        });
+        getDataBencanaValidasiKerusakan(token_bencana_detail);
+    });
+
+    function getDataBencanaValidasiKerusakan(token_bencana_detail) {
+        run_waitMe($('#frmEntryValidasiKerusakan'));
+        $.ajax({
+            type: 'POST',
+            url: site + '/reviewValidasi',
+            data: {
+                'token_bencana_detail': token_bencana_detail,
+                '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                if (data.status == 'RC200') {
+                    $('input[name="tokenValidasiId"]').val(token_bencana_detail);
+                }
+                $('#frmEntryValidasiKerusakan').waitMe('hide');
+                getDataListValidasiKerusakan(token_bencana_detail);
+                idx = token_bencana_detail;
+            }
+        });
+    }
+
+    function getDataListValidasiKerusakan(token_bencana_detail) {
+        $('#tblListKerusakan').dataTable({
+            "pagingType": "full_numbers",
+            "destroy": true,
+            "processing": true,
+            "language": {
+                "loadingRecords": '&nbsp;',
+                "processing": 'Loading data...'
+            },
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": site + '/listviewKerusakan',
+                "type": "POST",
+                "data": {
+                    "token_bencana_detail": token_bencana_detail,
+                    "param": $('#formFilter').serializeArray(),
+                    "<?php echo $this->security->get_csrf_token_name(); ?>": $('input[name="' + csrfName + '"]').val()
+                },
+            },
+            "columnDefs": [{
+                    "targets": [0], //first column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+                {
+                    "targets": [-1, -2, -3], //last column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+            ],
+        });
+        $('#tblListKerusakan_filter input').addClass('form-control').attr('placeholder', 'Search Data');
+        $('#tblListKerusakan_length select').addClass('form-control');
+
+        $('#tblListTerendam').dataTable({
+            "pagingType": "full_numbers",
+            "destroy": true,
+            "processing": true,
+            "language": {
+                "loadingRecords": '&nbsp;',
+                "processing": 'Loading data...'
+            },
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": site + '/listviewTerendam',
+                "type": "POST",
+                "data": {
+                    "token_bencana_detail": token_bencana_detail,
+                    "param": $('#formFilter').serializeArray(),
+                    "<?php echo $this->security->get_csrf_token_name(); ?>": $('input[name="' + csrfName + '"]').val()
+                },
+            },
+            "columnDefs": [{
+                    "targets": [0], //first column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+                {
+                    "targets": [-1, -2], //last column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+            ],
+        });
+        $('#tblListTerendam_filter input').addClass('form-control').attr('placeholder', 'Search Data');
+        $('#tblListTerendam_length select').addClass('form-control');
+
+        $('#tblListSarana').dataTable({
+            "pagingType": "full_numbers",
+            "destroy": true,
+            "processing": true,
+            "language": {
+                "loadingRecords": '&nbsp;',
+                "processing": 'Loading data...'
+            },
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": site + '/listviewSarana',
+                "type": "POST",
+                "data": {
+                    "token_bencana_detail": token_bencana_detail,
+                    "param": $('#formFilter').serializeArray(),
+                    "<?php echo $this->security->get_csrf_token_name(); ?>": $('input[name="' + csrfName + '"]').val()
+                },
+            },
+            "columnDefs": [{
+                    "targets": [0], //first column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+                {
+                    "targets": [-1, -2], //last column
+                    "orderable": false, //set not orderable
+                    "className": 'text-center'
+                },
+            ],
+        });
+        $('#tblListSarana_filter input').addClass('form-control').attr('placeholder', 'Search Data');
+        $('#tblListSarana_length select').addClass('form-control');
+
+    }
+
+    //------------------ CHECK VALIDASI KERUSAKAN SARANA -------------//
+    // Handle click on "check all" control
+    $(document).on('click', '#checkAllKerusakan', function() {
+        $('#tblListKerusakan > tbody input[type=checkbox]').prop('checked', this.checked).trigger('change');
+    });
+
+    // Handle click on "checked" control
+    $(document).on('change', '#tblListKerusakan > tbody input[type=checkbox]', function(e) {
+        const rowCount = $('#tblListKerusakan > tbody input[type=checkbox]').length;
+        const n = $('#tblListKerusakan > tbody input[type=checkbox]').filter(':checked').length;
+        if (n > 0)
+            $('#btnValidasiKerusakan').show();
+        else
+            $('#btnValidasiKerusakan').hide();
+
+        if (rowCount == n)
+            $('#checkAllKerusakan').prop('checked', 'checked');
+        else
+            $('#checkAllKerusakan').prop('checked', '');
+    });
+
+    $(document).on('click', '#tblListKerusakan > tbody > tr', function() {
+        let n = $(this).find('input[type=checkbox]');
+        n.prop('checked', (n.is(':checked')) ? false : true).trigger('change');
+    });
+
+
+
+    $(document).on('click', '#btnValidasiKerusakan', function(e) {
+        e.preventDefault();
+        let token = [];
+        $.each($('#tblListKerusakan > tbody input[type=checkbox]:checked'), function() {
+            token.push($(this).val());
+        });
+        const postData = {
+            'tokenId': token,
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i> DIPROSES...');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin mengupdate data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/createValidasiKerusakan',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Update',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiKerusakan').html(msg.error(data.message)).delay(1600).fadeOut('slow');
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Update',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiKerusakan').html(msg.success(data.message)).delay(1600).fadeOut('slow');
+                                getDataListbencana();
+                                $('#btnValidasiKerusakan').hide();
+                                getDataListValidasiKerusakan(idx);
+                                $("#btnValidasiKerusakan").html('<i class="fa fa-check"></i> Validasi');
+                                $("#btnValidasiKerusakan").removeClass('disabled');
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccessValidasiKerusakan').html(msg.error('Harap periksa kembali data yang akan diupdate')).delay(1600).fadeOut('slow');
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $("#btnValidasiKerusakan").html('<i class="fa fa-check"></i> Validasi');
+                    $("#btnValidasiKerusakan").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('#btnValidasiKerusakan').html('<i class="fas fa-trash-alt"></i> Update Data');
+                        $('#btnValidasiKerusakan').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+    //------------------ CHECK VALIDASI KERUSAKAN SARANA -------------//
+
+    //------------------ CHECK VALIDASI RUMAH TERENDAM -------------//
+    // Handle click on "check all" control
+    $(document).on('click', '#checkAllTerendam', function() {
+        $('#tblListTerendam > tbody input[type=checkbox]').prop('checked', this.checked).trigger('change');
+    });
+
+    // Handle click on "checked" control
+    $(document).on('change', '#tblListTerendam > tbody input[type=checkbox]', function(e) {
+        const rowCount = $('#tblListTerendam > tbody input[type=checkbox]').length;
+        const n = $('#tblListTerendam > tbody input[type=checkbox]').filter(':checked').length;
+        if (n > 0)
+            $('#btnValidasiTerendam').show();
+        else
+            $('#btnValidasiTerendam').hide();
+
+        if (rowCount == n)
+            $('#checkAllTerendam').prop('checked', 'checked');
+        else
+            $('#checkAllTerendam').prop('checked', '');
+    });
+
+    $(document).on('click', '#tblListTerendam > tbody > tr', function() {
+        let n = $(this).find('input[type=checkbox]');
+        n.prop('checked', (n.is(':checked')) ? false : true).trigger('change');
+    });
+
+    $(document).on('click', '#btnValidasiTerendam', function(e) {
+        e.preventDefault();
+        let token = [];
+        $.each($('#tblListTerendam > tbody input[type=checkbox]:checked'), function() {
+            token.push($(this).val());
+        });
+        const postData = {
+            'tokenId': token,
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i> DIPROSES...');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin mengupdate data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/createValidasiTerendam',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Update',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiTerendam').html(msg.error(data.message)).delay(1600).fadeOut('slow');
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Update',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiTerendam').html(msg.success(data.message)).delay(1600).fadeOut('slow');
+                                getDataListbencana();
+                                $('#btnValidasiTerendam').hide();
+                                getDataListValidasiKerusakan(idx);
+                                $("#btnValidasiTerendam").html('<i class="fa fa-check"></i> Validasi');
+                                $("#btnValidasiTerendam").removeClass('disabled');
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccessValidasiTerendam').html(msg.error('Harap periksa kembali data yang akan diupdate')).delay(1600).fadeOut('slow');
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $("#btnValidasiTerendam").html('<i class="fa fa-check"></i> Validasi');
+                    $("#btnValidasiTerendam").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('#btnValidasiTerendam').html('<i class="fas fa-trash-alt"></i> Update Data');
+                        $('#btnValidasiTerendam').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+    //------------------ CHECK VALIDASI RUMAH TERENDAM -------------//
+
+    //------------------ CHECK VALIDASI SARANA LAINNYA -------------//
+    // Handle click on "check all" control
+    $(document).on('click', '#checkAllSarana', function() {
+        $('#tblListSarana > tbody input[type=checkbox]').prop('checked', this.checked).trigger('change');
+    });
+
+    // Handle click on "checked" control
+    $(document).on('change', '#tblListSarana > tbody input[type=checkbox]', function(e) {
+        const rowCount = $('#tblListSarana > tbody input[type=checkbox]').length;
+        const n = $('#tblListSarana > tbody input[type=checkbox]').filter(':checked').length;
+        if (n > 0)
+            $('#btnValidasiSarana').show();
+        else
+            $('#btnValidasiSarana').hide();
+
+        if (rowCount == n)
+            $('#checkAllSarana').prop('checked', 'checked');
+        else
+            $('#checkAllSarana').prop('checked', '');
+    });
+
+    $(document).on('click', '#tblListSarana > tbody > tr', function() {
+        let n = $(this).find('input[type=checkbox]');
+        n.prop('checked', (n.is(':checked')) ? false : true).trigger('change');
+    });
+
+    $(document).on('click', '#btnValidasiSarana', function(e) {
+        e.preventDefault();
+        let token = [];
+        $.each($('#tblListSarana > tbody input[type=checkbox]:checked'), function() {
+            token.push($(this).val());
+        });
+        const postData = {
+            'tokenId': token,
+            '<?php echo $this->security->get_csrf_token_name(); ?>': $('input[name="' + csrfName + '"]').val()
+        };
+        $(this).html('<i class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></i> DIPROSES...');
+        $(this).addClass('disabled');
+        run_waitMe($('#formParent'));
+        swalAlert.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah anda ingin mengupdate data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i> Ya, lanjutkan',
+            cancelButtonText: '<i class="fas fa-times"></i> Tidak, batalkan',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: site + '/createValidasiSarana',
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                }).done(function(data) {
+                    $('input[name="' + csrfName + '"]').val(data.csrfHash);
+                    if (data.status == 'RC404') {
+                        swalAlert.fire({
+                            title: 'Gagal Update',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiSarana').html(msg.error(data.message)).delay(1600).fadeOut('slow');
+                            }
+                        })
+                    } else {
+                        swalAlert.fire({
+                            title: 'Berhasil Update',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#errSuccessValidasiSarana').html(msg.success(data.message)).delay(1600).fadeOut('slow');
+                                getDataListbencana();
+                                $('#btnValidasiSarana').hide();
+                                getDataListValidasiKerusakan(idx);
+                                $("#btnValidasiSarana").html('<i class="fa fa-check"></i> Validasi');
+                                $("#btnValidasiSarana").removeClass('disabled');
+                            }
+                        })
+                    }
+                    $('#formParent').waitMe('hide');
+                }).fail(function() {
+                    $('#errSuccessValidasiSarana').html(msg.error('Harap periksa kembali data yang akan diupdate')).delay(1600).fadeOut('slow');
+                    $('#formParent').waitMe('hide');
+                }).always(function() {
+                    $("#btnValidasiSarana").html('<i class="fa fa-check"></i> Validasi');
+                    $("#btnValidasiSarana").removeClass('disabled');
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalAlert.fire({
+                    title: 'Batal Hapus',
+                    text: 'Proses hapus data telah dibatalkan',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        $('#formParent').waitMe('hide');
+                        $('#btnValidasiSarana').html('<i class="fas fa-trash-alt"></i> Update Data');
+                        $('#btnValidasiSarana').removeClass('disabled');
+                    }
+                })
+            }
+        })
+    });
+
+    //------------------ CHECK VALIDASI SARANA LAINNYA -------------//
+
+
+    // ------------------------------------- JAVASCRIPT PROSES VALIDASI KERUSAKAN BENCANA DAERAH -------------------------//
+
     // trigger ketika focus ke form input value akan di kosongkan
     function resetValueOnClick(element) {
         lastValue = element.value;

@@ -462,6 +462,9 @@ $config['csrf_exclude_uris'] = [
     'manajemen_data/bencana/listview',
     'manajemen_data/bencana_daerah/listview',
     'manajemen_data/bencana_daerah/listviewKorban',
+    'manajemen_data/bencana_daerah/listviewKerusakan',
+    'manajemen_data/bencana_daerah/listviewTerendam',
+    'manajemen_data/bencana_daerah/listviewSarana',
 ];
 /*
 |--------------------------------------------------------------------------
