@@ -151,6 +151,7 @@ class M_dashboard extends CI_Model
         $this->db->from('ms_bencana a');
         $this->db->join('cx_jenis_bencana b', 'b.id_jenis_bencana = a.id_jenis_bencana');
         $this->db->where('a.kategori_tanggap', 1);
+        $this->db->where('a.id_status', 1);
         // $this->db->where('a.token_bencana !=', $token_bencana);
         $this->db->order_by('a.tanggal_bencana', 'desc');
         $raw = $this->db->get()->result_array();
