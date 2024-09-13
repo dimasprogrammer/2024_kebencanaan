@@ -896,7 +896,6 @@ class Model_bencana_daerah extends CI_Model
         }
         $this->db->trans_start();
         $this->db->insert_batch('ms_bencana_diterima', $dataDiterima);
-
         $jumlah_sumber = $this->input->post('jml_sumber_diterima');
         $dataSumber = [];
         foreach ($jumlah_sumber as $key => $value) {

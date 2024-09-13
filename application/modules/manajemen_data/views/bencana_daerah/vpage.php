@@ -31,7 +31,10 @@
                                     <th width="10%" class="font-weight-bold">Jenis Bencana</th>
                                     <th width="8%" class="font-weight-bold">Tanggal</th>
                                     <th width="18%" class="font-weight-bold">Kabupaten/Kota</th>
-                                    <th width="35%" class="font-weight-bold">Validasi</th>
+                                    <?php $id_group         = $this->app_loader->current_group();
+                                    if ($id_group == 1 or $id_group == 2) { ?>
+                                        <th width="35%" class="font-weight-bold">Validasi</th>
+                                    <?php } ?>
                                     <th width="15%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>

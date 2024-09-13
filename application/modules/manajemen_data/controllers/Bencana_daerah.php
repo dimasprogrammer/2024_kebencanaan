@@ -45,19 +45,21 @@ class Bencana_daerah extends SLP_Controller
                 foreach ($dataList as $key => $dl) {
                     $no++;
                     $row = array();
-
+                    $id_group         = $this->app_loader->current_group();
                     $row[] = $no;
                     $row[] = $dl['jenis_bencana'];
                     $row[] = $dl['tanggal_bencana'];
                     $row[] = $dl['nm_regency'];
-                    $row[] = '
-                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKorban" title="Validasi Data Korban">
-                       <i class="fas fa-hand-holding-medical"></i>
-                                      Validasi  Korban
-                        </a>
-                        <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKerusakan" title="Validasi Data Kerusakan">
-                        <i class="fas fa-biohazard"></i>Validasi Kerusakan
-                        </a>';
+                    if ($id_group == 1 or $id_group == 2) {
+                        $row[] = '
+                            <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKorban" title="Validasi Data Korban">
+                           <i class="fas fa-hand-holding-medical"></i>
+                                          Validasi  Korban
+                            </a>
+                            <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnValidasiKerusakan" title="Validasi Data Kerusakan">
+                            <i class="fas fa-biohazard"></i>Validasi Kerusakan
+                            </a>';
+                    }
                     $row[] = '
                         <a type="button" data-id="' . $dl['token_bencana_detail'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnKebutuhan" title="Lihat Data">
                         <i class="fas fa-box-open"></i> Kebutuhan

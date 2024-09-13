@@ -28,7 +28,7 @@ class Home extends SLP_Controller
         $this->session_info['page_js']        = $this->load->view($this->_vwName . '/vjs', array('siteUri' => $this->_uriName), true);
         $this->session_info['longsor']        = $this->mHome->getBencanaLongsor();
         $this->session_info['banjir']         = $this->mHome->getBencanaBanjir();
-        $this->session_info['kebakaran']      = $this->mHome->getBencanaKebakaran();
+        $this->session_info['terban']      = $this->mHome->getBencanaTerban();
         $this->session_info['cuaca']          = $this->mHome->getBencanaCuaca();
         $this->session_info['erupsi']         = $this->mHome->getBencanaErupsi();
         $this->session_info['gempa_bumi']     = $this->mHome->getBencanaGempaBumi();

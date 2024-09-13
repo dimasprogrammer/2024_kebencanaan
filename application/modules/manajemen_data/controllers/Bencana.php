@@ -21,6 +21,9 @@ class bencana extends SLP_Controller
     private function validasiDataValue()
     {
         $this->form_validation->set_rules('nama_bencana', 'Nama Bencana', 'required|trim');
+        $this->form_validation->set_rules('tanggal_bencana', 'Tanggal Bencana', 'required|trim');
+        $this->form_validation->set_rules('kategori_tanggap', 'Kategori Tanggap', 'required|trim');
+        $this->form_validation->set_rules('id_jenis_bencana', 'Jenis Bencana', 'required|trim');
         validation_message_setting();
         if ($this->form_validation->run() == FALSE)
             return false;
@@ -65,22 +68,33 @@ class bencana extends SLP_Controller
                         $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnEdit" title="Draft">
                         <i class="fas fa-business-time"></i> Draft
                         </a>
-                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnFoto" title="Add Foto">
-                        <i class="fas fa-camera-retro"></i> Add Foto
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnFoto" title="Foto">
+                        <i class="fas fa-camera-retro"></i> Foto
                         </a>
-                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnVideo" title="Add Foto">
-                        <i class="fas fa-file-video"></i> Add Video
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnVideo" title="Video">
+                        <i class="fas fa-file-video"></i> Video
                         </a>
                         <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-success btn-sm px-2 waves-effect waves-light btnKirim" title="Kirim">
                         <i class="fas fa-paper-plane"></i> Kirim
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-danger btn-sm px-2 waves-effect waves-light btnDelete" title="Delete Data">
+                        <i class="fas fa-trash-alt"></i> Delete
                         </a>';
                     } else {
-                        $status = '<a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnEdit" title="Draft">
+                        $status = '
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnFoto" title="Foto">
+                        <i class="fas fa-camera-retro"></i> Foto
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-grey btn-sm px-2 waves-effect waves-light btnVideo" title="Video">
+                        <i class="fas fa-file-video"></i> Video
+                        </a>
+                        <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-warning btn-sm px-2 waves-effect waves-light btnEdit" title="Draft">
                         <i class="fas fa-business-time"></i> Ubah Data
                         </a>
                         <a type="button" data-id="' . $dl['token_bencana'] . '" class="btn btn-primary btn-sm px-2 waves-effect waves-light btnKirim" title="Lihat Data">
                         <i class="fas fa-box-open"></i> Lihat Data
-                        </a>';
+                        </a>
+                        ';
                     }
 
                     $row[] = $no;
@@ -148,10 +162,10 @@ class bencana extends SLP_Controller
                 $row['token']              = !empty($data) ? $data['token_bencana'] : '';
                 $row['tanggal_bencana']    = !empty($data) ? $data['tanggal_bencana'] : '';
                 $row['jam_bencana']        = !empty($data) ? $data['jam_bencana'] : '';
-                $row['kategori_tanggap']   = !empty($data) ? $data['kategori_tanggap'] : '';
+                $row['kategori_tanggap']   = !empty($data) ? $data['kategori_tanggap'] : 0;
                 $row['video_bencana']      = !empty($data) ? $data['video_bencana'] : '';
-                $row['taksiran_kerugian']  = !empty($data) ? $data['taksiran_kerugian'] : '';
-                $row['id_jenis_bencana']   = !empty($data) ? $data['id_jenis_bencana'] : '';
+                $row['taksiran_kerugian']  = !empty($data) ? $data['taksiran_kerugian'] : 0;
+                $row['id_jenis_bencana']   = !empty($data) ? $data['id_jenis_bencana'] : 0;
                 $row['nama_bencana']       = !empty($data) ? $data['nama_bencana'] : '';
                 $row['keterangan_bencana'] = !empty($data) ? $data['keterangan_bencana'] : '';
                 $row['penyebab_bencana']   = !empty($data) ? $data['penyebab_bencana'] : '';
