@@ -206,7 +206,7 @@ class Model_home extends CI_Model
                             ');
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
-        $this->db->where('b.id_jenis_bencana', 3);
+        $this->db->where('b.id_jenis_bencana', 4);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }
@@ -214,15 +214,15 @@ class Model_home extends CI_Model
         return $query->row_array();
     }
 
-    public function getBencanaKebakaran()
+    public function getBencanaTerban()
     {
         $id_regency = $this->app_loader->current_regencyID();
         $this->db->select('
-                            count(b.id_jenis_bencana) as total_kebakaran
+                            count(b.id_jenis_bencana) as total_terban
                             ');
         $this->db->from('ms_bencana_detail a');
         $this->db->join('ms_bencana b', 'b.token_bencana = a.token_bencana', 'INNER');
-        $this->db->where('b.id_jenis_bencana', 5);
+        $this->db->where('b.id_jenis_bencana', 2);
         if ($this->app_loader->is_operator()) {
             $this->db->where('a.id_regency_penerima', $id_regency);
         }

@@ -89,21 +89,21 @@
         <div class="card">
 
           <h4 class="ml-4 mt-2 mb-2 font-weight-bold black-text">
-            Kebakaran
+            Terban
           </h4>
 
           <!-- Card Data -->
           <div class="row mt-1">
 
             <div class="col-md-5 col-5 text-left pl-4">
-              <img class="btn-floating" style="width: 70%; height: auto;" src="<?php echo base_url('assets/img/kebakaran.png'); ?>" alt="">
+              <img class="btn-floating" style="width: 70%; height: auto;" src="<?php echo base_url('assets/img/longsor.png'); ?>" alt="">
             </div>
 
             <div class="col-md-7 col-7 text-right pr-5">
 
               <h1 class="ml-4 mt-2 mb-2 font-weight-bold red-text">
-                <?php $kebakaran = $kebakaran['total_kebakaran'];
-                echo isset($kebakaran) ? $kebakaran : 0; ?>
+                <?php $terban = $terban['total_terban'];
+                echo isset($terban) ? $terban : 0; ?>
               </h1>
 
               <p class="font-small grey-text">Total Kejadian</p>

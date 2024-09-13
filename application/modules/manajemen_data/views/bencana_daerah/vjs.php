@@ -87,7 +87,8 @@
                 $('input[name="' + csrfName + '"]').val(data.csrfHash);
                 if (data.status == 'RC200') {
                     $('input[name="tokenId"]').val(token_bencana_detail);
-                    tinymce.get('kebutuhan_bencana').setContent(data.message.kebutuhan_bencana);
+                    // tinymce.get('kebutuhan_bencana').setContent(data.message.kebutuhan_bencana);
+                    $('#kebutuhan_bencana').val(data.message.kebutuhan_bencana);
                 }
                 $('#frmEntryKebutuhan').waitMe('hide');
             }

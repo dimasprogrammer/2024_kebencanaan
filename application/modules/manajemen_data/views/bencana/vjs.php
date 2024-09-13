@@ -7,8 +7,8 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script type="text/javascript">
-    var base_url = 'http://localhost/2024/2024_kebencanaan/';
-    var base_url_2 = 'http://localhost/2024/2024_kebencanaan/';
+    var base_url = '<?php echo base_url() ?>';
+    var base_url_2 = '<?php echo base_url() ?>';
     $(document).ready(function(e) {
         getDataListbencana();
     });
@@ -824,7 +824,8 @@
                             let month = val['create_date'].substr(5, 2);
 
                             // Construct the file URL
-                            let fileUrl = `dokumen/bencana/${year}/${month}/${val['nama_file']}`;
+                            // let fileUrl = `dokumen/bencana/${year}/${month}/${val['nama_file']}`;
+                            let fileUrl = base_url_2 + 'dokumen/bencana/' + year + '/' + month + '/' + val['nama_file'];
 
                             // Build the HTML structure
                             html += `

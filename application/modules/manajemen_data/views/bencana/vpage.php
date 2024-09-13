@@ -21,12 +21,12 @@
                             <thead>
                                 <tr>
                                     <th width="3%" class="font-weight-bold">#</th>
-                                    <th width="15%" class="font-weight-bold">Jenis Bencana</th>
+                                    <th width="10%" class="font-weight-bold">Jenis Bencana</th>
                                     <th width="15%" class="font-weight-bold">Nama Bencana</th>
                                     <th width="15%" class="font-weight-bold">Tanggal Bencana</th>
                                     <th width="15%" class="font-weight-bold">Taksiran Kerugian</th>
                                     <th width="5%" class="font-weight-bold">Status</th>
-                                    <th width="25%" class="font-weight-bold">Action</th>
+                                    <th width="30%" class="font-weight-bold">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -66,10 +66,11 @@
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-4">
                         <label for="tanggal_bencana" class="control-label font-weight-bold">Pilih Tanggal <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control datepickerindo" name="tanggal_bencana" id="tanggal_bencana" style="background-color: white;" required>
+                        <input type="text" class="form-control datepickerindo" name="tanggal_bencana" id="tanggal_bencana" style="background-color: white;" required>
+                        <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-12 col-md-4 required">
-                        <label for="jam_bencana" class="control-label font-weight-bold">Jam Bencana <span class="text-danger">*</span></label>
+                        <label for="jam_bencana" class="control-label font-weight-bold">Jam Bencana</label>
                         <input type="text" class="form-control timepicker" placeholder="Select time" name="jam_bencana" id="jam_bencana" required>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -95,12 +96,12 @@
 
                 <div class="form-row mb-3">
                     <div class="col-12 col-md-6 required">
-                        <label for="keterangan_bencana" class="control-label font-weight-bold"> Keterangan Bencana <span class="text-danger">*</span></label>
+                        <label for="keterangan_bencana" class="control-label font-weight-bold"> Keterangan Bencana </label>
                         <textarea class="form-control" name="keterangan_bencana" id="keterangan_bencana" rows="4"></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-12 col-md-6 required">
-                        <label for="penyebab_bencana" class="control-label font-weight-bold"> Penyebab Bencana <span class="text-danger">*</span></label>
+                        <label for="penyebab_bencana" class="control-label font-weight-bold"> Penyebab Bencana </label>
                         <textarea class="form-control" name="penyebab_bencana" id="penyebab_bencana" rows="4"></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -193,7 +194,7 @@
                     </div>
                 </div> -->
                 <div class="alert alert-danger">
-                    Ukuran dokumen yang diupload maksimal 2 Mb. Format dokumen yang diupload harus pdf/ppt</div>
+                    Ukuran dokumen yang diupload maksimal 2 Mb. Format dokumen yang diupload harus gambar</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-grey waves-effect waves-light px-3 py-2 font-weight-bold btnClose"><i class="fas fa-times"></i> Close</button>
