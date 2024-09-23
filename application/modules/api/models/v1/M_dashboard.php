@@ -99,7 +99,7 @@ class M_dashboard extends CI_Model
                 $month = $splitted_created_date[1];
 
                 $foto[] = [
-                    "url" => base_url('dokumen/foto/' . $year . '/' . $month . '/' . $row['nama_file']),
+                    "url" => base_url('dokumen/bencana/' . $year . '/' . $month . '/' . $row['nama_file']),
                     "keterangan" => $row['judul_foto']
                 ];
             }
@@ -774,12 +774,10 @@ class M_dashboard extends CI_Model
         $this->db->from("cx_jenis_bencana");
         $this->db->select("id_jenis_bencana as id,nm_bencana as jenis_bencana");
         $this->db->where("id_status", 1);
-        if($id != "")
-        {
+        if ($id != "") {
             $this->db->where("id_jenis_bencana", $id);
             $result = $this->db->get()->row_array();
-        }
-        else{
+        } else {
             $result = $this->db->get()->result_array();
         }
 
@@ -789,9 +787,8 @@ class M_dashboard extends CI_Model
     private function _formatter_listBencana($data)
     {
         $result = [];
-        if(count($data) > 0)
-        {
-            foreach($data as $item){
+        if (count($data) > 0) {
+            foreach ($data as $item) {
                 $tanggalKejadian = $item['tanggal_bencana'] ? tgl_surat($item['tanggal_bencana']) : null;
                 $tanggalKejadian = $item['jam_bencana'] ? $tanggalKejadian . ' - ' . $item['jam_bencana'] . ' WIB' : $tanggalKejadian;
                 $last_update_data = $this->_formatter_updateData($item['token_bencana']);
@@ -830,10 +827,9 @@ class M_dashboard extends CI_Model
         $splitted_created_date = explode('-', $raw_created_date[0]);
         $year = $splitted_created_date[0];
         $month = $splitted_created_date[1];
-        $infoGrafisUrl = $data['nama_file_infografis'] ? 
-                            base_url('dokumen/infografis/' . $year . '/' . $month . '/' . $data['nama_file_infografis']) 
-                            : null;
+        $infoGrafisUrl = $data['nama_file_infografis'] ?
+            base_url('dokumen/infografis/' . $year . '/' . $month . '/' . $data['nama_file_infografis'])
+            : null;
         return $infoGrafisUrl;
     }
-
 }
